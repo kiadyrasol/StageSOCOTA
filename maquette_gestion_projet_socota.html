@@ -114,6 +114,53 @@
   .progress-track{flex:1; background:#EDEDE8; border-radius:6px; height:8px; overflow:hidden;}
   .progress-fill{height:100%; background:var(--socota-green);}
   .progress-pct{width:40px; text-align:right; color:var(--gray-text);}
+
+  /* équipe */
+  .team-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .member-card{background:#fff; border:0.5px solid var(--gray-border); border-radius:12px; padding:14px; display:flex; gap:10px; align-items:center;}
+  .member-avatar{width:40px; height:40px; border-radius:50%; background:var(--socota-green-light); color:var(--socota-green-dark); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;}
+  .member-name{font-size:13px; font-weight:600; margin:0;}
+  .member-role{font-size:11px; color:var(--gray-text); margin:2px 0 0;}
+  .member-load{font-size:10px; margin-top:6px; color:var(--gray-text);}
+
+  /* gantt */
+  .gantt-row{display:grid; grid-template-columns:160px 1fr; align-items:center; font-size:12px; padding:7px 0; border-top:0.5px solid var(--gray-border);}
+  .gantt-row:first-child{border-top:none;}
+  .gantt-track{position:relative; height:16px; background:#F0F0EC; border-radius:5px;}
+  .gantt-bar{position:absolute; top:0; height:100%; border-radius:5px; background:var(--socota-green);}
+  .gantt-bar.late{background:var(--gray-text-dark);}
+  .gantt-header{display:grid; grid-template-columns:160px 1fr; font-size:10px; color:var(--gray-text); padding-bottom:6px;}
+
+  /* documents */
+  .doc-row{display:flex; align-items:center; gap:12px; padding:11px 16px; border-top:0.5px solid var(--gray-border); font-size:13px;}
+  .doc-row:first-child{border-top:none;}
+  .doc-icon{width:32px; height:32px; border-radius:8px; background:var(--socota-green-light); color:var(--socota-green-dark); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+  .doc-name{font-weight:600; flex:1;}
+  .doc-meta{color:var(--gray-text); font-size:12px;}
+
+  /* risques */
+  .risk-row{display:flex; align-items:center; gap:12px; padding:11px 16px; border-top:0.5px solid var(--gray-border); font-size:13px;}
+  .risk-row:first-child{border-top:none;}
+  .risk-level{font-size:11px; padding:3px 9px; border-radius:6px; font-weight:600;}
+  .risk-level.high{background:#2C1010; color:#fff;}
+  .risk-level.medium{background:#F0F0EC; color:var(--gray-text-dark);}
+  .risk-level.low{background:var(--socota-green-light); color:var(--socota-green-dark);}
+
+  /* rapports */
+  .chart-bars{display:flex; align-items:flex-end; gap:14px; height:160px; padding:10px 6px;}
+  .chart-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .chart-bar{width:100%; background:var(--socota-green); border-radius:6px 6px 0 0;}
+  .chart-label{font-size:11px; color:var(--gray-text);}
+  .donut{width:120px; height:120px; border-radius:50%; background:conic-gradient(var(--socota-green) 0% 62%, #EDEDE8 62% 100%); display:flex; align-items:center; justify-content:center; margin:0 auto;}
+  .donut-inner{width:76px; height:76px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:var(--gray-text-dark);}
+
+  /* notifications */
+  .notif-row{display:flex; gap:12px; padding:12px 16px; border-top:0.5px solid var(--gray-border); font-size:13px;}
+  .notif-row:first-child{border-top:none;}
+  .notif-icon{width:30px; height:30px; border-radius:50%; background:var(--socota-green-light); color:var(--socota-green-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:14px;}
+  .notif-icon.warn{background:#2C1010; color:#fff;}
+  .notif-text{flex:1;}
+  .notif-time{font-size:11px; color:var(--gray-text); white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -126,6 +173,12 @@
     <button data-screen="newproject">Créer un projet</button>
     <button data-screen="tasks">Tâches</button>
     <button data-screen="budget">Budget</button>
+    <button data-screen="team">Équipe</button>
+    <button data-screen="planning">Planning (Gantt)</button>
+    <button data-screen="documents">Documents</button>
+    <button data-screen="risks">Risques</button>
+    <button data-screen="reports">Rapports</button>
+    <button data-screen="notifications">Notifications</button>
   </div>
 
   <!-- LOGIN -->
@@ -330,6 +383,191 @@
           <div class="progress-row"><div class="progress-name">Ligne de production 2</div><div class="progress-track"><div class="progress-fill" style="width:20%"></div></div><div class="progress-pct">20%</div></div>
           <div class="progress-row"><div class="progress-name">Audit qualité</div><div class="progress-track"><div class="progress-fill" style="width:100%"></div></div><div class="progress-pct">100%</div></div>
           <div class="progress-row"><div class="progress-name">Digitalisation stock</div><div class="progress-track"><div class="progress-fill" style="width:35%"></div></div><div class="progress-pct">35%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉQUIPE -->
+  <div class="screen" id="screen-team">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item active"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <h2 class="page-title" style="margin:0;">Équipe</h2>
+          <button class="btn btn-primary"><i class="ti ti-user-plus"></i> Ajouter un membre</button>
+        </div>
+        <div class="team-grid">
+          <div class="member-card"><div class="member-avatar">AR</div><div><p class="member-name">A. Rakoto</p><p class="member-role">Chef de projet</p><p class="member-load">4 tâches actives</p></div></div>
+          <div class="member-card"><div class="member-avatar">HA</div><div><p class="member-name">H. Andria</p><p class="member-role">Responsable achats</p><p class="member-load">2 tâches actives</p></div></div>
+          <div class="member-card"><div class="member-avatar">NR</div><div><p class="member-name">N. Rasoa</p><p class="member-role">Contrôle qualité</p><p class="member-load">1 tâche active</p></div></div>
+          <div class="member-card"><div class="member-avatar">JR</div><div><p class="member-name">J. Randria</p><p class="member-role">Technicien</p><p class="member-load">3 tâches actives</p></div></div>
+          <div class="member-card"><div class="member-avatar">MR</div><div><p class="member-name">M. Ravo</p><p class="member-role">Développeur (stagiaire)</p><p class="member-load">5 tâches actives</p></div></div>
+          <div class="member-card"><div class="member-avatar">+</div><div><p class="member-name" style="color:var(--gray-text);">Inviter</p><p class="member-role">Nouveau membre</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANNING / GANTT -->
+  <div class="screen" id="screen-planning">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Planning — Refonte entrepôt</h2>
+        <div class="card" style="padding:16px;">
+          <div class="gantt-header"><span>Tâche</span><span>Sept · Oct · Nov</span></div>
+          <div class="gantt-row"><span>Étude de faisabilité</span><div class="gantt-track"><div class="gantt-bar" style="left:0%; width:15%;"></div></div></div>
+          <div class="gantt-row"><span>Cahier des charges</span><div class="gantt-track"><div class="gantt-bar" style="left:12%; width:18%;"></div></div></div>
+          <div class="gantt-row"><span>Négociation fournisseur</span><div class="gantt-track"><div class="gantt-bar late" style="left:28%; width:22%;"></div></div></div>
+          <div class="gantt-row"><span>Validation budget</span><div class="gantt-track"><div class="gantt-bar" style="left:45%; width:10%;"></div></div></div>
+          <div class="gantt-row"><span>Réaménagement</span><div class="gantt-track"><div class="gantt-bar" style="left:55%; width:30%;"></div></div></div>
+          <div class="gantt-row"><span>Réception & clôture</span><div class="gantt-track"><div class="gantt-bar" style="left:85%; width:12%;"></div></div></div>
+        </div>
+        <p style="font-size:12px; color:var(--gray-text);"><span style="display:inline-block;width:10px;height:10px;background:var(--black);border-radius:3px;margin-right:5px;"></span>Barre foncée = tâche en retard</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="screen" id="screen-documents">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <h2 class="page-title" style="margin:0;">Documents</h2>
+          <button class="btn btn-primary"><i class="ti ti-upload"></i> Importer</button>
+        </div>
+        <div class="card">
+          <div class="doc-row"><div class="doc-icon"><i class="ti ti-file-text"></i></div><div class="doc-name">Cahier des charges — Refonte entrepôt.pdf</div><div class="doc-meta">v2 · A. Rakoto · 3 août 2026</div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="ti ti-file-spreadsheet"></i></div><div class="doc-name">Budget prévisionnel.xlsx</div><div class="doc-meta">v4 · N. Rasoa · 8 août 2026</div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="ti ti-photo"></i></div><div class="doc-name">Plan d'implantation.png</div><div class="doc-meta">v1 · J. Randria · 9 août 2026</div></div>
+          <div class="doc-row"><div class="doc-icon"><i class="ti ti-file-text"></i></div><div class="doc-name">Devis fournisseur — Rayonnage.pdf</div><div class="doc-meta">v1 · H. Andria · 10 août 2026</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISQUES -->
+  <div class="screen" id="screen-risks">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <h2 class="page-title" style="margin:0;">Registre des risques</h2>
+          <button class="btn btn-primary"><i class="ti ti-plus"></i> Signaler un risque</button>
+        </div>
+        <div class="card">
+          <div class="risk-row"><span class="risk-level high">Élevé</span><div style="flex:1;">Retard fournisseur rayonnage</div><div class="doc-meta">Refonte entrepôt</div></div>
+          <div class="risk-row"><span class="risk-level medium">Moyen</span><div style="flex:1;">Dépassement budget matériel</div><div class="doc-meta">Ligne de production 2</div></div>
+          <div class="risk-row"><span class="risk-level low">Faible</span><div style="flex:1;">Indisponibilité ponctuelle d'un technicien</div><div class="doc-meta">Digitalisation stock</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAPPORTS -->
+  <div class="screen" id="screen-reports">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item active"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Rapports</h2>
+        <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:16px;">
+          <div class="card" style="padding:16px;">
+            <p style="font-size:13px;font-weight:600;margin:0 0 6px;">Tâches terminées par mois</p>
+            <div class="chart-bars">
+              <div class="chart-col"><div class="chart-bar" style="height:40%;"></div><span class="chart-label">Mai</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:65%;"></div><span class="chart-label">Juin</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:50%;"></div><span class="chart-label">Juil</span></div>
+              <div class="chart-col"><div class="chart-bar" style="height:85%;"></div><span class="chart-label">Août</span></div>
+            </div>
+          </div>
+          <div class="card" style="padding:16px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <p style="font-size:13px;font-weight:600;margin:0 0 12px;">Budget consommé</p>
+            <div class="donut"><div class="donut-inner">62%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="screen" id="screen-notifications">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Notifications</h2>
+        <div class="card">
+          <div class="notif-row"><div class="notif-icon warn"><i class="ti ti-alert-triangle"></i></div><div class="notif-text"><b>Retard détecté</b> — Négociation fournisseur (Refonte entrepôt)</div><div class="notif-time">Il y a 2h</div></div>
+          <div class="notif-row"><div class="notif-icon"><i class="ti ti-check"></i></div><div class="notif-text"><b>Tâche terminée</b> — Étude de faisabilité</div><div class="notif-time">Hier</div></div>
+          <div class="notif-row"><div class="notif-icon"><i class="ti ti-currency-dollar"></i></div><div class="notif-text"><b>Budget à 90%</b> — Audit qualité approche de la limite</div><div class="notif-time">Hier</div></div>
+          <div class="notif-row"><div class="notif-icon"><i class="ti ti-user-plus"></i></div><div class="notif-text"><b>Nouveau membre</b> — J. Randria a rejoint l'équipe</div><div class="notif-time">3 août 2026</div></div>
         </div>
       </div>
     </div>
