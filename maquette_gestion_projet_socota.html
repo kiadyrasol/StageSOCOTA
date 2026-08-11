@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maquette — Gestion de projet Socota</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --socota-green:#1E5B33;
+    --socota-green-dark:#12391F;
+    --socota-green-light:#E4EFE7;
+    --gray-bg:#F4F4F2;
+    --gray-card:#FFFFFF;
+    --gray-border:#E1E0DB;
+    --gray-text:#5F5E5A;
+    --gray-text-dark:#2C2C2A;
+    --black:#111111;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--gray-bg); color:var(--gray-text-dark);
+  }
+  .note{
+    max-width:1100px; margin:16px auto 0; padding:10px 16px; background:#FFF7E0;
+    border:0.5px solid #E8D48A; border-radius:8px; font-size:13px; color:#5c4a12;
+  }
+  .app{max-width:1100px; margin:16px auto 40px; background:#fff; border-radius:14px; overflow:hidden; border:0.5px solid var(--gray-border); box-shadow:0 2px 10px rgba(0,0,0,0.04);}
+
+  /* tabs to switch screens */
+  .screen-tabs{display:flex; gap:4px; padding:10px 14px; background:var(--gray-card); border-bottom:0.5px solid var(--gray-border); flex-wrap:wrap;}
+  .screen-tabs button{
+    border:none; background:transparent; padding:8px 14px; border-radius:8px; font-size:13px; cursor:pointer; color:var(--gray-text);
+  }
+  .screen-tabs button.active{background:var(--socota-green); color:#fff; font-weight:600;}
+
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* topbar for app screens */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; padding:14px 20px;
+    background:var(--socota-green); color:#fff;
+  }
+  .topbar-left{display:flex; align-items:center; gap:10px;}
+  .logo-badge{width:28px; height:28px; border-radius:6px; background:#fff; color:var(--socota-green); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;}
+  .topbar-title{font-size:15px; font-weight:600;}
+  .topbar-right{display:flex; align-items:center; gap:16px; font-size:13px; opacity:0.95;}
+  .avatar{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.22); display:flex; align-items:center; justify-content:center; font-size:12px;}
+
+  .layout{display:grid; grid-template-columns:190px 1fr; min-height:480px;}
+  .sidebar{background:#FAFAF8; border-right:0.5px solid var(--gray-border); padding:16px 10px;}
+  .side-item{display:flex; align-items:center; gap:8px; padding:9px 10px; border-radius:8px; font-size:13px; color:var(--gray-text); cursor:pointer; margin-bottom:2px;}
+  .side-item.active{background:var(--socota-green-light); color:var(--socota-green-dark); font-weight:600;}
+  .content{padding:22px;}
+
+  h2.page-title{font-size:17px; font-weight:600; margin:0 0 18px; color:var(--gray-text-dark);}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;}
+  .stat-card{background:#FAFAF8; border-radius:10px; padding:14px;}
+  .stat-card.accent{background:var(--socota-green-light);}
+  .stat-label{font-size:12px; color:var(--gray-text); margin:0 0 6px;}
+  .stat-value{font-size:22px; font-weight:700; margin:0;}
+  .stat-card.accent .stat-value, .stat-card.accent .stat-label{color:var(--socota-green-dark);}
+
+  .card{background:#fff; border:0.5px solid var(--gray-border); border-radius:12px; overflow:hidden; margin-bottom:16px;}
+  .card-header{padding:12px 16px; border-bottom:0.5px solid var(--gray-border); font-size:14px; font-weight:600; display:flex; justify-content:space-between; align-items:center;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{font-weight:400; text-align:left; padding:8px 16px; color:var(--gray-text);}
+  td{padding:10px 16px; border-top:0.5px solid var(--gray-border);}
+  .badge{font-size:12px; padding:3px 10px; border-radius:6px; display:inline-block;}
+  .badge.ongoing{background:var(--socota-green-light); color:var(--socota-green-dark);}
+  .badge.planned{background:#F0F0EC; color:var(--gray-text);}
+  .badge.done{background:var(--black); color:#fff;}
+  .bar{background:#EDEDE8; border-radius:6px; height:6px; overflow:hidden; width:100px;}
+  .bar-fill{height:100%; background:var(--socota-green);}
+
+  .btn{border:0.5px solid var(--gray-border); background:#fff; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer; color:var(--gray-text-dark);}
+  .btn-primary{background:var(--socota-green); color:#fff; border:none; font-weight:600;}
+  .btn-primary:hover{background:var(--socota-green-dark);}
+
+  /* login screen */
+  .login-wrap{min-height:520px; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, var(--socota-green) 0%, var(--socota-green) 40%, var(--gray-bg) 40%);}
+  .login-card{background:#fff; border-radius:14px; padding:34px 32px; width:340px; box-shadow:0 8px 24px rgba(0,0,0,0.12);}
+  .login-logo{width:44px; height:44px; border-radius:10px; background:var(--socota-green); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; margin:0 auto 14px;}
+  .login-title{text-align:center; font-size:16px; font-weight:700; margin:0 0 4px;}
+  .login-sub{text-align:center; font-size:13px; color:var(--gray-text); margin:0 0 22px;}
+  label{font-size:12px; color:var(--gray-text); display:block; margin-bottom:5px;}
+  input[type=text],input[type=password]{width:100%; padding:9px 11px; border:0.5px solid var(--gray-border); border-radius:8px; font-size:13px; margin-bottom:14px;}
+  .login-btn{width:100%; padding:10px; border:none; border-radius:8px; background:var(--socota-green); color:#fff; font-weight:600; font-size:13px; cursor:pointer;}
+
+  /* form screen (creation projet) */
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .form-grid .full{grid-column:1/-1;}
+  textarea{width:100%; padding:9px 11px; border:0.5px solid var(--gray-border); border-radius:8px; font-size:13px; min-height:80px; font-family:inherit;}
+  select{width:100%; padding:9px 11px; border:0.5px solid var(--gray-border); border-radius:8px; font-size:13px;}
+
+  /* kanban tasks */
+  .kanban{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .kanban-col-title{font-size:13px; font-weight:600; margin-bottom:10px; color:var(--gray-text-dark); display:flex; align-items:center; gap:6px;}
+  .kanban-count{font-size:11px; background:#EDEDE8; color:var(--gray-text); padding:1px 7px; border-radius:10px;}
+  .task-card{background:#fff; border:0.5px solid var(--gray-border); border-radius:10px; padding:10px 12px; margin-bottom:10px; font-size:13px;}
+  .task-title{font-weight:600; margin:0 0 6px;}
+  .task-meta{display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--gray-text);}
+  .tag{font-size:10px; padding:2px 7px; border-radius:5px; background:var(--socota-green-light); color:var(--socota-green-dark);}
+
+  /* budget */
+  .budget-total{display:flex; align-items:baseline; gap:8px; margin-bottom:18px;}
+  .budget-total .amount{font-size:26px; font-weight:700;}
+  .progress-row{display:flex; align-items:center; gap:12px; padding:10px 0; border-top:0.5px solid var(--gray-border); font-size:13px;}
+  .progress-row:first-of-type{border-top:none;}
+  .progress-name{width:150px;}
+  .progress-track{flex:1; background:#EDEDE8; border-radius:6px; height:8px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--socota-green);}
+  .progress-pct{width:40px; text-align:right; color:var(--gray-text);}
+</style>
+</head>
+<body>
+
+<div class="note">
+  Estimation de couleur (vert Socota) — je n'ai pas trouvé de charte graphique officielle en ligne. Envoie-moi le code hex exact si tu l'as, pour que j'ajuste la maquette au vrai vert du Groupe.
+</div>
+
+<div class="app">
+  <div class="screen-tabs" id="tabs">
+    <button data-screen="login" class="active">Connexion</button>
+    <button data-screen="dashboard">Tableau de bord</button>
+    <button data-screen="projects">Liste des projets</button>
+    <button data-screen="newproject">Créer un projet</button>
+    <button data-screen="tasks">Tâches</button>
+    <button data-screen="budget">Budget</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="screen active" id="screen-login">
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-logo">S</div>
+        <p class="login-title">Socota — Gestion de projet</p>
+        <p class="login-sub">Connectez-vous à votre espace</p>
+        <label>Identifiant</label>
+        <input type="text" placeholder="nom.utilisateur">
+        <label>Mot de passe</label>
+        <input type="password" placeholder="••••••••">
+        <button class="login-btn">Se connecter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="screen-dashboard">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item active"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Tableau de bord</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><p class="stat-label">Projets actifs</p><p class="stat-value">8</p></div>
+          <div class="stat-card"><p class="stat-label">Tâches en cours</p><p class="stat-value">34</p></div>
+          <div class="stat-card accent"><p class="stat-label">Budget utilisé</p><p class="stat-value">62%</p></div>
+          <div class="stat-card"><p class="stat-label">Membres</p><p class="stat-value">12</p></div>
+        </div>
+        <div class="card">
+          <div class="card-header">Projets récents</div>
+          <table>
+            <tr><th>Projet</th><th>Responsable</th><th>Statut</th><th>Avancement</th></tr>
+            <tr><td>Refonte entrepôt</td><td>A. Rakoto</td><td><span class="badge ongoing">En cours</span></td><td><div class="bar"><div class="bar-fill" style="width:70%"></div></div></td></tr>
+            <tr><td>Ligne de production 2</td><td>H. Andria</td><td><span class="badge planned">Planifié</span></td><td><div class="bar"><div class="bar-fill" style="width:20%"></div></div></td></tr>
+            <tr><td>Audit qualité</td><td>N. Rasoa</td><td><span class="badge done">Terminé</span></td><td><div class="bar"><div class="bar-fill" style="width:100%"></div></div></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS LIST -->
+  <div class="screen" id="screen-projects">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item active"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <h2 class="page-title" style="margin:0;">Projets</h2>
+          <button class="btn btn-primary"><i class="ti ti-plus"></i> Nouveau projet</button>
+        </div>
+        <div class="card">
+          <table>
+            <tr><th>Projet</th><th>Responsable</th><th>Échéance</th><th>Statut</th><th>Budget</th></tr>
+            <tr><td>Refonte entrepôt</td><td>A. Rakoto</td><td>28/09/2026</td><td><span class="badge ongoing">En cours</span></td><td>4 200 000 Ar</td></tr>
+            <tr><td>Ligne de production 2</td><td>H. Andria</td><td>15/11/2026</td><td><span class="badge planned">Planifié</span></td><td>9 800 000 Ar</td></tr>
+            <tr><td>Audit qualité</td><td>N. Rasoa</td><td>02/08/2026</td><td><span class="badge done">Terminé</span></td><td>1 100 000 Ar</td></tr>
+            <tr><td>Digitalisation stock COTONA</td><td>J. Randria</td><td>30/10/2026</td><td><span class="badge ongoing">En cours</span></td><td>3 500 000 Ar</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW PROJECT -->
+  <div class="screen" id="screen-newproject">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item active"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Créer un projet</h2>
+        <div class="card" style="padding:20px;">
+          <div class="form-grid">
+            <div class="full">
+              <label>Nom du projet</label>
+              <input type="text" placeholder="Ex: Digitalisation stock COTONA">
+            </div>
+            <div>
+              <label>Responsable</label>
+              <select><option>A. Rakoto</option><option>H. Andria</option><option>N. Rasoa</option></select>
+            </div>
+            <div>
+              <label>Budget alloué (Ar)</label>
+              <input type="text" placeholder="Ex: 3 500 000">
+            </div>
+            <div>
+              <label>Date de début</label>
+              <input type="text" placeholder="jj/mm/aaaa">
+            </div>
+            <div>
+              <label>Date d'échéance</label>
+              <input type="text" placeholder="jj/mm/aaaa">
+            </div>
+            <div class="full">
+              <label>Description</label>
+              <textarea placeholder="Décrire les objectifs du projet..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+            <button class="btn">Annuler</button>
+            <button class="btn btn-primary">Créer le projet</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASKS (kanban) -->
+  <div class="screen" id="screen-tasks">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item active"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Tâches — Refonte entrepôt</h2>
+        <div class="kanban">
+          <div>
+            <div class="kanban-col-title">À faire <span class="kanban-count">3</span></div>
+            <div class="task-card"><p class="task-title">Cahier des charges rayonnage</p><div class="task-meta"><span class="tag">Logistique</span><span>A. Rakoto</span></div></div>
+            <div class="task-card"><p class="task-title">Devis prestataire</p><div class="task-meta"><span class="tag">Achats</span><span>H. Andria</span></div></div>
+            <div class="task-card"><p class="task-title">Plan d'implantation</p><div class="task-meta"><span class="tag">Technique</span><span>J. Randria</span></div></div>
+          </div>
+          <div>
+            <div class="kanban-col-title">En cours <span class="kanban-count">2</span></div>
+            <div class="task-card"><p class="task-title">Négociation fournisseur</p><div class="task-meta"><span class="tag">Achats</span><span>H. Andria</span></div></div>
+            <div class="task-card"><p class="task-title">Validation budget</p><div class="task-meta"><span class="tag">Finance</span><span>N. Rasoa</span></div></div>
+          </div>
+          <div>
+            <div class="kanban-col-title">Terminé <span class="kanban-count">1</span></div>
+            <div class="task-card"><p class="task-title">Étude de faisabilité</p><div class="task-meta"><span class="tag">Technique</span><span>A. Rakoto</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUDGET -->
+  <div class="screen" id="screen-budget">
+    <div class="topbar">
+      <div class="topbar-left"><div class="logo-badge">S</div><span class="topbar-title">Socota — gestion de projet</span></div>
+      <div class="topbar-right"><i class="ti ti-bell"></i><div class="avatar">MR</div></div>
+    </div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="side-item"><i class="ti ti-layout-dashboard"></i>Tableau de bord</div>
+        <div class="side-item"><i class="ti ti-folder"></i>Projets</div>
+        <div class="side-item"><i class="ti ti-checklist"></i>Tâches</div>
+        <div class="side-item"><i class="ti ti-users"></i>Équipe</div>
+        <div class="side-item active"><i class="ti ti-currency-dollar"></i>Budget</div>
+        <div class="side-item"><i class="ti ti-chart-bar"></i>Rapports</div>
+      </div>
+      <div class="content">
+        <h2 class="page-title">Suivi budgétaire</h2>
+        <div class="budget-total">
+          <span class="amount">1 500 000 000 Ar</span>
+          <span style="color:var(--gray-text); font-size:13px;">budget global du portefeuille</span>
+        </div>
+        <div class="card" style="padding:6px 16px;">
+          <div class="progress-row"><div class="progress-name">Refonte entrepôt</div><div class="progress-track"><div class="progress-fill" style="width:70%"></div></div><div class="progress-pct">70%</div></div>
+          <div class="progress-row"><div class="progress-name">Ligne de production 2</div><div class="progress-track"><div class="progress-fill" style="width:20%"></div></div><div class="progress-pct">20%</div></div>
+          <div class="progress-row"><div class="progress-name">Audit qualité</div><div class="progress-track"><div class="progress-fill" style="width:100%"></div></div><div class="progress-pct">100%</div></div>
+          <div class="progress-row"><div class="progress-name">Digitalisation stock</div><div class="progress-track"><div class="progress-fill" style="width:35%"></div></div><div class="progress-pct">35%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('#tabs button');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
