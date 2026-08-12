@@ -1,0 +1,19 @@
+@model GestionProjetSocota.Models.Projet
+
+<div style="padding:20px; max-width:500px;">
+    <h2 style="color:#a12020;">Confirmer la suppression</h2>
+    <p>Es-tu sûr de vouloir supprimer ce projet ? Cette action est irréversible.</p>
+
+    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px; margin:16px 0;">
+        <p><b>Ticket ID :</b> @Model.TicketId</p>
+        <p><b>Nom :</b> @Model.Nom</p>
+        <p><b>Unité :</b> @Model.Unite</p>
+        <p><b>Owner IT :</b> @(Model.OwnerIt?.Nom ?? "-")</p>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" style="background:#a12020; color:#fff; border:none; padding:10px 20px; border-radius:8px; font-weight:600; cursor:pointer;">Oui, supprimer</button>
+        <a href="/Projet" style="margin-left:10px; color:#5F5E5A; text-decoration:none;">Annuler</a>
+    </form>
+</div>

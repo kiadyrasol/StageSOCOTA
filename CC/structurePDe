@@ -1,0 +1,50 @@
+Gestion de Projet/                          ← ton dossier de travail (Desktop)
+│
+└── GestionProjetSocota/                    ← le projet (créé par dotnet new mvc)
+    │
+    ├── GestionProjetSocota.csproj          ← fichier projet (EF Core + Negotiate/AD ajoutés)
+    │
+    ├── Program.cs                          ← point d'entrée — DbContext + Authentification Windows AD configurés
+    │
+    ├── appsettings.json                    ← config, avec la chaîne de connexion SQL Server
+    │
+    ├── Controllers/
+    │   ├── HomeController.cs               ← généré par défaut
+    │   └── ProjetController.cs             ✅ FAIT — Index, Create, Edit, Delete (CRUD complet)
+    │
+    ├── Models/
+    │   ├── ErrorViewModel.cs               ← généré par défaut
+    │   ├── Utilisateur.cs                  ✅ FAIT — + enum RoleUtilisateur
+    │   ├── Projet.cs                       ✅ FAIT — + enums Unite, Departement, TypeProjet, Plateforme, StatutProjet
+    │   ├── RFC.cs                          ✅ FAIT (table en base, pas encore de Controller/Vue)
+    │   ├── ActionProjet.cs                 ✅ FAIT (table en base, pas encore de Controller/Vue)
+    │   ├── Commentaire.cs                  ✅ FAIT (table en base, pas encore de Controller/Vue)
+    │   └── PieceJointe.cs                  ✅ FAIT (table en base, pas encore de Controller/Vue)
+    │
+    ├── ViewModels/
+    │   ├── ProjetCreateViewModel.cs        ✅ FAIT
+    │   └── ProjetEditViewModel.cs          ✅ FAIT
+    │
+    ├── Data/
+    │   └── ApplicationDbContext.cs         ✅ FAIT — 6 DbSet + règles OnDelete (Restrict)
+    │
+    ├── Migrations/                         ⚙️ générées automatiquement par EF Core
+    │   └── ..._InitialCreate.cs
+    │
+    ├── Views/
+    │   ├── Home/
+    │   │   ├── Index.cshtml                ← généré par défaut (nettoyé de la ligne de test)
+    │   │   └── Privacy.cshtml
+    │   ├── Projet/
+    │   │   ├── Index.cshtml                ✅ FAIT — liste + liens Modifier/Supprimer
+    │   │   ├── Create.cshtml               ✅ FAIT
+    │   │   ├── Edit.cshtml                 ✅ FAIT
+    │   │   └── Delete.cshtml               ✅ FAIT
+    │   └── Shared/
+    │       ├── _Layout.cshtml              ← gabarit commun (généré par défaut)
+    │       └── _ValidationScriptsPartial.cshtml
+    │
+    └── wwwroot/                            ← fichiers statiques (CSS, JS, images)
+        ├── css/
+        ├── js/
+        └── lib/

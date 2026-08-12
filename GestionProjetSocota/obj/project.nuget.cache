@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "eZgxlck7wpM=",
+  "dgSpecHash": "s1aysiXEgvM=",
   "success": true,
   "projectFilePath": "C:\\Users\\kiady.info\\Desktop\\Gestion de Projet\\GestionProjetSocota\\GestionProjetSocota.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kiady.info\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\kiady.info\\.nuget\\packages\\microsoft.aspnetcore.authentication.negotiate\\10.0.11\\microsoft.aspnetcore.authentication.negotiate.10.0.11.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.4\\microsoft.bcl.cryptography.9.0.4.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
@@ -47,6 +48,7 @@
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.composition.runtime\\9.0.0\\system.composition.runtime.9.0.0.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.composition.typedparts\\9.0.0\\system.composition.typedparts.9.0.0.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.4\\system.configuration.configurationmanager.9.0.4.nupkg.sha512",
+    "C:\\Users\\kiady.info\\.nuget\\packages\\system.directoryservices.protocols\\10.0.11\\system.directoryservices.protocols.10.0.11.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.7.1\\system.identitymodel.tokens.jwt.7.7.1.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.memory.data\\8.0.1\\system.memory.data.8.0.1.nupkg.sha512",
     "C:\\Users\\kiady.info\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.4\\system.security.cryptography.pkcs.9.0.4.nupkg.sha512",

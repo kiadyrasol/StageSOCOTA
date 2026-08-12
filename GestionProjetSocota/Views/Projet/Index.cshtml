@@ -1,0 +1,46 @@
+@model List<GestionProjetSocota.Models.Projet>
+
+<div style="padding:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+        <h2 style="margin:0; color:#155D15;">Projets</h2>
+        <a href="/Projet/Create" style="background:#228B22; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; font-weight:600;">+ Nouveau projet</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p style="color:#5F5E5A;">Aucun projet pour le moment.</p>
+    }
+    else
+    {
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+                <tr style="background:#E6F4E6; text-align:left;">
+                    <th style="padding:10px;">Ticket ID</th>
+                    <th style="padding:10px;">Nom</th>
+                    <th style="padding:10px;">Unité</th>
+                    <th style="padding:10px;">Statut</th>
+                    <th style="padding:10px;">Owner IT</th>
+                    <th style="padding:10px;">Avancement</th>
+                    <th style="padding:10px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var projet in Model)
+                {
+                    <tr style="border-top:1px solid #E1E0DB;">
+                        <td style="padding:10px;">@projet.TicketId</td>
+                        <td style="padding:10px;">@projet.Nom</td>
+                        <td style="padding:10px;">@projet.Unite</td>
+                        <td style="padding:10px;">@projet.Statut</td>
+                        <td style="padding:10px;">@(projet.OwnerIt?.Nom ?? "-")</td>
+                        <td style="padding:10px;">@projet.PourcentageAvancement%</td>
+                        <td style="padding:10px;">
+                            <a href="/Projet/Edit/@projet.Id" style="color:#228B22; margin-right:10px;">Modifier</a>
+                            <a href="/Projet/Delete/@projet.Id" style="color:#a12020;">Supprimer</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
