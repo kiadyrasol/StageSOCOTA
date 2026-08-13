@@ -52,6 +52,48 @@ else
         </div>
     }
 
+<h3 style="color:#155D15; font-size:16px; margin-top:24px;">Actions</h3>
+<a href="/ActionProjet/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; display:inline-block; margin-bottom:10px;">+ Nouvelle action</a>
+
+@{
+    var actions = ViewBag.Actions as List<GestionProjetSocota.Models.ActionProjet>;
+}
+@if (actions != null && actions.Any())
+{
+    @foreach (var action in actions)
+{
+    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
+        <p style="margin:0 0 4px;">@action.Description</p>
+        <p style="margin:0 0 8px; color:#5F5E5A; font-size:12px;">
+            @(action.Responsable?.Nom ?? "-") · Échéance : @action.DateEcheance.ToString("dd/MM/yyyy") ·
+            <span style="background:@(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "#E6F4E6" : "#FFF3CD"); padding:2px 8px; border-radius:5px;">@action.Statut</span>
+        </p>
+        <div style="display:flex; gap:6px;">
+            @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
+            {
+                <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                    <input type="hidden" name="id" value="@action.Id" />
+                    <input type="hidden" name="nouveauStatut" value="Ongoing" />
+                    <button type="submit" style="background:#fff; border:1px solid #E1E0DB; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">En cours</button>
+                </form>
+            }
+            @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
+            {
+                <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                    <input type="hidden" name="id" value="@action.Id" />
+                    <input type="hidden" name="nouveauStatut" value="Closed" />
+                    <button type="submit" style="background:#228B22; border:none; color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Clôturer</button>
+                </form>
+            }
+            <form asp-controller="ActionProjet" asp-action="Delete" method="post">
+                <input type="hidden" name="id" value="@action.Id" />
+                <button type="submit" style="background:#fff; border:1px solid #a12020; color:#a12020; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Supprimer</button>
+            </form>
+        </div>
+    </div>
+}
+}
+
     <div style="margin-top:20px;">
         <a href="/Projet" style="color:#5F5E5A; text-decoration:none;">← Retour à la liste</a>
     </div>

@@ -3,16 +3,19 @@ using GestionProjetSocota.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
+
 namespace GestionProjetSocota.Middlewares
 {
     public class SyncUtilisateurMiddleware
     {
         private readonly RequestDelegate _next;
 
+
         public SyncUtilisateurMiddleware(RequestDelegate next)
         {
             _next = next;
         }
+
 
         public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext)
         {
@@ -39,25 +42,24 @@ namespace GestionProjetSocota.Middlewares
                     await dbContext.SaveChangesAsync();
                 }
 
-                    var identity = context.User!.Identity as ClaimsIdentity;
+                var identity = context.User!.Identity as ClaimsIdentity;
 
-if (identity != null)
-{
-    var claims = new List<Claim>(identity.Claims)
-    {
-        new Claim(ClaimTypes.Role, utilisateur.Role.ToString())
-    };
+                if (identity != null)
+                {
+                    var claims = new List<Claim>(identity.Claims)
+                    {
+                        new Claim(ClaimTypes.Role, utilisateur.Role.ToString())
+                    };
 
-    var nouvelleIdentity = new ClaimsIdentity(
-        claims,
-        identity.AuthenticationType,
-        identity.NameClaimType,
-        ClaimTypes.Role); // force explicitement le bon type pour les rôles
+                    var nouvelleIdentity = new ClaimsIdentity(
+                        claims,
+                        identity.AuthenticationType,
+                        identity.NameClaimType,
+                        ClaimTypes.Role);
 
-    context.User = new ClaimsPrincipal(nouvelleIdentity);
-}
-
+                    context.User = new ClaimsPrincipal(nouvelleIdentity);
                 }
+            }
 
             await _next(context);
         }

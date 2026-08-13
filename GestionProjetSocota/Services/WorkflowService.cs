@@ -1,9 +1,12 @@
 using GestionProjetSocota.Models;
 
+
 namespace GestionProjetSocota.Services
 {
     public class WorkflowService
     {
+
+        // InHouse
         private static readonly Dictionary<StatutProjet, List<StatutProjet>> TransitionsInHouse = new()
         {
             { StatutProjet.WaitingRFC, new() { StatutProjet.RFCApproved } },
@@ -17,6 +20,8 @@ namespace GestionProjetSocota.Services
             { StatutProjet.Support, new() { StatutProjet.Closed } },
         };
 
+
+        // Outsourced
         private static readonly Dictionary<StatutProjet, List<StatutProjet>> TransitionsOutsourced = new()
         {
             { StatutProjet.WaitingRFC, new() { StatutProjet.RFCApproved } },
@@ -32,10 +37,10 @@ namespace GestionProjetSocota.Services
             { StatutProjet.ApresVente, new() { StatutProjet.Closed } },
         };
 
+
+        // Transitions
         public List<StatutProjet> GetTransitionsPossibles(StatutProjet statutActuel, StatutProjet statutPrecedent, TypeProjet type)
         {
-            // Cas particulier : un projet suspendu ou annulé ne peut que redevenir actif,
-            // en reprenant exactement le statut où il en était avant.
             if (statutActuel == StatutProjet.Suspendu || statutActuel == StatutProjet.Cancelled)
             {
                 return new List<StatutProjet> { statutPrecedent };
@@ -47,7 +52,6 @@ namespace GestionProjetSocota.Services
                 ? new List<StatutProjet>(liste)
                 : new List<StatutProjet>();
 
-            // Depuis n'importe quel statut actif, on peut toujours suspendre ou annuler.
             if (statutActuel != StatutProjet.Closed)
             {
                 transitions.Add(StatutProjet.Suspendu);

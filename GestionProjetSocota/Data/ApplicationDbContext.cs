@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GestionProjetSocota.Models;
 
+
 namespace GestionProjetSocota.Data
 {
     public class ApplicationDbContext : DbContext
@@ -9,12 +10,14 @@ namespace GestionProjetSocota.Data
         {
         }
 
+
         public DbSet<Utilisateur> Utilisateurs { get; set; }
         public DbSet<Projet> Projets { get; set; }
         public DbSet<RFC> RFCs { get; set; }
         public DbSet<ActionProjet> Actions { get; set; }
         public DbSet<Commentaire> Commentaires { get; set; }
         public DbSet<PieceJointe> PiecesJointes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

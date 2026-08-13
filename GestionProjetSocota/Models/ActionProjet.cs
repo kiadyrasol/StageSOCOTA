@@ -1,11 +1,13 @@
 namespace GestionProjetSocota.Models
 {
+
     public enum StatutAction
     {
         Open,
         Ongoing,
         Closed
     }
+
 
     public class ActionProjet
     {

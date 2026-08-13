@@ -5,6 +5,7 @@ using GestionProjetSocota.Data;
 using GestionProjetSocota.Models;
 using GestionProjetSocota.ViewModels;
 
+
 namespace GestionProjetSocota.Controllers
 {
     public class RFCController : Controller
@@ -16,6 +17,8 @@ namespace GestionProjetSocota.Controllers
             _context = context;
         }
 
+
+        // Create
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> Create(int projetId)
@@ -65,6 +68,8 @@ namespace GestionProjetSocota.Controllers
             return RedirectToAction("Details", "Projet", new { id = model.ProjetId });
         }
 
+
+        // Valider
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Valider(int id)
@@ -89,31 +94,33 @@ namespace GestionProjetSocota.Controllers
             return RedirectToAction("Details", "Projet", new { id = rfc.ProjetId });
         }
 
+
+        // Annuler
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
-[HttpPost]
-public async Task<IActionResult> AnnulerValidation(int id)
-{
-    var rfc = await _context.RFCs.FindAsync(id);
-    if (rfc == null)
-    {
-        return NotFound();
-    }
+        [HttpPost]
+        public async Task<IActionResult> AnnulerValidation(int id)
+        {
+            var rfc = await _context.RFCs.FindAsync(id);
+            if (rfc == null)
+            {
+                return NotFound();
+            }
 
-    var projet = await _context.Projets.FindAsync(rfc.ProjetId);
+            var projet = await _context.Projets.FindAsync(rfc.ProjetId);
 
-    if (projet != null && projet.Statut == StatutProjet.RFCApproved)
-    {
-        rfc.EstValide = false;
-        projet.Statut = StatutProjet.WaitingRFC;
+            if (projet != null && projet.Statut == StatutProjet.RFCApproved)
+            {
+                rfc.EstValide = false;
+                projet.Statut = StatutProjet.WaitingRFC;
 
-        await _context.SaveChangesAsync();
-    }
-    else
-    {
-        TempData["Erreur"] = "Impossible d'annuler : le projet a déjà avancé au-delà de l'approbation du RFC.";
-    }
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                TempData["Erreur"] = "Impossible d'annuler : le projet a déjà avancé au-delà de l'approbation du RFC.";
+            }
 
-    return RedirectToAction("Details", "Projet", new { id = rfc.ProjetId });
-}
+            return RedirectToAction("Details", "Projet", new { id = rfc.ProjetId });
+        }
     }
 }

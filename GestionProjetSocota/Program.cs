@@ -17,9 +17,12 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddScoped<WorkflowService>();
 
+
 var app = builder.Build();
+
 
 if (!app.Environment.IsDevelopment())
 {
@@ -27,14 +30,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthentication();
-
 app.UseMiddleware<GestionProjetSocota.Middlewares.SyncUtilisateurMiddleware>();
-
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 

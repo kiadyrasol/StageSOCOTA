@@ -10,16 +10,17 @@ namespace GestionProjetSocota.Controllers
 {
     public class ProjetController : Controller
     {
-       private readonly ApplicationDbContext _context;
-private readonly WorkflowService _workflowService;
+        private readonly ApplicationDbContext _context;
+        private readonly WorkflowService _workflowService;
 
-public ProjetController(ApplicationDbContext context, WorkflowService workflowService)
-{
-    _context = context;
-    _workflowService = workflowService;
-}
+        public ProjetController(ApplicationDbContext context, WorkflowService workflowService)
+        {
+            _context = context;
+            _workflowService = workflowService;
+        }
 
-                                        //Index
+
+        // Index
         public async Task<IActionResult> Index()
         {
             var projets = await _context.Projets
@@ -30,84 +31,150 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
             return View(projets);
         }
 
-                                        //Kanban
-            public async Task<IActionResult> Kanban()
-{
-    var projets = await _context.Projets
-        .Include(p => p.OwnerIt)
-        .ToListAsync();
 
-    var statutsAffiches = new List<StatutProjet>
-    {
-        StatutProjet.WaitingRFC,
-        StatutProjet.RFCApproved,
-        StatutProjet.Analyse,
-        StatutProjet.DevStarted,
-        StatutProjet.Testing,
-        StatutProjet.Debugging,
-        StatutProjet.Formation,
-        StatutProjet.GoLive,
-        StatutProjet.Support,
-        StatutProjet.Closed
-    };
+        // Kanban
+        public async Task<IActionResult> Kanban()
+        {
+            var projets = await _context.Projets
+                .Include(p => p.OwnerIt)
+                .ToListAsync();
 
-    ViewBag.StatutsAffiches = statutsAffiches;
+            var statutsAffiches = new List<StatutProjet>
+            {
+                StatutProjet.WaitingRFC,
+                StatutProjet.RFCApproved,
+                StatutProjet.Analyse,
+                StatutProjet.DevStarted,
+                StatutProjet.Testing,
+                StatutProjet.Debugging,
+                StatutProjet.Formation,
+                StatutProjet.GoLive,
+                StatutProjet.Support,
+                StatutProjet.Closed
+            };
 
-    return View(projets);
-}
+            ViewBag.StatutsAffiches = statutsAffiches;
 
-                                        //Dashboard
-public async Task<IActionResult> Dashboard()
-{
-    var projets = await _context.Projets.ToListAsync();
+            return View(projets);
+        }
 
-    var stats = new DashboardViewModel
-    {
-        TotalProjets = projets.Count,
-        ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
-        ProjetsTermines = projets.Count(p => p.Statut == StatutProjet.Closed),
-        ProjetsSuspendus = projets.Count(p => p.Statut == StatutProjet.Suspendu),
-        ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
 
-        RepartitionParStatut = projets
-            .GroupBy(p => p.Statut)
-            .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-            .ToList(),
+        // Dashboard
+        public async Task<IActionResult> Dashboard()
+        {
+            var projets = await _context.Projets.ToListAsync();
 
-        RepartitionParUnite = projets
-            .GroupBy(p => p.Unite)
-            .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-            .ToList()
-    };
+            var stats = new DashboardViewModel
+            {
+                TotalProjets = projets.Count,
+                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
+                ProjetsTermines = projets.Count(p => p.Statut == StatutProjet.Closed),
+                ProjetsSuspendus = projets.Count(p => p.Statut == StatutProjet.Suspendu),
+                ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
 
-    return View(stats);
-}
+                RepartitionParStatut = projets
+                    .GroupBy(p => p.Statut)
+                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .ToList(),
 
-                                        //Details
+                RepartitionParUnite = projets
+                    .GroupBy(p => p.Unite)
+                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .ToList()
+            };
+
+            return View(stats);
+        }
+
+
+        // Dashboard COMEX
+        public async Task<IActionResult> DashboardComex()
+        {
+            var projets = await _context.Projets.ToListAsync();
+
+            var stats = new DashboardViewModel
+            {
+                TotalProjets = projets.Count,
+                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
+                ProjetsTermines = projets.Count(p => p.Statut == StatutProjet.Closed),
+                ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
+
+                RepartitionParUnite = projets
+                    .GroupBy(p => p.Unite)
+                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .ToList(),
+
+                RepartitionParDepartement = projets
+                    .GroupBy(p => p.Departement)
+                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .ToList()
+            };
+
+            return View(stats);
+        }
+
+
+        // Dashboard IT Manager
+        public async Task<IActionResult> DashboardItManager()
+        {
+            var projets = await _context.Projets
+                .Include(p => p.OwnerIt)
+                .ToListAsync();
+
+            var stats = new DashboardViewModel
+            {
+                TotalProjets = projets.Count,
+                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
+                ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
+
+                RepartitionParStatut = projets
+                    .GroupBy(p => p.Statut)
+                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .ToList(),
+
+                ChargeParOwnerIt = projets
+                    .Where(p => p.OwnerIt != null && p.Statut != StatutProjet.Closed)
+                    .GroupBy(p => p.OwnerIt!.Nom)
+                    .Select(g => new StatDonnee { Label = g.Key, Valeur = g.Count() })
+                    .ToList()
+            };
+
+            return View(stats);
+        }
+
+
+        // Details
         public async Task<IActionResult> Details(int id)
-{
-    var projet = await _context.Projets
-        .Include(p => p.OwnerIt)
-        .Include(p => p.PowerUser)
-        .FirstOrDefaultAsync(p => p.Id == id);
+        {
+            var projet = await _context.Projets
+                .Include(p => p.OwnerIt)
+                .Include(p => p.PowerUser)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-    if (projet == null)
-    {
-        return NotFound();
-    }
+            if (projet == null)
+            {
+                return NotFound();
+            }
 
-    var rfc = await _context.RFCs
-        .Include(r => r.Champion)
-        .Include(r => r.Sponsor)
-        .FirstOrDefaultAsync(r => r.ProjetId == id);
+            var rfc = await _context.RFCs
+                .Include(r => r.Champion)
+                .Include(r => r.Sponsor)
+                .FirstOrDefaultAsync(r => r.ProjetId == id);
 
-    ViewBag.RFC = rfc;
+            var actions = await _context.Actions
+                .Include(a => a.Responsable)
+                .Where(a => a.ProjetId == id)
+                .ToListAsync();
 
-    return View(projet);
-}
+            ViewBag.RFC = rfc;
+            ViewBag.Actions = actions;
 
-                                        //Create
-    [Authorize(Roles = "Administrateur,ChefDeProjet")]
+            return View(projet);
+        }
+
+
+        // Create
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -119,7 +186,7 @@ public async Task<IActionResult> Dashboard()
             return View(model);
         }
 
-    [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Create(ProjetCreateViewModel model)
         {
@@ -134,7 +201,7 @@ public async Task<IActionResult> Dashboard()
                 TicketId = model.TicketId,
                 Reference = model.Reference,
                 Nom = model.Nom,
-               Description = model.Description ?? string.Empty,
+                Description = model.Description ?? string.Empty,
                 Unite = model.Unite,
                 Departement = model.Departement,
                 Type = model.Type,
@@ -153,149 +220,149 @@ public async Task<IActionResult> Dashboard()
         }
 
 
-                                        //Edit
-    [Authorize(Roles = "Administrateur,ChefDeProjet")]
-    [HttpGet]
-public async Task<IActionResult> Edit(int id)
-{
-    var projet = await _context.Projets.FindAsync(id);
-    if (projet == null)
-    {
-        return NotFound();
-    }
+        // Edit
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var projet = await _context.Projets.FindAsync(id);
+            if (projet == null)
+            {
+                return NotFound();
+            }
 
-    var model = new ProjetEditViewModel
-    {
-        Id = projet.Id,
-        TicketId = projet.TicketId,
-        Reference = projet.Reference,
-        Nom = projet.Nom,
-        Description = projet.Description,
-        Unite = projet.Unite,
-        Departement = projet.Departement,
-        Type = projet.Type,
-        Plateforme = projet.Plateforme,
-        Statut = projet.Statut,
-        Priorite = projet.Priorite,
-        Deadline = projet.Deadline,
-        PourcentageAvancement = projet.PourcentageAvancement,
-        OwnerItId = projet.OwnerItId,
-        PowerUserId = projet.PowerUserId,
-        UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync()
-    };
+            var model = new ProjetEditViewModel
+            {
+                Id = projet.Id,
+                TicketId = projet.TicketId,
+                Reference = projet.Reference,
+                Nom = projet.Nom,
+                Description = projet.Description,
+                Unite = projet.Unite,
+                Departement = projet.Departement,
+                Type = projet.Type,
+                Plateforme = projet.Plateforme,
+                Statut = projet.Statut,
+                Priorite = projet.Priorite,
+                Deadline = projet.Deadline,
+                PourcentageAvancement = projet.PourcentageAvancement,
+                OwnerItId = projet.OwnerItId,
+                PowerUserId = projet.PowerUserId,
+                UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync()
+            };
 
-    return View(model);
-}
+            return View(model);
+        }
 
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProjetEditViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync();
+                return View(model);
+            }
 
-[Authorize(Roles = "Administrateur,ChefDeProjet")]
-[HttpPost]
-public async Task<IActionResult> Edit(ProjetEditViewModel model)
-{
-    if (!ModelState.IsValid)
-    {
-        model.UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync();
-        return View(model);
-    }
+            var projet = await _context.Projets.FindAsync(model.Id);
+            if (projet == null)
+            {
+                return NotFound();
+            }
 
-    var projet = await _context.Projets.FindAsync(model.Id);
-    if (projet == null)
-    {
-        return NotFound();
-    }
+            projet.TicketId = model.TicketId;
+            projet.Reference = model.Reference;
+            projet.Nom = model.Nom;
+            projet.Description = model.Description ?? string.Empty;
+            projet.Unite = model.Unite;
+            projet.Departement = model.Departement;
+            projet.Type = model.Type;
+            projet.Plateforme = model.Plateforme;
+            projet.StatutPrecedent = projet.Statut;
+            projet.Statut = model.Statut;
+            projet.Priorite = model.Priorite;
+            projet.Deadline = model.Deadline;
+            projet.PourcentageAvancement = model.PourcentageAvancement;
+            projet.OwnerItId = model.OwnerItId;
+            projet.PowerUserId = model.PowerUserId;
 
-    projet.TicketId = model.TicketId;
-    projet.Reference = model.Reference;
-    projet.Nom = model.Nom;
-  projet.Description = model.Description ?? string.Empty;
-    projet.Unite = model.Unite;
-    projet.Departement = model.Departement;
-    projet.Type = model.Type;
-    projet.Plateforme = model.Plateforme;
-    projet.StatutPrecedent = projet.Statut;
-    projet.Statut = model.Statut;
-    projet.Priorite = model.Priorite;
-    projet.Deadline = model.Deadline;
-    projet.PourcentageAvancement = model.PourcentageAvancement;
-    projet.OwnerItId = model.OwnerItId;
-    projet.PowerUserId = model.PowerUserId;
+            await _context.SaveChangesAsync();
 
-    await _context.SaveChangesAsync();
-
-    return RedirectToAction("Index");
-}
-
-                                            // Changer le Statut
-[Authorize(Roles = "Administrateur,ChefDeProjet")]
-[HttpGet]
-public async Task<IActionResult> ChangerStatut(int id)
-{
-    var projet = await _context.Projets.FindAsync(id);
-    if (projet == null)
-    {
-        return NotFound();
-    }
-
-    ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
-
-    return View(projet);
-}
-
-[Authorize(Roles = "Administrateur,ChefDeProjet")]
-[HttpPost]
-public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatut)
-{
-    var projet = await _context.Projets.FindAsync(id);
-    if (projet == null)
-    {
-        return NotFound();
-    }
-
-    var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
-
-    if (!transitionsAutorisees.Contains(nouveauStatut))
-    {
-        TempData["Erreur"] = "Transition de statut non autorisée.";
-        return RedirectToAction("ChangerStatut", new { id });
-    }
-
-    projet.StatutPrecedent = projet.Statut;
-    projet.Statut = nouveauStatut;
-    await _context.SaveChangesAsync();
-
-    return RedirectToAction("Index");
-}
+            return RedirectToAction("Index");
+        }
 
 
-                                            //Delete
-[Authorize(Roles = "Administrateur")]
-[HttpGet]
-public async Task<IActionResult> Delete(int id)
-{
-    var projet = await _context.Projets
-        .Include(p => p.OwnerIt)
-        .FirstOrDefaultAsync(p => p.Id == id);
+        // Changer statut
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [HttpGet]
+        public async Task<IActionResult> ChangerStatut(int id)
+        {
+            var projet = await _context.Projets.FindAsync(id);
+            if (projet == null)
+            {
+                return NotFound();
+            }
 
-    if (projet == null)
-    {
-        return NotFound();
-    }
+            ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
 
-    return View(projet);
-}
+            return View(projet);
+        }
 
-[Authorize(Roles = "Administrateur")]
-[HttpPost, ActionName("Delete")]
-public async Task<IActionResult> DeleteConfirmed(int id)
-{
-    var projet = await _context.Projets.FindAsync(id);
-    if (projet != null)
-    {
-        _context.Projets.Remove(projet);
-        await _context.SaveChangesAsync();
-    }
+        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [HttpPost]
+        public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatut)
+        {
+            var projet = await _context.Projets.FindAsync(id);
+            if (projet == null)
+            {
+                return NotFound();
+            }
 
-    return RedirectToAction("Index");
-}
+            var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
+
+            if (!transitionsAutorisees.Contains(nouveauStatut))
+            {
+                TempData["Erreur"] = "Transition de statut non autorisée.";
+                return RedirectToAction("ChangerStatut", new { id });
+            }
+
+            projet.StatutPrecedent = projet.Statut;
+            projet.Statut = nouveauStatut;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+
+        // Delete
+        [Authorize(Roles = "Administrateur")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var projet = await _context.Projets
+                .Include(p => p.OwnerIt)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (projet == null)
+            {
+                return NotFound();
+            }
+
+            return View(projet);
+        }
+
+        [Authorize(Roles = "Administrateur")]
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var projet = await _context.Projets.FindAsync(id);
+            if (projet != null)
+            {
+                _context.Projets.Remove(projet);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace GestionProjetSocota.ViewModels
 
         public List<StatDonnee> RepartitionParStatut { get; set; } = new();
         public List<StatDonnee> RepartitionParUnite { get; set; } = new();
+        public List<StatDonnee> RepartitionParDepartement { get; set; } = new();
+        public List<StatDonnee> ChargeParOwnerIt { get; set; } = new();
     }
 
     public class StatDonnee
