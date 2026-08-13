@@ -1,0 +1,40 @@
+@model GestionProjetSocota.Models.Projet
+
+<div style="padding:20px; max-width:500px;">
+    <h2 style="color:#155D15;">Changer le statut</h2>
+
+    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px; margin-bottom:16px;">
+        <p><b>Projet :</b> @Model.Nom</p>
+        <p><b>Type :</b> @Model.Type</p>
+        <p><b>Statut actuel :</b> <span style="background:#E6F4E6; color:#155D15; padding:3px 10px; border-radius:6px;">@Model.Statut</span></p>
+    </div>
+
+    @if (TempData["Erreur"] != null)
+    {
+        <p style="color:red; font-size:13px;">@TempData["Erreur"]</p>
+    }
+
+    <form asp-action="ChangerStatut" method="post">
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <label>Nouveau statut</label>
+        <select name="nouveauStatut" style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px;">
+            @{
+                var transitions = ViewBag.TransitionsPossibles as List<GestionProjetSocota.Models.StatutProjet>;
+            }
+            @if (transitions != null && transitions.Any())
+            {
+                @foreach (var statut in transitions)
+                {
+                    <option value="@statut">@statut</option>
+                }
+            }
+            else
+            {
+                <option disabled>Aucune transition possible</option>
+            }
+        </select>
+
+        <button type="submit" style="margin-top:16px; width:100%; padding:10px; border:none; border-radius:8px; background:#228B22; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Valider le changement</button>
+    </form>
+</div>

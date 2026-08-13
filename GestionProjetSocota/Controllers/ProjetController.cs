@@ -4,17 +4,20 @@ using GestionProjetSocota.Data;
 using GestionProjetSocota.Models;
 using GestionProjetSocota.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using GestionProjetSocota.Services;
 
 namespace GestionProjetSocota.Controllers
 {
     public class ProjetController : Controller
     {
-        private readonly ApplicationDbContext _context;
+       private readonly ApplicationDbContext _context;
+private readonly WorkflowService _workflowService;
 
-        public ProjetController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+public ProjetController(ApplicationDbContext context, WorkflowService workflowService)
+{
+    _context = context;
+    _workflowService = workflowService;
+}
 
         public async Task<IActionResult> Index()
         {
@@ -138,6 +141,46 @@ public async Task<IActionResult> Edit(ProjetEditViewModel model)
     projet.OwnerItId = model.OwnerItId;
     projet.PowerUserId = model.PowerUserId;
 
+    await _context.SaveChangesAsync();
+
+    return RedirectToAction("Index");
+}
+
+[Authorize(Roles = "Administrateur,ChefDeProjet")]
+[HttpGet]
+public async Task<IActionResult> ChangerStatut(int id)
+{
+    var projet = await _context.Projets.FindAsync(id);
+    if (projet == null)
+    {
+        return NotFound();
+    }
+
+    ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.Type);
+
+    return View(projet);
+}
+
+[Authorize(Roles = "Administrateur,ChefDeProjet")]
+[HttpPost]
+public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatut)
+{
+    var projet = await _context.Projets.FindAsync(id);
+    if (projet == null)
+    {
+        return NotFound();
+    }
+
+    var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.Type);
+
+    if (!transitionsAutorisees.Contains(nouveauStatut))
+    {
+        TempData["Erreur"] = "Transition de statut non autorisée.";
+        return RedirectToAction("ChangerStatut", new { id });
+    }
+
+    projet.StatutPrecedent = projet.Statut;
+    projet.Statut = nouveauStatut;
     await _context.SaveChangesAsync();
 
     return RedirectToAction("Index");

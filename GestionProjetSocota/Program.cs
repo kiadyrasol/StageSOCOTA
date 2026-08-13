@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using GestionProjetSocota.Data;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using GestionProjetSocota.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<WorkflowService>();
 
 var app = builder.Build();
 

@@ -51,8 +51,18 @@
   en rôle Administrateur.
 
 ================================================================================
-                          PROCHAINES ÉTAPES PRÉVUES
+#Jour 2 (suite) - Module 2 Workflow (13/08/2026)
 ================================================================================
-1. Module 2 (Workflow) : modélisation des transitions de statut (branches
-   in-house et outsourced), interface de changement de statut, historisation
-   via StatutPrecedent.
+
+1. MODULE 2 - WORKFLOW PROJET
+--------------------------------------------------------------------------------
+- Création de 'WorkflowService.cs' : logique métier centralisant les transitions
+  de statut autorisées, avec 2 branches distinctes (In-house / Outsourced) selon
+  le type de projet.
+- Ajout de l'action 'ChangerStatut' (GET/POST) dans 'ProjetController.cs',
+  avec vérification côté serveur des transitions autorisées (sécurité : la
+  validation ne repose jamais uniquement sur l'interface).
+- Statuts spéciaux 'Suspendu' et 'Cancelled' accessibles depuis tout statut actif.
+- Historisation automatique via 'StatutPrecedent' à chaque changement.
+- Testé : divergence confirmée entre branches In-house et Outsourced après
+  'RFCApproved' (Analyse vs Prospection).
