@@ -19,6 +19,7 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
     _workflowService = workflowService;
 }
 
+                                        //Index
         public async Task<IActionResult> Index()
         {
             var projets = await _context.Projets
@@ -29,6 +30,60 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
             return View(projets);
         }
 
+                                        //Kanban
+            public async Task<IActionResult> Kanban()
+{
+    var projets = await _context.Projets
+        .Include(p => p.OwnerIt)
+        .ToListAsync();
+
+    var statutsAffiches = new List<StatutProjet>
+    {
+        StatutProjet.WaitingRFC,
+        StatutProjet.RFCApproved,
+        StatutProjet.Analyse,
+        StatutProjet.DevStarted,
+        StatutProjet.Testing,
+        StatutProjet.Debugging,
+        StatutProjet.Formation,
+        StatutProjet.GoLive,
+        StatutProjet.Support,
+        StatutProjet.Closed
+    };
+
+    ViewBag.StatutsAffiches = statutsAffiches;
+
+    return View(projets);
+}
+
+                                        //Dashboard
+public async Task<IActionResult> Dashboard()
+{
+    var projets = await _context.Projets.ToListAsync();
+
+    var stats = new DashboardViewModel
+    {
+        TotalProjets = projets.Count,
+        ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
+        ProjetsTermines = projets.Count(p => p.Statut == StatutProjet.Closed),
+        ProjetsSuspendus = projets.Count(p => p.Statut == StatutProjet.Suspendu),
+        ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
+
+        RepartitionParStatut = projets
+            .GroupBy(p => p.Statut)
+            .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+            .ToList(),
+
+        RepartitionParUnite = projets
+            .GroupBy(p => p.Unite)
+            .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+            .ToList()
+    };
+
+    return View(stats);
+}
+
+                                        //Details
         public async Task<IActionResult> Details(int id)
 {
     var projet = await _context.Projets
@@ -51,6 +106,7 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
     return View(projet);
 }
 
+                                        //Create
     [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -97,6 +153,7 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
         }
 
 
+                                        //Edit
     [Authorize(Roles = "Administrateur,ChefDeProjet")]
     [HttpGet]
 public async Task<IActionResult> Edit(int id)
@@ -168,6 +225,7 @@ public async Task<IActionResult> Edit(ProjetEditViewModel model)
     return RedirectToAction("Index");
 }
 
+                                            // Changer le Statut
 [Authorize(Roles = "Administrateur,ChefDeProjet")]
 [HttpGet]
 public async Task<IActionResult> ChangerStatut(int id)
@@ -209,6 +267,7 @@ public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatu
 }
 
 
+                                            //Delete
 [Authorize(Roles = "Administrateur")]
 [HttpGet]
 public async Task<IActionResult> Delete(int id)

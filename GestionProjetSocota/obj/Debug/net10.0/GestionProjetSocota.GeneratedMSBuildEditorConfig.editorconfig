@@ -46,6 +46,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XERhc2hib2FyZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -60,6 +64,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Kanban.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEthbmJhbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/RFC/Create.cshtml]

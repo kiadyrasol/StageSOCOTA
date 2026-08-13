@@ -1,0 +1,31 @@
+@model List<GestionProjetSocota.Models.Projet>
+@{
+    var statuts = ViewBag.StatutsAffiches as List<GestionProjetSocota.Models.StatutProjet>;
+}
+
+<div style="padding:20px;">
+    <h2 style="color:#155D15; margin-bottom:18px;">Kanban</h2>
+
+    <div style="display:flex; gap:12px; overflow-x:auto;">
+        @foreach (var statut in statuts!)
+        {
+            var projetsDuStatut = Model.Where(p => p.Statut == statut).ToList();
+
+            <div style="min-width:220px; background:#FAFAF8; border-radius:10px; padding:10px; flex-shrink:0;">
+                <div style="font-size:13px; font-weight:600; margin-bottom:10px; display:flex; justify-content:space-between;">
+                    <span>@statut</span>
+                    <span style="background:#E1E0DB; color:#5F5E5A; font-size:11px; padding:1px 7px; border-radius:10px;">@projetsDuStatut.Count</span>
+                </div>
+
+                @foreach (var projet in projetsDuStatut)
+                {
+                    <a href="/Projet/Details/@projet.Id" style="display:block; background:#fff; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:12px; text-decoration:none; color:#2C2C2A;">
+                        <div style="font-weight:600; margin-bottom:4px;">@projet.Nom</div>
+                        <div style="color:#5F5E5A;">@projet.TicketId</div>
+                        <div style="color:#5F5E5A;">@(projet.OwnerIt?.Nom ?? "-")</div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,56 @@
+@model GestionProjetSocota.ViewModels.DashboardViewModel
+
+<div style="padding:20px;">
+    <h2 style="color:#155D15; margin-bottom:18px;">Dashboard Exécutif</h2>
+
+    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; margin-bottom:24px;">
+        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
+            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Total projets</p>
+            <p style="font-size:22px; font-weight:700; margin:0;">@Model.TotalProjets</p>
+        </div>
+        <div style="background:#E6F4E6; border-radius:10px; padding:14px;">
+            <p style="font-size:12px; color:#155D15; margin:0 0 6px;">Actifs</p>
+            <p style="font-size:22px; font-weight:700; margin:0; color:#155D15;">@Model.ProjetsActifs</p>
+        </div>
+        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
+            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Terminés</p>
+            <p style="font-size:22px; font-weight:700; margin:0;">@Model.ProjetsTermines</p>
+        </div>
+        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
+            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Suspendus</p>
+            <p style="font-size:22px; font-weight:700; margin:0;">@Model.ProjetsSuspendus</p>
+        </div>
+        <div style="background:#FDEAEA; border-radius:10px; padding:14px;">
+            <p style="font-size:12px; color:#a12020; margin:0 0 6px;">En retard</p>
+            <p style="font-size:22px; font-weight:700; margin:0; color:#a12020;">@Model.ProjetsEnRetard</p>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:16px;">
+        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
+            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par statut</p>
+            <canvas id="chartStatut"></canvas>
+        </div>
+        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
+            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par unité</p>
+            <canvas id="chartUnite"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+    const statutLabels = @Html.Raw(Json.Serialize(Model.RepartitionParStatut.Select(s => s.Label)));
+    const statutValeurs = @Html.Raw(Json.Serialize(Model.RepartitionParStatut.Select(s => s.Valeur)));
+
+    new Chart(document.getElementById('chartStatut'), {
+        type: 'bar',
+        data: {
+            labels: statutLabels,
+            datasets: [{ data: statutValeurs, backgroundColor: '#228B22' }]
+        },
+        options: { plugins: { legend: { display: false } } }
+    });
+
+    const uniteLabels = @Html.Raw(Json.Serialize(Model.RepartitionParUnite.Select(u => u.Label)));
+    const uniteValeurs = @Html.Raw(Json.Serialize(Model.RepartitionParUnite.Select(u => u.Valeur)));

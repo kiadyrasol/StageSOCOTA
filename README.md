@@ -33,6 +33,9 @@
 - Creation du commit selon les normes Conventional Commits.
 - Marquage de la version v1.1.0 (version mineure validant le Module 1 et la sécurité AD).
 
+
+
+
 ================================================================================
 #Jour 2 (13/08/2026)
 ================================================================================
@@ -90,3 +93,18 @@
   avancé au-delà de RFCApproved (évite les incohérences de rollback).
 - Décision de périmètre : le projet vise désormais l'intégralité du cahier des
   charges (modules secondaires et bonus inclus), pas seulement le MVP.
+
+  ================================================================================
+#Jour 2 (suite) - Modules 4 et 5 (13/08/2026)
+================================================================================
+
+1. MODULE 4 - KANBAN
+--------------------------------------------------------------------------------
+- Vue en colonnes par statut (branche In-house comme référence d'affichage),
+  cartes cliquables menant vers Details.
+
+2. MODULE 5 - DASHBOARD EXÉCUTIF
+--------------------------------------------------------------------------------
+- KPIs : total, actifs, terminés, suspendus, en retard.
+- Graphiques ChartJS : répartition par statut (barres), par unité (anneau).
+- DashboardViewModel avec regroupement via GroupBy.
