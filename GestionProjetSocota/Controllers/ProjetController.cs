@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using GestionProjetSocota.Data;
 using GestionProjetSocota.Models;
 using GestionProjetSocota.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GestionProjetSocota.Controllers
 {
@@ -25,6 +26,7 @@ namespace GestionProjetSocota.Controllers
             return View(projets);
         }
 
+    [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -36,6 +38,7 @@ namespace GestionProjetSocota.Controllers
             return View(model);
         }
 
+    [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Create(ProjetCreateViewModel model)
         {
@@ -68,7 +71,9 @@ namespace GestionProjetSocota.Controllers
             return RedirectToAction("Index");
         }
 
-                [HttpGet]
+
+    [Authorize(Roles = "Administrateur,ChefDeProjet")]
+    [HttpGet]
 public async Task<IActionResult> Edit(int id)
 {
     var projet = await _context.Projets.FindAsync(id);
@@ -100,6 +105,8 @@ public async Task<IActionResult> Edit(int id)
     return View(model);
 }
 
+
+[Authorize(Roles = "Administrateur,ChefDeProjet")]
 [HttpPost]
 public async Task<IActionResult> Edit(ProjetEditViewModel model)
 {
@@ -136,6 +143,8 @@ public async Task<IActionResult> Edit(ProjetEditViewModel model)
     return RedirectToAction("Index");
 }
 
+
+[Authorize(Roles = "Administrateur")]
 [HttpGet]
 public async Task<IActionResult> Delete(int id)
 {
@@ -151,6 +160,7 @@ public async Task<IActionResult> Delete(int id)
     return View(projet);
 }
 
+[Authorize(Roles = "Administrateur")]
 [HttpPost, ActionName("Delete")]
 public async Task<IActionResult> DeleteConfirmed(int id)
 {

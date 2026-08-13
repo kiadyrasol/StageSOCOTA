@@ -29,9 +29,10 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseMiddleware<GestionProjetSocota.Middlewares.SyncUtilisateurMiddleware>();
+
+app.UseAuthorization();
 
 app.MapStaticAssets();
 

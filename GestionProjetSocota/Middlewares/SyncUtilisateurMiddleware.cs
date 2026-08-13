@@ -1,6 +1,7 @@
 using GestionProjetSocota.Data;
 using GestionProjetSocota.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace GestionProjetSocota.Middlewares
 {
@@ -19,14 +20,14 @@ namespace GestionProjetSocota.Middlewares
 
             if (!string.IsNullOrEmpty(nomAD))
             {
-                var utilisateurExiste = await dbContext.Utilisateurs
-                    .AnyAsync(u => u.NomADUtilisateur == nomAD);
+                var utilisateur = await dbContext.Utilisateurs
+                    .FirstOrDefaultAsync(u => u.NomADUtilisateur == nomAD);
 
-                if (!utilisateurExiste)
+                if (utilisateur == null)
                 {
                     var nomAffiche = nomAD.Contains('\\') ? nomAD.Split('\\')[1] : nomAD;
 
-                    var nouvelUtilisateur = new Utilisateur
+                    utilisateur = new Utilisateur
                     {
                         NomADUtilisateur = nomAD,
                         Nom = nomAffiche,
@@ -34,10 +35,29 @@ namespace GestionProjetSocota.Middlewares
                         Role = RoleUtilisateur.Lecteur
                     };
 
-                    dbContext.Utilisateurs.Add(nouvelUtilisateur);
+                    dbContext.Utilisateurs.Add(utilisateur);
                     await dbContext.SaveChangesAsync();
                 }
-            }
+
+                    var identity = context.User!.Identity as ClaimsIdentity;
+
+if (identity != null)
+{
+    var claims = new List<Claim>(identity.Claims)
+    {
+        new Claim(ClaimTypes.Role, utilisateur.Role.ToString())
+    };
+
+    var nouvelleIdentity = new ClaimsIdentity(
+        claims,
+        identity.AuthenticationType,
+        identity.NameClaimType,
+        ClaimTypes.Role); // force explicitement le bon type pour les rôles
+
+    context.User = new ClaimsPrincipal(nouvelleIdentity);
+}
+
+                }
 
             await _next(context);
         }
