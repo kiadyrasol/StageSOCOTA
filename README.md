@@ -66,3 +66,9 @@
 - Historisation automatique via 'StatutPrecedent' à chaque changement.
 - Testé : divergence confirmée entre branches In-house et Outsourced après
   'RFCApproved' (Analyse vs Prospection).
+
+  2. AMÉLIORATION - RÉACTIVATION EXPLICITE
+--------------------------------------------------------------------------------
+- Ajout d'un bouton "Réactiver le projet" dédié pour les statuts Suspendu/Cancelled,
+  pré-rempli avec le StatutPrecedent (au lieu d'un menu déroulant générique à une
+  seule option).

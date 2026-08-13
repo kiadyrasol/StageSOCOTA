@@ -32,16 +32,23 @@ namespace GestionProjetSocota.Services
             { StatutProjet.ApresVente, new() { StatutProjet.Closed } },
         };
 
-        public List<StatutProjet> GetTransitionsPossibles(StatutProjet statutActuel, TypeProjet type)
+        public List<StatutProjet> GetTransitionsPossibles(StatutProjet statutActuel, StatutProjet statutPrecedent, TypeProjet type)
         {
+            // Cas particulier : un projet suspendu ou annulé ne peut que redevenir actif,
+            // en reprenant exactement le statut où il en était avant.
+            if (statutActuel == StatutProjet.Suspendu || statutActuel == StatutProjet.Cancelled)
+            {
+                return new List<StatutProjet> { statutPrecedent };
+            }
+
             var table = type == TypeProjet.InHouse ? TransitionsInHouse : TransitionsOutsourced;
 
             var transitions = table.TryGetValue(statutActuel, out var liste)
                 ? new List<StatutProjet>(liste)
                 : new List<StatutProjet>();
 
-            //depuis n'importe quel statut actif, on peut toujours suspendre ou annuler.
-            if (statutActuel != StatutProjet.Closed && statutActuel != StatutProjet.Cancelled)
+            // Depuis n'importe quel statut actif, on peut toujours suspendre ou annuler.
+            if (statutActuel != StatutProjet.Closed)
             {
                 transitions.Add(StatutProjet.Suspendu);
                 transitions.Add(StatutProjet.Cancelled);

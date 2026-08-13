@@ -156,7 +156,7 @@ public async Task<IActionResult> ChangerStatut(int id)
         return NotFound();
     }
 
-    ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.Type);
+    ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
 
     return View(projet);
 }
@@ -171,7 +171,7 @@ public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatu
         return NotFound();
     }
 
-    var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.Type);
+    var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
 
     if (!transitionsAutorisees.Contains(nouveauStatut))
     {
