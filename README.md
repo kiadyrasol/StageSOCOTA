@@ -72,3 +72,21 @@
 - Ajout d'un bouton "Réactiver le projet" dédié pour les statuts Suspendu/Cancelled,
   pré-rempli avec le StatutPrecedent (au lieu d'un menu déroulant générique à une
   seule option).
+
+  ================================================================================
+#Jour 2 (suite) - Module 3 Gestion RFC (13/08/2026)
+================================================================================
+
+1. MODULE 3 - GESTION RFC
+--------------------------------------------------------------------------------
+- Création de RFCController.cs : Create (lié à un projet), Valider,
+  AnnulerValidation.
+- Ajout de ProjetController.Details : page centrale affichant les infos d'un
+  projet + son RFC associé (base pour les futurs modules Actions/Commentaires/
+  Pièces jointes).
+- Lien Workflow ↔ RFC : la validation d'un RFC fait automatiquement passer le
+  projet de WaitingRFC à RFCApproved.
+- Annulation de validation possible uniquement si le projet n'a pas encore
+  avancé au-delà de RFCApproved (évite les incohérences de rollback).
+- Décision de périmètre : le projet vise désormais l'intégralité du cahier des
+  charges (modules secondaires et bonus inclus), pas seulement le MVP.

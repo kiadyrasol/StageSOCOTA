@@ -2,14 +2,15 @@
 classDiagram
     class Utilisateur {
         +int Id
+        +string NomADUtilisateur
         +string Nom
         +string Email
-        +string Role
+        +RoleUtilisateur Role
     }
 
     class Projet {
         +int Id
-        +string Ticket_Id
+        +string TicketId
         +string Nom
         +string Description
         +Unite Unite
@@ -17,43 +18,53 @@ classDiagram
         +TypeProjet Type
         +Plateforme Plateforme
         +StatutProjet Statut
-        +int Pourcentage_Avancement
+        +StatutProjet StatutPrecedent
+        +int PourcentageAvancement
         +DateTime Deadline
     }
 
     class RFC {
         +int Id
-        +string Business_Case
-        +decimal Roi_Estime
-        +string Gains_Attendus
+        +string BusinessCase
+        +decimal RoiEstime
+        +string GainsAttendus
         +string Priorite
+        +bool EstValide
     }
 
-    class Action {
+    class ActionProjet {
         +int Id
         +string Description
-        +DateTime Date_Echeance
-        +string Statut
+        +DateTime DateEcheance
+        +StatutAction Statut
     }
 
     class Commentaire {
         +int Id
         +string Contenu
-        +DateTime Date_Publication
+        +DateTime DatePublication
     }
 
     class PieceJointe {
         +int Id
-        +string Nom_Fichier
-        +string Chemin_Stockage
-        +string Type
+        +string NomFichier
+        +string CheminStockage
+        +TypePieceJointe Type
+    }
+
+    class WorkflowService {
+        +GetTransitionsPossibles(statut, statutPrecedent, type) List
     }
 
     Utilisateur "1" --> "*" Projet : OwnerIT gère
     Utilisateur "1" --> "*" Projet : PowerUser suit
     Projet "1" --> "0..1" RFC : associé à
-    Projet "1" --> "*" Action : contient
+    RFC "*" --> "1" Utilisateur : Champion
+    RFC "*" --> "1" Utilisateur : Sponsor
+    Projet "1" --> "*" ActionProjet : contient
+    ActionProjet "*" --> "1" Utilisateur : Responsable
     Projet "1" --> "*" Commentaire : reçoit
+    Commentaire "*" --> "1" Utilisateur : Auteur
     Projet "1" --> "*" PieceJointe : contient
-    Utilisateur "1" --> "*" Commentaire : rédige
+    WorkflowService ..> Projet : gère les transitions
 ```

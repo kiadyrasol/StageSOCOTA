@@ -50,12 +50,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/RFC/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUkZDXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Shared/Error.cshtml]

@@ -29,6 +29,28 @@ public ProjetController(ApplicationDbContext context, WorkflowService workflowSe
             return View(projets);
         }
 
+        public async Task<IActionResult> Details(int id)
+{
+    var projet = await _context.Projets
+        .Include(p => p.OwnerIt)
+        .Include(p => p.PowerUser)
+        .FirstOrDefaultAsync(p => p.Id == id);
+
+    if (projet == null)
+    {
+        return NotFound();
+    }
+
+    var rfc = await _context.RFCs
+        .Include(r => r.Champion)
+        .Include(r => r.Sponsor)
+        .FirstOrDefaultAsync(r => r.ProjetId == id);
+
+    ViewBag.RFC = rfc;
+
+    return View(projet);
+}
+
     [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> Create()

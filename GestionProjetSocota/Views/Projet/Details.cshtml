@@ -1,0 +1,58 @@
+@model GestionProjetSocota.Models.Projet
+@{
+    var rfc = ViewBag.RFC as GestionProjetSocota.Models.RFC;
+}
+
+<div style="padding:20px; max-width:700px;">
+    <h2 style="color:#155D15;">@Model.Nom</h2>
+
+    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px; margin-bottom:20px;">
+        <p><b>Ticket ID :</b> @Model.TicketId</p>
+        <p><b>Unité :</b> @Model.Unite &nbsp;|&nbsp; <b>Département :</b> @Model.Departement</p>
+        <p><b>Type :</b> @Model.Type &nbsp;|&nbsp; <b>Plateforme :</b> @Model.Plateforme</p>
+        <p><b>Statut :</b> <span style="background:#E6F4E6; color:#155D15; padding:3px 10px; border-radius:6px;">@Model.Statut</span></p>
+        <p><b>Owner IT :</b> @(Model.OwnerIt?.Nom ?? "-") &nbsp;|&nbsp; <b>Power User :</b> @(Model.PowerUser?.Nom ?? "-")</p>
+        <p><b>Avancement :</b> @Model.PourcentageAvancement%</p>
+    </div>
+
+    <h3 style="color:#155D15; font-size:16px;">RFC</h3>
+    @if (rfc == null)
+    {
+        <p style="color:#5F5E5A;">Aucun RFC pour ce projet.</p>
+        <a href="/RFC/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; display:inline-block;">+ Créer un RFC</a>
+    }
+    else
+    {
+        <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px;">
+            <p><b>Business Case :</b> @rfc.BusinessCase</p>
+            <p><b>ROI estimé :</b> @(rfc.RoiEstime?.ToString("N0") ?? "-")</p>
+            <p><b>Champion :</b> @(rfc.Champion?.Nom ?? "-") &nbsp;|&nbsp; <b>Sponsor :</b> @(rfc.Sponsor?.Nom ?? "-")</p>
+            <p><b>Statut :</b> @(rfc.EstValide ? "✅ Validé" : "⏳ En attente de validation")</p>
+
+           @if (TempData["Erreur"] != null)
+{
+    <p style="color:red; font-size:13px;">@TempData["Erreur"]</p>
+}
+
+@if (!rfc.EstValide)
+{
+    <form asp-controller="RFC" asp-action="Valider" method="post" style="margin-top:10px;">
+        <input type="hidden" name="id" value="@rfc.Id" />
+        <button type="submit" style="background:#228B22; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Valider ce RFC</button>
+    </form>
+}
+else
+{
+    <form asp-controller="RFC" asp-action="AnnulerValidation" method="post" style="margin-top:10px;">
+        <input type="hidden" name="id" value="@rfc.Id" />
+        <button type="submit" style="background:#a12020; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Annuler la validation</button>
+    </form>
+}
+
+        </div>
+    }
+
+    <div style="margin-top:20px;">
+        <a href="/Projet" style="color:#5F5E5A; text-decoration:none;">← Retour à la liste</a>
+    </div>
+</div>
