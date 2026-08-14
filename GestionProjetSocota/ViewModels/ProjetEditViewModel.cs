@@ -32,7 +32,7 @@ namespace GestionProjetSocota.ViewModels
         [Required]
         public StatutProjet Statut { get; set; }
 
-        public string Priorite { get; set; } = string.Empty;
+       public PrioriteProjet Priorite { get; set; }
         public DateTime? Deadline { get; set; }
         public int PourcentageAvancement { get; set; }
 

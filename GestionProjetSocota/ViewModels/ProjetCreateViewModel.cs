@@ -27,7 +27,7 @@ namespace GestionProjetSocota.ViewModels
         [Required]
         public Plateforme Plateforme { get; set; }
 
-        public string Priorite { get; set; } = string.Empty;
+      public PrioriteProjet Priorite { get; set; }
 
         public DateTime? Deadline { get; set; }
 

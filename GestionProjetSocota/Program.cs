@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using GestionProjetSocota.Data;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using GestionProjetSocota.Services;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 

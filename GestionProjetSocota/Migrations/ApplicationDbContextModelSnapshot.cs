@@ -129,6 +129,9 @@ namespace GestionProjetSocota.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateCreation")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DateDebut")
                         .HasColumnType("datetime2");
 
@@ -165,9 +168,8 @@ namespace GestionProjetSocota.Migrations
                     b.Property<int?>("PowerUserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Priorite")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Priorite")
+                        .HasColumnType("int");
 
                     b.Property<string>("Reference")
                         .IsRequired()

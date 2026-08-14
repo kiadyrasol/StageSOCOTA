@@ -1,0 +1,84 @@
+@model List<GestionProjetSocota.Models.Projet>
+@{
+    var utilisateurs = ViewBag.Utilisateurs as List<GestionProjetSocota.Models.Utilisateur>;
+}
+
+<div style="padding:20px;">
+    <h2 style="color:#155D15; margin-bottom:18px;">Recherche multicritères</h2>
+
+    <form method="get" asp-action="Recherche" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; background:#FAFAF8; padding:14px; border-radius:10px;">
+       
+        <div style="margin-bottom:16px;">
+    <a href="/Projet/ExporterExcel@(Context.Request.QueryString)" style="background:#228B22; color:#fff; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px; margin-right:8px;">Export Excel</a>
+    <a href="/Projet/ExporterPdf@(Context.Request.QueryString)" style="background:#155D15; color:#fff; padding:6px 14px; border-radius:6px; text-decoration:none; font-size:12px;">Export PDF</a>
+        </div>
+        
+        <select name="unite" style="padding:8px; border:1px solid #E1E0DB; border-radius:6px; font-size:13px;">
+            <option value="">Unité (toutes)</option>
+            @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.Unite>())
+            {
+                <option value="@v" selected="@(Context.Request.Query["unite"] == v.ToString())">@v</option>
+            }
+        </select>
+
+        <select name="departement" style="padding:8px; border:1px solid #E1E0DB; border-radius:6px; font-size:13px;">
+            <option value="">Département (tous)</option>
+            @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.Departement>())
+            {
+                <option value="@v" selected="@(Context.Request.Query["departement"] == v.ToString())">@v</option>
+            }
+        </select>
+
+        <select name="statut" style="padding:8px; border:1px solid #E1E0DB; border-radius:6px; font-size:13px;">
+            <option value="">Statut (tous)</option>
+            @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.StatutProjet>())
+            {
+                <option value="@v" selected="@(Context.Request.Query["statut"] == v.ToString())">@v</option>
+            }
+        </select>
+
+        <select name="type" style="padding:8px; border:1px solid #E1E0DB; border-radius:6px; font-size:13px;">
+            <option value="">Type (tous)</option>
+            @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.TypeProjet>())
+            {
+                <option value="@v" selected="@(Context.Request.Query["type"] == v.ToString())">@v</option>
+            }
+        </select>
+
+        <select name="ownerItId" style="padding:8px; border:1px solid #E1E0DB; border-radius:6px; font-size:13px;">
+            <option value="">Responsable IT (tous)</option>
+            @if (utilisateurs != null)
+            {
+                @foreach (var u in utilisateurs)
+                {
+                    <option value="@u.Id" selected="@(Context.Request.Query["ownerItId"] == u.Id.ToString())">@u.Nom</option>
+                }
+            }
+        </select>
+
+        <button type="submit" style="background:#228B22; color:#fff; border:none; padding:8px 18px; border-radius:6px; font-size:13px; cursor:pointer;">Filtrer</button>
+        <a href="/Projet/Recherche" style="align-self:center; color:#5F5E5A; font-size:13px; text-decoration:none;">Réinitialiser</a>
+    </form>
+
+    <p style="font-size:13px; color:#5F5E5A; margin-bottom:10px;">@Model.Count résultat(s)</p>
+
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <tr style="background:#E6F4E6; text-align:left;">
+            <th style="padding:10px;">Ticket ID</th>
+            <th style="padding:10px;">Nom</th>
+            <th style="padding:10px;">Unité</th>
+            <th style="padding:10px;">Statut</th>
+            <th style="padding:10px;">Owner IT</th>
+        </tr>
+        @foreach (var projet in Model)
+        {
+            <tr style="border-top:1px solid #E1E0DB;">
+                <td style="padding:10px;">@projet.TicketId</td>
+                <td style="padding:10px;"><a href="/Projet/Details/@projet.Id" style="color:#228B22; text-decoration:none;">@projet.Nom</a></td>
+                <td style="padding:10px;">@projet.Unite</td>
+                <td style="padding:10px;">@projet.Statut</td>
+                <td style="padding:10px;">@(projet.OwnerIt?.Nom ?? "-")</td>
+            </tr>
+        }
+    </table>
+</div>

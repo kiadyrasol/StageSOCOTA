@@ -70,7 +70,7 @@ namespace GestionProjetSocota.Controllers
 
 
         // Valider
-        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [Authorize(Roles = "Administrateur,ChefDeProjet,PowerUser")]
         [HttpPost]
         public async Task<IActionResult> Valider(int id)
         {
@@ -96,7 +96,7 @@ namespace GestionProjetSocota.Controllers
 
 
         // Annuler
-        [Authorize(Roles = "Administrateur,ChefDeProjet")]
+        [Authorize(Roles = "Administrateur,ChefDeProjet,PowerUser")]
         [HttpPost]
         public async Task<IActionResult> AnnulerValidation(int id)
         {

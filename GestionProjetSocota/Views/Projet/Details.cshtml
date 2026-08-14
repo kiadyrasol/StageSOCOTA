@@ -1,6 +1,9 @@
 @model GestionProjetSocota.Models.Projet
 @{
     var rfc = ViewBag.RFC as GestionProjetSocota.Models.RFC;
+    var actions = ViewBag.Actions as List<GestionProjetSocota.Models.ActionProjet>;
+    var piecesJointes = ViewBag.PiecesJointes as List<GestionProjetSocota.Models.PieceJointe>;
+    var commentaires = ViewBag.Commentaires as List<GestionProjetSocota.Models.Commentaire>;
 }
 
 <div style="padding:20px; max-width:700px;">
@@ -15,6 +18,8 @@
         <p><b>Avancement :</b> @Model.PourcentageAvancement%</p>
     </div>
 
+
+    <!-- RFC -->
     <h3 style="color:#155D15; font-size:16px;">RFC</h3>
     @if (rfc == null)
     {
@@ -29,70 +34,144 @@
             <p><b>Champion :</b> @(rfc.Champion?.Nom ?? "-") &nbsp;|&nbsp; <b>Sponsor :</b> @(rfc.Sponsor?.Nom ?? "-")</p>
             <p><b>Statut :</b> @(rfc.EstValide ? "✅ Validé" : "⏳ En attente de validation")</p>
 
-           @if (TempData["Erreur"] != null)
-{
-    <p style="color:red; font-size:13px;">@TempData["Erreur"]</p>
-}
+            @if (TempData["Erreur"] != null)
+            {
+                <p style="color:red; font-size:13px;">@TempData["Erreur"]</p>
+            }
 
-@if (!rfc.EstValide)
-{
-    <form asp-controller="RFC" asp-action="Valider" method="post" style="margin-top:10px;">
-        <input type="hidden" name="id" value="@rfc.Id" />
-        <button type="submit" style="background:#228B22; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Valider ce RFC</button>
-    </form>
-}
-else
-{
-    <form asp-controller="RFC" asp-action="AnnulerValidation" method="post" style="margin-top:10px;">
-        <input type="hidden" name="id" value="@rfc.Id" />
-        <button type="submit" style="background:#a12020; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Annuler la validation</button>
-    </form>
-}
-
+            @if (!rfc.EstValide)
+            {
+                <form asp-controller="RFC" asp-action="Valider" method="post" style="margin-top:10px;">
+                    <input type="hidden" name="id" value="@rfc.Id" />
+                    <button type="submit" style="background:#228B22; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Valider ce RFC</button>
+                </form>
+            }
+            else
+            {
+                <form asp-controller="RFC" asp-action="AnnulerValidation" method="post" style="margin-top:10px;">
+                    <input type="hidden" name="id" value="@rfc.Id" />
+                    <button type="submit" style="background:#a12020; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Annuler la validation</button>
+                </form>
+            }
         </div>
     }
 
-<h3 style="color:#155D15; font-size:16px; margin-top:24px;">Actions</h3>
-<a href="/ActionProjet/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; display:inline-block; margin-bottom:10px;">+ Nouvelle action</a>
 
-@{
-    var actions = ViewBag.Actions as List<GestionProjetSocota.Models.ActionProjet>;
-}
-@if (actions != null && actions.Any())
-{
-    @foreach (var action in actions)
-{
-    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
-        <p style="margin:0 0 4px;">@action.Description</p>
-        <p style="margin:0 0 8px; color:#5F5E5A; font-size:12px;">
-            @(action.Responsable?.Nom ?? "-") · Échéance : @action.DateEcheance.ToString("dd/MM/yyyy") ·
-            <span style="background:@(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "#E6F4E6" : "#FFF3CD"); padding:2px 8px; border-radius:5px;">@action.Statut</span>
-        </p>
-        <div style="display:flex; gap:6px;">
-            @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
-            {
-                <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
-                    <input type="hidden" name="id" value="@action.Id" />
-                    <input type="hidden" name="nouveauStatut" value="Ongoing" />
-                    <button type="submit" style="background:#fff; border:1px solid #E1E0DB; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">En cours</button>
-                </form>
-            }
-            @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
-            {
-                <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
-                    <input type="hidden" name="id" value="@action.Id" />
-                    <input type="hidden" name="nouveauStatut" value="Closed" />
-                    <button type="submit" style="background:#228B22; border:none; color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Clôturer</button>
-                </form>
-            }
-            <form asp-controller="ActionProjet" asp-action="Delete" method="post">
-                <input type="hidden" name="id" value="@action.Id" />
-                <button type="submit" style="background:#fff; border:1px solid #a12020; color:#a12020; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Supprimer</button>
-            </form>
-        </div>
-    </div>
-}
-}
+    <!-- Actions -->
+    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Actions</h3>
+    <a href="/ActionProjet/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; display:inline-block; margin-bottom:10px;">+ Nouvelle action</a>
+
+    @if (actions != null && actions.Any())
+    {
+        @foreach (var action in actions)
+        {
+            <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
+                <p style="margin:0 0 4px;">@action.Description</p>
+                <p style="margin:0 0 8px; color:#5F5E5A; font-size:12px;">
+                    @(action.Responsable?.Nom ?? "-") · Échéance : @action.DateEcheance.ToString("dd/MM/yyyy") ·
+                    <span style="background:@(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "#E6F4E6" : "#FFF3CD"); padding:2px 8px; border-radius:5px;">@action.Statut</span>
+                </p>
+                <div style="display:flex; gap:6px;">
+                    @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
+                    {
+                        <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                            <input type="hidden" name="id" value="@action.Id" />
+                            <input type="hidden" name="nouveauStatut" value="Ongoing" />
+                            <button type="submit" style="background:#fff; border:1px solid #E1E0DB; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">En cours</button>
+                        </form>
+                    }
+                    @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
+                    {
+                        <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                            <input type="hidden" name="id" value="@action.Id" />
+                            <input type="hidden" name="nouveauStatut" value="Closed" />
+                            <button type="submit" style="background:#228B22; border:none; color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Clôturer</button>
+                        </form>
+                    }
+                    <form asp-controller="ActionProjet" asp-action="Delete" method="post">
+                        <input type="hidden" name="id" value="@action.Id" />
+                        <button type="submit" style="background:#fff; border:1px solid #a12020; color:#a12020; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p style="color:#5F5E5A; font-size:13px;">Aucune action pour ce projet.</p>
+    }
+
+
+    <!-- Pièces jointes -->
+    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Pièces jointes</h3>
+
+    <form asp-controller="PieceJointe" asp-action="Create" method="post" enctype="multipart/form-data" style="margin-bottom:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <input type="hidden" name="ProjetId" value="@Model.Id" />
+        <input type="file" name="Fichier" style="font-size:12px;" />
+        <select name="Type" style="padding:6px 10px; border:1px solid #E1E0DB; border-radius:6px; font-size:12px;">
+            <option value="RFC">RFC</option>
+            <option value="MOM">Compte-rendu (MOM)</option>
+            <option value="Analyse">Analyse</option>
+            <option value="CahierDesCharges">Cahier des charges</option>
+            <option value="CaptureEcran">Capture d'écran</option>
+            <option value="PlanDeTests">Plan de tests</option>
+        </select>
+        <button type="submit" style="background:#228B22; color:#fff; border:none; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer;">Importer</button>
+    </form>
+
+    @if (piecesJointes != null && piecesJointes.Any())
+    {
+        @foreach (var pj in piecesJointes)
+        {
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:13px;">
+                <a href="@pj.CheminStockage" target="_blank" style="color:#228B22; text-decoration:none;">@pj.NomFichier</a>
+                <div>
+                    <span style="color:#5F5E5A; font-size:11px; margin-right:10px;">@pj.Type · @pj.DateAjout.ToString("dd/MM/yyyy")</span>
+                    <form asp-controller="PieceJointe" asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@pj.Id" />
+                        <button type="submit" style="background:none; border:none; color:#a12020; font-size:11px; cursor:pointer;">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p style="color:#5F5E5A; font-size:13px;">Aucune pièce jointe pour ce projet.</p>
+    }
+
+
+    <!-- Commentaires -->
+    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Commentaires</h3>
+
+    <form asp-controller="Commentaire" asp-action="Create" method="post" style="margin-bottom:14px;">
+        <input type="hidden" name="ProjetId" value="@Model.Id" />
+        <textarea name="Contenu" placeholder="Ajouter un commentaire..." style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px; min-height:60px;"></textarea>
+        <button type="submit" style="margin-top:8px; background:#228B22; color:#fff; border:none; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer;">Publier</button>
+    </form>
+
+    @if (commentaires != null && commentaires.Any())
+    {
+        @foreach (var c in commentaires)
+        {
+            <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
+                <p style="margin:0 0 4px; font-weight:600;">@(c.Auteur?.Nom ?? "Utilisateur inconnu")</p>
+                <p style="margin:0 0 6px;">@c.Contenu</p>
+                <p style="margin:0; color:#5F5E5A; font-size:11px;">
+                    @c.DatePublication.ToString("dd/MM/yyyy HH:mm")
+                    <form asp-controller="Commentaire" asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@c.Id" />
+                        <button type="submit" style="background:none; border:none; color:#a12020; font-size:11px; cursor:pointer; padding:0; margin-left:8px;">Supprimer</button>
+                    </form>
+                </p>
+            </div>
+        }
+    }
+    else
+    {
+        <p style="color:#5F5E5A; font-size:13px;">Aucun commentaire pour ce projet.</p>
+    }
+
 
     <div style="margin-top:20px;">
         <a href="/Projet" style="color:#5F5E5A; text-decoration:none;">← Retour à la liste</a>

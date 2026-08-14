@@ -33,6 +33,9 @@
         <label style="display:block; margin-top:10px;">Plateforme</label>
         <select asp-for="Plateforme" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Plateforme>()" style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px;"></select>
 
+        <label style="display:block; margin-top:10px;">Priorité</label>
+        <select asp-for="Priorite" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()" style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px;"></select>
+
         <label style="display:block; margin-top:10px; font-weight:600; color:#155D15;">Statut</label>
         <select asp-for="Statut" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()" style="width:100%; padding:9px 11px; border:1px solid #228B22; border-radius:8px; font-size:13px;"></select>
 
@@ -41,12 +44,12 @@
 
         <label style="display:block; margin-top:10px;">Owner IT</label>
         <select asp-for="OwnerItId" asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))" style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px;">
-            <option value="">-- Aucun --</option>
+            <option value="">Aucun</option>
         </select>
 
         <label style="display:block; margin-top:10px;">Power User</label>
         <select asp-for="PowerUserId" asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))" style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px;">
-            <option value="">-- Aucun --</option>
+            <option value="">Aucun</option>
         </select>
 
         <label style="display:block; margin-top:10px;">Deadline</label>

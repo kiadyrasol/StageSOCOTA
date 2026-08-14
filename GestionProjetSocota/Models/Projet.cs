@@ -1,5 +1,12 @@
 namespace GestionProjetSocota.Models
 {
+    public enum PrioriteProjet
+{
+    Low,
+    Medium,
+    High
+}
+
     public enum Unite
     {
         CTN, SGL, CRE
@@ -50,7 +57,7 @@ namespace GestionProjetSocota.Models
         public int? PowerUserId { get; set; }
         public Utilisateur? PowerUser { get; set; }
 
-        public string Priorite { get; set; } = string.Empty;
+        public PrioriteProjet Priorite { get; set; } = PrioriteProjet.Medium;
         public string DevVolume { get; set; } = string.Empty;
 
         public DateTime? Deadline { get; set; }
@@ -59,5 +66,6 @@ namespace GestionProjetSocota.Models
 
         public int PourcentageAvancement { get; set; } = 0;
         public string Commentaire { get; set; } = string.Empty;
+        public DateTime DateCreation { get; set; } = DateTime.Now;
     }
 }
