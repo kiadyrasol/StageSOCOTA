@@ -22,6 +22,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<WorkflowService>();
+builder.Services.AddHttpClient<GeminiService>();
 
 
 var app = builder.Build();

@@ -11,15 +11,17 @@ using QuestPDF.Helpers;
 namespace GestionProjetSocota.Controllers
 {
     public class ProjetController : Controller
-    {
-        private readonly ApplicationDbContext _context;
-        private readonly WorkflowService _workflowService;
+{
+    private readonly ApplicationDbContext _context;
+    private readonly WorkflowService _workflowService;
+    private readonly GeminiService _geminiService;
 
-        public ProjetController(ApplicationDbContext context, WorkflowService workflowService)
-        {
-            _context = context;
-            _workflowService = workflowService;
-        }
+    public ProjetController(ApplicationDbContext context, WorkflowService workflowService, GeminiService geminiService)
+    {
+        _context = context;
+        _workflowService = workflowService;
+        _geminiService = geminiService;
+    }
 
 
         // Index
@@ -379,6 +381,54 @@ public async Task<IActionResult> ExporterExcel(Unite? unite, Departement? depart
 
             return View(projet);
         }
+
+
+                                        //Compte rendu
+        public async Task<IActionResult> GenererCompteRendu(int id)
+{
+    var projet = await _context.Projets
+        .Include(p => p.OwnerIt)
+        .FirstOrDefaultAsync(p => p.Id == id);
+
+    if (projet == null)
+    {
+        return NotFound();
+    }
+
+    var actions = await _context.Actions
+        .Where(a => a.ProjetId == id)
+        .ToListAsync();
+
+    var commentaires = await _context.Commentaires
+        .Include(c => c.Auteur)
+        .OrderByDescending(c => c.DatePublication)
+        .Where(c => c.ProjetId == id)
+        .Take(5)
+        .ToListAsync();
+
+    var prompt = $@"Rédige un compte-rendu professionnel et concis (en français) pour le projet suivant, destiné à un rapport de suivi interne.
+
+Nom du projet : {projet.Nom}
+Statut actuel : {projet.Statut}
+Avancement : {projet.PourcentageAvancement}%
+Responsable IT : {projet.OwnerIt?.Nom ?? "non assigné"}
+Deadline : {(projet.Deadline.HasValue ? projet.Deadline.Value.ToString("dd/MM/yyyy") : "non définie")}
+
+Actions en cours ({actions.Count}) :
+{string.Join("\n", actions.Select(a => $"- {a.Description} ({a.Statut})"))}
+
+Derniers commentaires :
+{string.Join("\n", commentaires.Select(c => $"- {c.Auteur?.Nom}: {c.Contenu}"))}
+
+Structure attendue : un paragraphe de résumé de la situation, suivi des points d'attention si nécessaire.";
+
+    var compteRendu = await _geminiService.GenererCompteRendu(prompt);
+
+    ViewBag.Projet = projet;
+    ViewBag.CompteRendu = compteRendu;
+
+    return View();
+}
 
 
         // Create

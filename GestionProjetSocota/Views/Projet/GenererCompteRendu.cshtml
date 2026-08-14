@@ -1,0 +1,18 @@
+@{
+    var projet = ViewBag.Projet as GestionProjetSocota.Models.Projet;
+    var compteRendu = ViewBag.CompteRendu as string;
+}
+
+<div style="padding:20px; max-width:700px;">
+    <h2 style="color:#155D15;">Compte-rendu généré par IA</h2>
+    <p style="color:#5F5E5A; font-size:13px; margin-bottom:16px;">Projet : <b>@projet?.Nom</b></p>
+
+    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:20px; white-space:pre-wrap; font-size:14px; line-height:1.6;">
+        @compteRendu
+    </div>
+
+    <div style="margin-top:16px; display:flex; gap:10px;">
+        <a href="/Projet/GenererCompteRendu/@projet?.Id" style="background:#228B22; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px;">Régénérer</a>
+        <a href="/Projet/Details/@projet?.Id" style="color:#5F5E5A; text-decoration:none; align-self:center; font-size:13px;">← Retour au projet</a>
+    </div>
+</div>
