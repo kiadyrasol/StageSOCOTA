@@ -5,12 +5,12 @@
 
 <h1 class="h3 mb-3">Kanban</h1>
 
-<div class="d-flex gap-3" style="overflow-x:auto;">
+<div class="d-flex flex-column gap-3">
     @foreach (var statut in statuts!)
     {
         var projetsDuStatut = Model.Where(p => p.Statut == statut).ToList();
 
-        <div class="card" style="min-width:250px; flex-shrink:0;">
+        <div class="card w-100">
             <div class="card-header d-flex justify-content-between align-items-center py-2">
                 <span class="small fw-bold">@statut</span>
                 <span class="badge bg-secondary">@projetsDuStatut.Count</span>
