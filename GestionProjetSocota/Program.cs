@@ -21,6 +21,17 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddControllersWithViews();
 
+//langue
+builder.Services.AddLocalization();
+
+var languesSupportees = new[] { "fr", "en" };
+var optionsLocalisation = new RequestLocalizationOptions()
+    .SetDefaultCulture("fr")
+    .AddSupportedCultures(languesSupportees)
+    .AddSupportedUICultures(languesSupportees);
+
+optionsLocalisation.RequestCultureProviders.Insert(0, new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider());
+
 builder.Services.AddScoped<WorkflowService>();
 builder.Services.AddHttpClient<GeminiService>();
 

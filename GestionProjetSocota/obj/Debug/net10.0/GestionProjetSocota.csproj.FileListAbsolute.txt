@@ -84,8 +84,6 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\erwh31f8sg-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\5b579hkf5n-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\0j168bu772-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\vboiajvql6-{0}-uecctlr2jl-uecctlr2jl.gz
-C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\zbxxaj710h-{0}-uecctlr2jl-uecctlr2jl.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\staticwebassets.development.json
@@ -272,3 +270,5 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\bin\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\bin\Debug\net10.0\runtimes\win-x64\native\qpdf.dll
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\bin\Debug\net10.0\runtimes\win-x86\native\QuestPdfSkia.dll
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\bin\Debug\net10.0\runtimes\win-x86\native\qpdf.dll
+C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\vboiajvql6-{0}-y2b3mqta6w-y2b3mqta6w.gz
+C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\zbxxaj710h-{0}-y2b3mqta6w-y2b3mqta6w.gz
