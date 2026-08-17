@@ -1,59 +1,67 @@
 @model GestionProjetSocota.ViewModels.DashboardViewModel
 
-<div style="padding:20px;">
-    <h2 style="color:#155D15; margin-bottom:18px;">Dashboard Exécutif</h2>
+<h1 class="h3 mb-3">Dashboard Exécutif</h1>
 
-    <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; margin-bottom:24px;">
-        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
-            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Total projets</p>
-            <p style="font-size:22px; font-weight:700; margin:0;">@Model.TotalProjets</p>
-        </div>
-        <div style="background:#E6F4E6; border-radius:10px; padding:14px;">
-            <p style="font-size:12px; color:#155D15; margin:0 0 6px;">Actifs</p>
-            <p style="font-size:22px; font-weight:700; margin:0; color:#155D15;">@Model.ProjetsActifs</p>
-        </div>
-        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
-            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Terminés</p>
-            <p style="font-size:22px; font-weight:700; margin:0;">@Model.ProjetsTermines</p>
-        </div>
-        <div style="background:#FAFAF8; border-radius:10px; padding:14px;">
-            <p style="font-size:12px; color:#5F5E5A; margin:0 0 6px;">Bloqués (Suspendus)</p>
-            <p style="font-size:22px; font-weight:700; margin:0;">@Model.ProjetsSuspendus</p>
-        </div>
-        <div style="background:#FDEAEA; border-radius:10px; padding:14px;">
-            <p style="font-size:12px; color:#a12020; margin:0 0 6px;">En retard</p>
-            <p style="font-size:22px; font-weight:700; margin:0; color:#a12020;">@Model.ProjetsEnRetard</p>
-        </div>
+<div class="row mb-4">
+    <div class="col">
+        <div class="card"><div class="card-body">
+            <p class="text-muted small mb-1">Total projets</p>
+            <p class="h4 mb-0">@Model.TotalProjets</p>
+        </div></div>
     </div>
-
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
-            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par statut</p>
-            <div style="height:220px;">
-                <canvas id="chartStatut"></canvas>
-            </div>
-        </div>
-        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
-            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par entité (unité)</p>
-            <div style="height:220px;">
-                <canvas id="chartUnite"></canvas>
-            </div>
-        </div>
+    <div class="col">
+        <div class="card bg-light-success"><div class="card-body">
+            <p class="text-success small mb-1">Actifs</p>
+            <p class="h4 mb-0 text-success">@Model.ProjetsActifs</p>
+        </div></div>
     </div>
+    <div class="col">
+        <div class="card"><div class="card-body">
+            <p class="text-muted small mb-1">Terminés</p>
+            <p class="h4 mb-0">@Model.ProjetsTermines</p>
+        </div></div>
+    </div>
+    <div class="col">
+        <div class="card"><div class="card-body">
+            <p class="text-muted small mb-1">Bloqués (Suspendus)</p>
+            <p class="h4 mb-0">@Model.ProjetsSuspendus</p>
+        </div></div>
+    </div>
+    <div class="col">
+        <div class="card border-danger"><div class="card-body">
+            <p class="text-danger small mb-1">En retard</p>
+            <p class="h4 mb-0 text-danger">@Model.ProjetsEnRetard</p>
+        </div></div>
+    </div>
+</div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
-            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par département</p>
-            <div style="height:220px;">
-                <canvas id="chartDepartement"></canvas>
-            </div>
-        </div>
-        <div style="background:#fff; border:1px solid #E1E0DB; border-radius:12px; padding:16px;">
-            <p style="font-size:13px; font-weight:600; margin:0 0 10px;">Répartition par responsable IT</p>
-            <div style="height:220px;">
-                <canvas id="chartResponsable"></canvas>
-            </div>
-        </div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <p class="fw-bold small">Répartition par statut</p>
+            <div style="height:220px;"><canvas id="chartStatut"></canvas></div>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <p class="fw-bold small">Répartition par entité (unité)</p>
+            <div style="height:220px;"><canvas id="chartUnite"></canvas></div>
+        </div></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <p class="fw-bold small">Répartition par département</p>
+            <div style="height:220px;"><canvas id="chartDepartement"></canvas></div>
+        </div></div>
+    </div>
+    <div class="col-md-6">
+        <div class="card"><div class="card-body">
+            <p class="fw-bold small">Répartition par responsable IT</p>
+            <div style="height:220px;"><canvas id="chartResponsable"></canvas></div>
+        </div></div>
     </div>
 </div>
 

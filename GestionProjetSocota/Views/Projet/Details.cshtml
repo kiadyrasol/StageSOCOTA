@@ -6,175 +6,186 @@
     var commentaires = ViewBag.Commentaires as List<GestionProjetSocota.Models.Commentaire>;
 }
 
-<div style="padding:20px; max-width:700px;">
-    <h2 style="color:#155D15;">@Model.Nom</h2>
+<h1 class="h3 mb-3">@Model.Nom</h1>
 
-    <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px; margin-bottom:20px;">
-        <p><b>Ticket ID :</b> @Model.TicketId</p>
-        <p><b>Unité :</b> @Model.Unite &nbsp;|&nbsp; <b>Département :</b> @Model.Departement</p>
-        <p><b>Type :</b> @Model.Type &nbsp;|&nbsp; <b>Plateforme :</b> @Model.Plateforme</p>
-        <p><b>Statut :</b> <span style="background:#E6F4E6; color:#155D15; padding:3px 10px; border-radius:6px;">@Model.Statut</span></p>
-        <p><b>Owner IT :</b> @(Model.OwnerIt?.Nom ?? "-") &nbsp;|&nbsp; <b>Power User :</b> @(Model.PowerUser?.Nom ?? "-")</p>
-        <p><b>Avancement :</b> @Model.PourcentageAvancement%</p>
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4"><b>Ticket ID :</b> @Model.TicketId</div>
+            <div class="col-md-4"><b>Unité :</b> @Model.Unite</div>
+            <div class="col-md-4"><b>Département :</b> @Model.Departement</div>
+            <div class="col-md-4"><b>Type :</b> @Model.Type</div>
+            <div class="col-md-4"><b>Plateforme :</b> @Model.Plateforme</div>
+            <div class="col-md-4"><b>Statut :</b> <span class="badge bg-success">@Model.Statut</span></div>
+            <div class="col-md-4"><b>Owner IT :</b> @(Model.OwnerIt?.Nom ?? "-")</div>
+            <div class="col-md-4"><b>Power User :</b> @(Model.PowerUser?.Nom ?? "-")</div>
+            <div class="col-md-4"><b>Avancement :</b> @Model.PourcentageAvancement%</div>
+        </div>
+        <a href="/Projet/GenererCompteRendu/@Model.Id" class="btn btn-outline-success btn-sm mt-3"><i class="fas fa-magic"></i> Générer un compte-rendu IA</a>
     </div>
+</div>
 
-<a href="/Projet/GenererCompteRendu/@Model.Id" style="background:#155D15; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; display:inline-block; margin-bottom:20px;">✨ Générer un compte-rendu IA</a>
-
-    <!-- RFC -->
-    <h3 style="color:#155D15; font-size:16px;">RFC</h3>
-    @if (rfc == null)
-    {
-        <p style="color:#5F5E5A;">Aucun RFC pour ce projet.</p>
-        <a href="/RFC/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:13px; display:inline-block;">+ Créer un RFC</a>
-    }
-    else
-    {
-        <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:10px; padding:16px;">
+<!-- RFC -->
+<div class="card mb-3">
+    <div class="card-header"><b>RFC</b></div>
+    <div class="card-body">
+        @if (rfc == null)
+        {
+            <p class="text-muted">Aucun RFC pour ce projet.</p>
+            <a href="/RFC/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">+ Créer un RFC</a>
+        }
+        else
+        {
             <p><b>Business Case :</b> @rfc.BusinessCase</p>
             <p><b>ROI estimé :</b> @(rfc.RoiEstime?.ToString("N0") ?? "-")</p>
-            <p><b>Champion :</b> @(rfc.Champion?.Nom ?? "-") &nbsp;|&nbsp; <b>Sponsor :</b> @(rfc.Sponsor?.Nom ?? "-")</p>
+            <p><b>Champion :</b> @(rfc.Champion?.Nom ?? "-") · <b>Sponsor :</b> @(rfc.Sponsor?.Nom ?? "-")</p>
             <p><b>Statut :</b> @(rfc.EstValide ? "✅ Validé" : "⏳ En attente de validation")</p>
 
             @if (TempData["Erreur"] != null)
             {
-                <p style="color:red; font-size:13px;">@TempData["Erreur"]</p>
+                <div class="alert alert-danger">@TempData["Erreur"]</div>
             }
 
             @if (!rfc.EstValide)
             {
-                <form asp-controller="RFC" asp-action="Valider" method="post" style="margin-top:10px;">
+                <form asp-controller="RFC" asp-action="Valider" method="post">
                     <input type="hidden" name="id" value="@rfc.Id" />
-                    <button type="submit" style="background:#228B22; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Valider ce RFC</button>
+                    <button type="submit" class="btn btn-socota btn-sm">Valider ce RFC</button>
                 </form>
             }
             else
             {
-                <form asp-controller="RFC" asp-action="AnnulerValidation" method="post" style="margin-top:10px;">
+                <form asp-controller="RFC" asp-action="AnnulerValidation" method="post">
                     <input type="hidden" name="id" value="@rfc.Id" />
-                    <button type="submit" style="background:#a12020; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-size:13px; cursor:pointer;">Annuler la validation</button>
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Annuler la validation</button>
                 </form>
             }
-        </div>
-    }
-
-
-    <!-- Actions -->
-    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Actions</h3>
-    <a href="/ActionProjet/Create?projetId=@Model.Id" style="background:#228B22; color:#fff; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:12px; display:inline-block; margin-bottom:10px;">+ Nouvelle action</a>
-
-    @if (actions != null && actions.Any())
-    {
-        @foreach (var action in actions)
-        {
-            <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
-                <p style="margin:0 0 4px;">@action.Description</p>
-                <p style="margin:0 0 8px; color:#5F5E5A; font-size:12px;">
-                    @(action.Responsable?.Nom ?? "-") · Échéance : @action.DateEcheance.ToString("dd/MM/yyyy") ·
-                    <span style="background:@(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "#E6F4E6" : "#FFF3CD"); padding:2px 8px; border-radius:5px;">@action.Statut</span>
-                </p>
-                <div style="display:flex; gap:6px;">
-                    @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
-                    {
-                        <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
-                            <input type="hidden" name="id" value="@action.Id" />
-                            <input type="hidden" name="nouveauStatut" value="Ongoing" />
-                            <button type="submit" style="background:#fff; border:1px solid #E1E0DB; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">En cours</button>
-                        </form>
-                    }
-                    @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
-                    {
-                        <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
-                            <input type="hidden" name="id" value="@action.Id" />
-                            <input type="hidden" name="nouveauStatut" value="Closed" />
-                            <button type="submit" style="background:#228B22; border:none; color:#fff; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Clôturer</button>
-                        </form>
-                    }
-                    <form asp-controller="ActionProjet" asp-action="Delete" method="post">
-                        <input type="hidden" name="id" value="@action.Id" />
-                        <button type="submit" style="background:#fff; border:1px solid #a12020; color:#a12020; padding:4px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Supprimer</button>
-                    </form>
-                </div>
-            </div>
         }
-    }
-    else
-    {
-        <p style="color:#5F5E5A; font-size:13px;">Aucune action pour ce projet.</p>
-    }
-
-
-    <!-- Pièces jointes -->
-    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Pièces jointes</h3>
-
-    <form asp-controller="PieceJointe" asp-action="Create" method="post" enctype="multipart/form-data" style="margin-bottom:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-        <input type="hidden" name="ProjetId" value="@Model.Id" />
-        <input type="file" name="Fichier" style="font-size:12px;" />
-        <select name="Type" style="padding:6px 10px; border:1px solid #E1E0DB; border-radius:6px; font-size:12px;">
-            <option value="RFC">RFC</option>
-            <option value="MOM">Compte-rendu (MOM)</option>
-            <option value="Analyse">Analyse</option>
-            <option value="CahierDesCharges">Cahier des charges</option>
-            <option value="CaptureEcran">Capture d'écran</option>
-            <option value="PlanDeTests">Plan de tests</option>
-        </select>
-        <button type="submit" style="background:#228B22; color:#fff; border:none; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer;">Importer</button>
-    </form>
-
-    @if (piecesJointes != null && piecesJointes.Any())
-    {
-        @foreach (var pj in piecesJointes)
-        {
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:13px;">
-                <a href="@pj.CheminStockage" target="_blank" style="color:#228B22; text-decoration:none;">@pj.NomFichier</a>
-                <div>
-                    <span style="color:#5F5E5A; font-size:11px; margin-right:10px;">@pj.Type · @pj.DateAjout.ToString("dd/MM/yyyy")</span>
-                    <form asp-controller="PieceJointe" asp-action="Delete" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@pj.Id" />
-                        <button type="submit" style="background:none; border:none; color:#a12020; font-size:11px; cursor:pointer;">Supprimer</button>
-                    </form>
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p style="color:#5F5E5A; font-size:13px;">Aucune pièce jointe pour ce projet.</p>
-    }
-
-
-    <!-- Commentaires -->
-    <h3 style="color:#155D15; font-size:16px; margin-top:24px;">Commentaires</h3>
-
-    <form asp-controller="Commentaire" asp-action="Create" method="post" style="margin-bottom:14px;">
-        <input type="hidden" name="ProjetId" value="@Model.Id" />
-        <textarea name="Contenu" placeholder="Ajouter un commentaire..." style="width:100%; padding:9px 11px; border:1px solid #E1E0DB; border-radius:8px; font-size:13px; min-height:60px;"></textarea>
-        <button type="submit" style="margin-top:8px; background:#228B22; color:#fff; border:none; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer;">Publier</button>
-    </form>
-
-    @if (commentaires != null && commentaires.Any())
-    {
-        @foreach (var c in commentaires)
-        {
-            <div style="background:#FAFAF8; border:1px solid #E1E0DB; border-radius:8px; padding:10px; margin-bottom:8px; font-size:13px;">
-                <p style="margin:0 0 4px; font-weight:600;">@(c.Auteur?.Nom ?? "Utilisateur inconnu")</p>
-                <p style="margin:0 0 6px;">@c.Contenu</p>
-                <p style="margin:0; color:#5F5E5A; font-size:11px;">
-                    @c.DatePublication.ToString("dd/MM/yyyy HH:mm")
-                    <form asp-controller="Commentaire" asp-action="Delete" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="@c.Id" />
-                        <button type="submit" style="background:none; border:none; color:#a12020; font-size:11px; cursor:pointer; padding:0; margin-left:8px;">Supprimer</button>
-                    </form>
-                </p>
-            </div>
-        }
-    }
-    else
-    {
-        <p style="color:#5F5E5A; font-size:13px;">Aucun commentaire pour ce projet.</p>
-    }
-
-
-    <div style="margin-top:20px;">
-        <a href="/Projet" style="color:#5F5E5A; text-decoration:none;">← Retour à la liste</a>
     </div>
 </div>
+
+<!-- Actions -->
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <b>Actions</b>
+        <a href="/ActionProjet/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">+ Nouvelle action</a>
+    </div>
+    <div class="card-body">
+        @if (actions != null && actions.Any())
+        {
+            @foreach (var action in actions)
+            {
+                <div class="border rounded p-2 mb-2">
+                    <p class="mb-1">@action.Description</p>
+                    <p class="text-muted small mb-2">
+                        @(action.Responsable?.Nom ?? "-") · Échéance : @action.DateEcheance.ToString("dd/MM/yyyy") ·
+                        <span class="badge @(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "bg-success" : "bg-warning text-dark")">@action.Statut</span>
+                    </p>
+                    <div class="d-flex gap-1">
+                        @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
+                        {
+                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                                <input type="hidden" name="id" value="@action.Id" />
+                                <input type="hidden" name="nouveauStatut" value="Ongoing" />
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">En cours</button>
+                            </form>
+                        }
+                        @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
+                        {
+                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                                <input type="hidden" name="id" value="@action.Id" />
+                                <input type="hidden" name="nouveauStatut" value="Closed" />
+                                <button type="submit" class="btn btn-socota btn-sm">Clôturer</button>
+                            </form>
+                        }
+                        <form asp-controller="ActionProjet" asp-action="Delete" method="post">
+                            <input type="hidden" name="id" value="@action.Id" />
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted mb-0">Aucune action pour ce projet.</p>
+        }
+    </div>
+</div>
+
+<!-- Pièces jointes -->
+<div class="card mb-3">
+    <div class="card-header"><b>Pièces jointes</b></div>
+    <div class="card-body">
+        <form asp-controller="PieceJointe" asp-action="Create" method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-center flex-wrap mb-3">
+            <input type="hidden" name="ProjetId" value="@Model.Id" />
+            <input type="file" name="Fichier" class="form-control form-control-sm" style="width:auto;" />
+            <select name="Type" class="form-select form-select-sm" style="width:auto;">
+                <option value="RFC">RFC</option>
+                <option value="MOM">Compte-rendu (MOM)</option>
+                <option value="Analyse">Analyse</option>
+                <option value="CahierDesCharges">Cahier des charges</option>
+                <option value="CaptureEcran">Capture d'écran</option>
+                <option value="PlanDeTests">Plan de tests</option>
+            </select>
+            <button type="submit" class="btn btn-socota btn-sm">Importer</button>
+        </form>
+
+        @if (piecesJointes != null && piecesJointes.Any())
+        {
+            @foreach (var pj in piecesJointes)
+            {
+                <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                    <a href="@pj.CheminStockage" target="_blank">@pj.NomFichier</a>
+                    <div>
+                        <span class="text-muted small me-2">@pj.Type · @pj.DateAjout.ToString("dd/MM/yyyy")</span>
+                        <form asp-controller="PieceJointe" asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@pj.Id" />
+                            <button type="submit" class="btn btn-link text-danger btn-sm p-0">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted mb-0">Aucune pièce jointe pour ce projet.</p>
+        }
+    </div>
+</div>
+
+<!-- Commentaires -->
+<div class="card mb-3">
+    <div class="card-header"><b>Commentaires</b></div>
+    <div class="card-body">
+        <form asp-controller="Commentaire" asp-action="Create" method="post" class="mb-3">
+            <input type="hidden" name="ProjetId" value="@Model.Id" />
+            <textarea name="Contenu" placeholder="Ajouter un commentaire..." class="form-control mb-2" rows="2"></textarea>
+            <button type="submit" class="btn btn-socota btn-sm">Publier</button>
+        </form>
+
+        @if (commentaires != null && commentaires.Any())
+        {
+            @foreach (var c in commentaires)
+            {
+                <div class="border rounded p-2 mb-2">
+                    <p class="fw-bold mb-1">@(c.Auteur?.Nom ?? "Utilisateur inconnu")</p>
+                    <p class="mb-1">@c.Contenu</p>
+                    <p class="text-muted small mb-0">
+                        @c.DatePublication.ToString("dd/MM/yyyy HH:mm")
+                        <form asp-controller="Commentaire" asp-action="Delete" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@c.Id" />
+                            <button type="submit" class="btn btn-link text-danger btn-sm p-0 ms-2">Supprimer</button>
+                        </form>
+                    </p>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-muted mb-0">Aucun commentaire pour ce projet.</p>
+        }
+    </div>
+</div>
+
+<a href="/Projet" class="text-muted"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
