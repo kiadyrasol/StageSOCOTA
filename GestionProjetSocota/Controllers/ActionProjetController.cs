@@ -53,6 +53,7 @@ namespace GestionProjetSocota.Controllers
 
             _context.Actions.Add(action);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "L'action a été créée avec succès.";
 
             return RedirectToAction("Details", "Projet", new { id = model.ProjetId });
         }
@@ -71,6 +72,7 @@ namespace GestionProjetSocota.Controllers
 
             action.Statut = nouveauStatut;
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Le statut de l'action a été mis à jour.";
 
             return RedirectToAction("Details", "Projet", new { id = action.ProjetId });
         }
@@ -90,6 +92,7 @@ namespace GestionProjetSocota.Controllers
             var projetId = action.ProjetId;
             _context.Actions.Remove(action);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "L'action a été supprimée.";
 
             return RedirectToAction("Details", "Projet", new { id = projetId });
         }

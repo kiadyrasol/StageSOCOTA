@@ -473,6 +473,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
             _context.Projets.Add(projet);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = $"Le projet \"{projet.Nom}\" a été créé avec succès.";
 
             return RedirectToAction("Index");
         }
@@ -545,6 +546,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             projet.PowerUserId = model.PowerUserId;
 
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Les modifications ont été enregistrées.";
 
             return RedirectToAction("Index");
         }
@@ -587,6 +589,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             projet.StatutPrecedent = projet.Statut;
             projet.Statut = nouveauStatut;
             await _context.SaveChangesAsync();
+            TempData["Succes"] = $"Statut changé vers {nouveauStatut}.";
 
             return RedirectToAction("Index");
         }
@@ -620,6 +623,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 await _context.SaveChangesAsync();
             }
 
+            TempData["Succes"] = "Le projet a été supprimé.";
             return RedirectToAction("Index");
         }
     }

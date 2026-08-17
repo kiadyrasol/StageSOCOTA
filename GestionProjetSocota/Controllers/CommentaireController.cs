@@ -16,6 +16,7 @@ namespace GestionProjetSocota.Controllers
             _context = context;
         }
 
+//create
         [Authorize(Roles = "Administrateur,ChefDeProjet,PowerUser")]
         [HttpPost]
         public async Task<IActionResult> Create(CommentaireCreateViewModel model)
@@ -38,10 +39,12 @@ namespace GestionProjetSocota.Controllers
 
             _context.Commentaires.Add(commentaire);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Commentaire publié.";
 
             return RedirectToAction("Details", "Projet", new { id = model.ProjetId });
         }
 
+    //delete
         [Authorize(Roles = "Administrateur")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
@@ -55,6 +58,7 @@ namespace GestionProjetSocota.Controllers
             var projetId = commentaire.ProjetId;
             _context.Commentaires.Remove(commentaire);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Commentaire supprimé.";
 
             return RedirectToAction("Details", "Projet", new { id = projetId });
         }

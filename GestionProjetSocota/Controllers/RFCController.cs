@@ -36,6 +36,7 @@ namespace GestionProjetSocota.Controllers
             };
 
             ViewBag.ProjetNom = projet.Nom;
+            TempData["Succes"] = "Le RFC a été créé avec succès.";
 
             return View(model);
         }
@@ -90,6 +91,7 @@ namespace GestionProjetSocota.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Le RFC a été validé avec succès.";
 
             return RedirectToAction("Details", "Projet", new { id = rfc.ProjetId });
         }

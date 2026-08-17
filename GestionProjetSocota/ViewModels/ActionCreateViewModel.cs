@@ -8,6 +8,8 @@ namespace GestionProjetSocota.ViewModels
         public int ProjetId { get; set; }
 
         [Required(ErrorMessage = "La description est obligatoire")]
+        [MaxLength(500, ErrorMessage = "La description ne peut pas dépasser 500 caractères")]
+
         public string Description { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Le responsable est obligatoire")]

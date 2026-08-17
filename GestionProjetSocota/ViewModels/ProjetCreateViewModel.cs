@@ -6,12 +6,17 @@ namespace GestionProjetSocota.ViewModels
     public class ProjetCreateViewModel
     {
         [Required(ErrorMessage = "Le Ticket ID est obligatoire")]
+        [MaxLength(50, ErrorMessage = "Le Ticket ID ne peut pas dépasser 50 caractères")]
         public string TicketId { get; set; } = string.Empty;
 
         public string Reference { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Le nom du projet est obligatoire")]
+        [MaxLength(200, ErrorMessage = "Le nom ne peut pas dépasser 200 caractères")]
+
         public string Nom { get; set; } = string.Empty;
+        [MaxLength(2000, ErrorMessage = "La description ne peut pas dépasser 2000 caractères")]
+
 
       public string? Description { get; set; }
 

@@ -3,12 +3,22 @@
     var utilisateurs = ViewBag.Utilisateurs as List<GestionProjetSocota.Models.Utilisateur>;
 }
 
+<style>
+    .filtres-recherche { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+    .filtres-recherche > div { flex: 1; min-width: 140px; }
+
+    @@media (max-width: 650px) {
+        .filtres-recherche { flex-direction: column; align-items: stretch; }
+        .filtres-recherche > div { min-width: 100%; }
+    }
+</style>
+
 <h1 class="h3 mb-3">Recherche multicritères</h1>
 
 <div class="card mb-3">
     <div class="card-body">
-        <form method="get" asp-action="Recherche" class="row g-2 align-items-end">
-            <div class="col-md-2">
+        <form method="get" asp-action="Recherche" class="filtres-recherche">
+            <div>
                 <label class="form-label small">Unité</label>
                 <select name="unite" class="form-select form-select-sm">
                     <option value="">Toutes</option>
@@ -18,7 +28,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-2">
+            <div>
                 <label class="form-label small">Département</label>
                 <select name="departement" class="form-select form-select-sm">
                     <option value="">Tous</option>
@@ -28,7 +38,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-2">
+            <div>
                 <label class="form-label small">Statut</label>
                 <select name="statut" class="form-select form-select-sm">
                     <option value="">Tous</option>
@@ -38,7 +48,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-2">
+            <div>
                 <label class="form-label small">Type</label>
                 <select name="type" class="form-select form-select-sm">
                     <option value="">Tous</option>
@@ -48,7 +58,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-2">
+            <div>
                 <label class="form-label small">Responsable IT</label>
                 <select name="ownerItId" class="form-select form-select-sm">
                     <option value="">Tous</option>
@@ -61,7 +71,7 @@
                     }
                 </select>
             </div>
-            <div class="col-md-2">
+            <div>
                 <button type="submit" class="btn btn-socota btn-sm w-100">Filtrer</button>
             </div>
         </form>
@@ -78,22 +88,24 @@
 
 <div class="card">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr><th>Ticket ID</th><th>Nom</th><th>Unité</th><th>Statut</th><th>Owner IT</th></tr>
-            </thead>
-            <tbody>
-                @foreach (var projet in Model)
-                {
-                    <tr>
-                        <td>@projet.TicketId</td>
-                        <td><a href="/Projet/Details/@projet.Id">@projet.Nom</a></td>
-                        <td>@projet.Unite</td>
-                        <td><span class="badge bg-success">@projet.Statut</span></td>
-                        <td>@(projet.OwnerIt?.Nom ?? "-")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr><th>Ticket ID</th><th>Nom</th><th>Unité</th><th>Statut</th><th>Owner IT</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var projet in Model)
+                    {
+                        <tr>
+                            <td>@projet.TicketId</td>
+                            <td><a href="/Projet/Details/@projet.Id">@projet.Nom</a></td>
+                            <td>@projet.Unite</td>
+                            <td><span class="badge bg-success">@projet.Statut</span></td>
+                            <td>@(projet.OwnerIt?.Nom ?? "-")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

@@ -18,6 +18,7 @@ namespace GestionProjetSocota.Controllers
             _environment = environment;
         }
 
+//create
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Create(PieceJointeCreateViewModel model)
@@ -60,10 +61,12 @@ namespace GestionProjetSocota.Controllers
 
             _context.PiecesJointes.Add(pieceJointe);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Fichier importé avec succès.";
 
             return RedirectToAction("Details", "Projet", new { id = model.ProjetId });
         }
 
+//delete
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
@@ -83,6 +86,7 @@ namespace GestionProjetSocota.Controllers
             var projetId = pieceJointe.ProjetId;
             _context.PiecesJointes.Remove(pieceJointe);
             await _context.SaveChangesAsync();
+            TempData["Succes"] = "Pièce jointe supprimée.";
 
             return RedirectToAction("Details", "Projet", new { id = projetId });
         }
