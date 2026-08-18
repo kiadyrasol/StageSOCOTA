@@ -1,3 +1,4 @@
+markdown
 # README Technique — Déploiement GestionProjetSocota
 
 ## 1. Prérequis
@@ -9,26 +10,53 @@
 
 ## 2. Récupérer le projet
 
-Copier l'ensemble du code source du projet (dossier `GestionProjetSocota`) sur la machine de destination.
+Copier l'ensemble du code source du projet sur la machine de destination
+(dépôt de code source interne, ou archive fournie séparément).
 
-## 3. Créer la base de données
 
-Dans le dossier du projet, ouvrir un terminal et lancer :
+## 3. Configuration — appsettings.json
+
+**Important** :
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=VOTRE_SERVEUR;Database=GestionProjetSocotaDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+  },
+  "Gemini": {
+    "ApiKey": "VOTRE_CLE_API_GEMINI"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+- Remplacer VOTRE_SERVEUR par le nom de l'instance SQL Server (ex: `(localdb)\mssqllocaldb` en local, ou le nom du serveur de production)
+- Remplacer VOTRE_CLE_API_GEMINI par une clé obtenue sur https://aistudio.google.com/apikey (nécessaire pour la fonctionnalité "Générer un compte-rendu IA" — l'application fonctionne sans, mais cette fonctionnalité précise sera indisponible)
+
+## 4. Créer la base de données
+
+Dans le dossier du projet :
 
 dotnet tool install --global dotnet-ef
 dotnet ef database update
 
 
-Ça applique automatiquement toutes les migrations et crée les tables nécessaires (Utilisateurs, Projets, RFCs, Actions, Commentaires, PiecesJointes, HistoriqueProjets).
+Ça applique automatiquement toutes les migrations et crée les tables nécessaires.
 
-## 4. Lancer en local (développement)
+## 5. Lancer en local (développement)
 
 dotnet run
 
 
 L'application démarre sur http://localhost:5009 (ou le port indiqué dans le terminal).
 
-## 5. Déploiement en production (IIS)
+## 6. Déploiement en production (IIS)
 
 1. Publier le projet :
 
@@ -36,10 +64,10 @@ dotnet publish -c Release -o ./publish
 
 2. Copier le contenu du dossier `publish` vers le serveur IIS
 3. Dans IIS, créer un site pointant vers ce dossier, avec le pool d'applications configuré en "Aucun code managé"
-4. Vérifier que le fichier `appsettings.json` est bien présent dans le dossier publié, avec une chaîne de connexion adaptée au serveur SQL Server de production
-5. Vérifier que le compte du pool d'applications IIS a les droits d'accès à la base SQL Server et que l'authentification Windows (AD/SSO) est bien activée au niveau du site IIS (authentification Windows activée, anonyme désactivée)
+4. Copier manuellement `appsettings.json` (configuré avec les vraies valeurs de production) dans le dossier publié — il n'est pas inclus automatiquement
+5. Vérifier que le compte du pool d'applications IIS a les droits d'accès à la base SQL Server et que l'authentification Windows (AD/SSO) est bien activée au niveau du site IIS
 
-## 6. Dépendances externes non configurées (à activer plus tard)
+## 7. Dépendances externes non configurées (à activer plus tard)
 
 | Fonctionnalité | Ce qui manque |
 |---|---|
@@ -47,7 +75,7 @@ dotnet publish -c Release -o ./publish
 | Stockage réseau des pièces jointes | Accès à \\fileserver\IT\Digitalisation\ ou SharePoint |
 | Power BI Embedded | Licence et espace de travail Power BI Socota |
 
-## 7. Structure du projet
+## 8. Structure du projet
 
 GestionProjetSocota/
 ├── Controllers/ — logique de traitement des requêtes
