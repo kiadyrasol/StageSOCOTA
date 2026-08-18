@@ -1,0 +1,35 @@
+@{
+    var trimestres = ViewBag.Trimestres as List<(string Label, List<GestionProjetSocota.Models.Projet> Projets)>;
+}
+
+<h1 class="h3 mb-3">Roadmap trimestrielle</h1>
+
+<div class="row">
+    @foreach (var trimestre in trimestres!)
+    {
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white text-center">
+                    <b>@trimestre.Label</b>
+                </div>
+                <div class="card-body">
+                    @if (!trimestre.Projets.Any())
+                    {
+                        <p class="text-muted small mb-0">Aucun projet</p>
+                    }
+                    else
+                    {
+                        @foreach (var projet in trimestre.Projets)
+                        {
+                            <a href="/Projet/Details/@projet.Id" class="d-block text-decoration-none text-dark border rounded p-2 mb-2">
+                                <div class="fw-bold small">@projet.Nom</div>
+                                <div class="text-muted small">@projet.Deadline?.ToString("dd/MM/yyyy")</div>
+                                <span class="badge bg-secondary">@projet.Statut</span>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

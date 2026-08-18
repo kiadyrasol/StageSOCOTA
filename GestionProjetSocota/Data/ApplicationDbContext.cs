@@ -17,6 +17,7 @@ namespace GestionProjetSocota.Data
         public DbSet<ActionProjet> Actions { get; set; }
         public DbSet<Commentaire> Commentaires { get; set; }
         public DbSet<PieceJointe> PiecesJointes { get; set; }
+        public DbSet<HistoriqueProjet> HistoriqueProjets { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +44,12 @@ namespace GestionProjetSocota.Data
                 .HasOne(c => c.Auteur)
                 .WithMany()
                 .HasForeignKey(c => c.AuteurId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<HistoriqueProjet>()
+                .HasOne(h => h.Utilisateur)
+                .WithMany()
+                .HasForeignKey(h => h.UtilisateurId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

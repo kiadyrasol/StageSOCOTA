@@ -24,6 +24,7 @@
                         <th>Owner IT</th>
                         <th>Avancement</th>
                         <th>Actions</th>
+                        <th>Risque</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,6 +46,13 @@
                                 <a href="/Projet/ChangerStatut/@projet.Id" class="btn btn-sm btn-outline-success"><i class="fas fa-exchange-alt"></i></a>
                                 <a href="/Projet/Edit/@projet.Id" class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></a>
                                 <a href="/Projet/Delete/@projet.Id" class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></a>
+                            </td>
+                            <td>
+                                @{
+                                var scores = ViewBag.Scores as Dictionary<int, (int score, string couleur)>;
+                                var (score, couleur) = scores != null && scores.ContainsKey(projet.Id) ? scores[projet.Id] : (0, "secondary");
+                                }
+                                <span class="badge bg-@couleur">@score</span>
                             </td>
                         </tr>
                     }

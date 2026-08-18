@@ -1,0 +1,40 @@
+@model List<GestionProjetSocota.Models.Projet>
+
+<h1 class="h3 mb-3">Gantt</h1>
+
+<div class="card">
+    <div class="card-body">
+        @if (!Model.Any(p => p.DateDebut.HasValue || p.Deadline.HasValue))
+        {
+            <p class="text-muted mb-0">Aucun projet avec des dates définies (début ou deadline) pour afficher le Gantt.</p>
+        }
+        else
+        {
+            <svg id="gantt"></svg>
+        }
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css">
+<script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.min.js"></script>
+<script>
+    const taches = @Html.Raw(Json.Serialize(Model
+        .Where(p => p.DateDebut.HasValue || p.Deadline.HasValue)
+        .Select(p => new
+        {
+            id = p.Id.ToString(),
+            name = p.Nom,
+            start = (p.DateDebut ?? p.Deadline!.Value.AddDays(-14)).ToString("yyyy-MM-dd"),
+            end = (p.Deadline ?? p.DateDebut!.Value.AddDays(14)).ToString("yyyy-MM-dd"),
+            progress = p.PourcentageAvancement
+        })));
+
+    if (taches.length > 0) {
+        const gantt = new Gantt("#gantt", taches, {
+            on_click: (tache) => {
+                window.location.href = "/Projet/Details/" + tache.id;
+            },
+            view_mode: 'Month'
+        });
+    }
+</script>

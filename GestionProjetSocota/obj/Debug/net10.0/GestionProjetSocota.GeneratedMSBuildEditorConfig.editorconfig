@@ -74,6 +74,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Gantt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEdhbnR0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/GenererCompteRendu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XEdlbmVyZXJDb21wdGVSZW5kdS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -88,6 +92,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Recherche.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XFJlY2hlcmNoZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/Projet/Roadmap.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamV0XFJvYWRtYXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/kiady.info/Desktop/Gestion de Projet/GestionProjetSocota/Views/RFC/Create.cshtml]

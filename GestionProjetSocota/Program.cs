@@ -33,6 +33,7 @@ var optionsLocalisation = new RequestLocalizationOptions()
 optionsLocalisation.RequestCultureProviders.Insert(0, new Microsoft.AspNetCore.Localization.CookieRequestCultureProvider());
 
 builder.Services.AddScoped<WorkflowService>();
+builder.Services.AddScoped<ScoreRisqueService>();
 builder.Services.AddHttpClient<GeminiService>();
 
 
