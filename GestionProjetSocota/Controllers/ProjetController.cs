@@ -34,15 +34,15 @@ namespace GestionProjetSocota.Controllers
                 .Include(p => p.PowerUser)
                 .ToListAsync();
 
+            var derniersCommentaires = await _context.Commentaires
+                .GroupBy(c => c.ProjetId)
+                .Select(g => new { ProjetId = g.Key, Date = g.Max(c => c.DatePublication) })
+                .ToDictionaryAsync(x => x.ProjetId, x => (DateTime?)x.Date);
+
             var scores = new Dictionary<int, (int score, string couleur)>();
             foreach (var p in projets)
             {
-                var dernierCommentaire = await _context.Commentaires
-                    .Where(c => c.ProjetId == p.Id)
-                    .OrderByDescending(c => c.DatePublication)
-                    .Select(c => (DateTime?)c.DatePublication)
-                    .FirstOrDefaultAsync();
-
+                derniersCommentaires.TryGetValue(p.Id, out var dernierCommentaire);
                 var score = _scoreRisqueService.CalculerScore(p, dernierCommentaire);
                 scores[p.Id] = (score, _scoreRisqueService.ObtenirCouleur(score));
             }
@@ -86,48 +86,73 @@ namespace GestionProjetSocota.Controllers
 
 
         // Export du fichier excel
-        public async Task<IActionResult> ExporterExcel(Unite? unite, Departement? departement, StatutProjet? statut, TypeProjet? type, int? ownerItId)
+        public async Task<IActionResult> ExporterExcel(
+     Unite? unite,
+     Departement? departement,
+     StatutProjet? statut,
+     TypeProjet? type,
+     int? ownerItId)
         {
-            var query = _context.Projets.Include(p => p.OwnerIt).AsQueryable();
+            var query = _context.Projets
+                .Include(p => p.OwnerIt)
+                .AsQueryable();
 
-            if (unite.HasValue) query = query.Where(p => p.Unite == unite.Value);
-            if (departement.HasValue) query = query.Where(p => p.Departement == departement.Value);
-            if (statut.HasValue) query = query.Where(p => p.Statut == statut.Value);
-            if (type.HasValue) query = query.Where(p => p.Type == type.Value);
-            if (ownerItId.HasValue) query = query.Where(p => p.OwnerItId == ownerItId.Value);
+            if (unite.HasValue)
+                query = query.Where(p => p.Unite == unite.Value);
+
+            if (departement.HasValue)
+                query = query.Where(p => p.Departement == departement.Value);
+
+            if (statut.HasValue)
+                query = query.Where(p => p.Statut == statut.Value);
+
+            if (type.HasValue)
+                query = query.Where(p => p.Type == type.Value);
+
+            if (ownerItId.HasValue)
+                query = query.Where(p => p.OwnerItId == ownerItId.Value);
 
             var projets = await query.ToListAsync();
 
             using var workbook = new ClosedXML.Excel.XLWorkbook();
+
             var feuille = workbook.Worksheets.Add("Projets");
 
             feuille.Cell(1, 1).Value = "Ticket ID";
-            feuille.Cell(1, 2).Value = "Nom";
-            feuille.Cell(1, 3).Value = "Unité";
-            feuille.Cell(1, 4).Value = "Département";
-            feuille.Cell(1, 5).Value = "Statut";
-            feuille.Cell(1, 6).Value = "Owner IT";
+            feuille.Cell(1, 2).Value = "Référence";
+            feuille.Cell(1, 3).Value = "Nom";
+            feuille.Cell(1, 4).Value = "Unité";
+            feuille.Cell(1, 5).Value = "Département";
+            feuille.Cell(1, 6).Value = "Statut";
+            feuille.Cell(1, 7).Value = "Owner IT";
+
             feuille.Row(1).Style.Font.Bold = true;
 
             for (int i = 0; i < projets.Count; i++)
             {
                 var p = projets[i];
+
                 feuille.Cell(i + 2, 1).Value = p.TicketId;
-                feuille.Cell(i + 2, 2).Value = p.Nom;
-                feuille.Cell(i + 2, 3).Value = p.Unite.ToString();
-                feuille.Cell(i + 2, 4).Value = p.Departement.ToString();
-                feuille.Cell(i + 2, 5).Value = p.Statut.ToString();
-                feuille.Cell(i + 2, 6).Value = p.OwnerIt?.Nom ?? "-";
+                feuille.Cell(i + 2, 2).Value = p.Reference;
+                feuille.Cell(i + 2, 3).Value = p.Nom;
+                feuille.Cell(i + 2, 4).Value = p.Unite.ToString();
+                feuille.Cell(i + 2, 5).Value = p.Departement.ToString();
+                feuille.Cell(i + 2, 6).Value = p.Statut.ToString();
+                feuille.Cell(i + 2, 7).Value = p.OwnerIt?.Nom ?? "-";
             }
 
             feuille.Columns().AdjustToContents();
 
             using var stream = new MemoryStream();
+
             workbook.SaveAs(stream);
 
-            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "projets.xlsx");
+            return File(
+                stream.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "projets.xlsx"
+            );
         }
-
 
         // Pdf
         public async Task<IActionResult> ExporterPdf(Unite? unite, Departement? departement, StatutProjet? statut, TypeProjet? type, int? ownerItId)
@@ -195,6 +220,225 @@ namespace GestionProjetSocota.Controllers
             return File(pdfBytes, "application/pdf", "projets.pdf");
         }
 
+
+        // Importer le fichier Excel
+        [Authorize(Roles = "Administrateur")]
+        [HttpGet]
+        public IActionResult ImporterExcel()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Administrateur")]
+        [HttpPost]
+        public async Task<IActionResult> ImporterExcel(IFormFile fichier)
+        {
+            if (fichier == null || fichier.Length == 0)
+            {
+                TempData["Erreur"] = "Aucun fichier sélectionné.";
+                return RedirectToAction("ImporterExcel");
+            }
+            
+            var nomUtilisateur = User.Identity?.Name;
+
+            var auteur = await _context.Utilisateurs
+                .FirstOrDefaultAsync(u => u.NomADUtilisateur == nomUtilisateur);
+
+            if (auteur == null)
+            {
+                TempData["Erreur"] = "Utilisateur connecté introuvable.";
+                return RedirectToAction("ImporterExcel");
+            }
+
+            int nbImportes = 0;
+            int nbIgnores = 0;
+
+            using (var stream = new MemoryStream())
+            {
+                await fichier.CopyToAsync(stream);
+
+                using var workbook = new ClosedXML.Excel.XLWorkbook(stream);
+                var feuille = workbook.Worksheet("Projets");
+
+                var lignes = feuille.RowsUsed().Skip(1);
+
+                foreach (var ligne in lignes)
+                {
+                    var uniteTexte = ligne.Cell(1).GetString().Trim();
+                    var ticketId = ligne.Cell(2).GetString().Trim();
+                    var reference = ligne.Cell(3).GetString().Trim();
+                    var nom = ligne.Cell(4).GetString().Trim();
+                    var departementTexte = ligne.Cell(5).GetString().Trim();
+                    var typeTexte = ligne.Cell(6).GetString().Trim();
+                    var plateformeTexte = ligne.Cell(7).GetString().Trim();
+                    var ownerItNom = ligne.Cell(8).GetString().Trim();
+                    var powerUserNom = ligne.Cell(9).GetString().Trim();
+                    var prioriteTexte = ligne.Cell(10).GetString().Trim();
+                    var deadlineCell = ligne.Cell(12);
+                    var statutTexte = ligne.Cell(14).GetString().Trim().Replace(" ", "");
+                    var avancementCell = ligne.Cell(17);
+                    var commentaireExcel = ligne.Cell(19).GetString().Trim();
+
+                    DateTime? deadline = null;
+
+                    if (deadlineCell.DataType == ClosedXML.Excel.XLDataType.DateTime)
+                    {
+                        deadline = deadlineCell.GetDateTime();
+                    }
+
+                    int pourcentageAvancement = 0;
+
+                    if (avancementCell.DataType == ClosedXML.Excel.XLDataType.Number)
+                    {
+                        var valeur = avancementCell.GetDouble();
+
+                        pourcentageAvancement = (int)Math.Round(valeur * 100);
+
+                        if (pourcentageAvancement > 100)
+                        {
+                            pourcentageAvancement = (int)Math.Round(valeur);
+                        }
+
+                        pourcentageAvancement = Math.Clamp(
+                            pourcentageAvancement,
+                            0,
+                            100
+                        );
+                    }
+
+                    if (string.IsNullOrWhiteSpace(nom))
+                    {
+                        nbIgnores++;
+                        continue;
+                    }
+
+                    if (!Enum.TryParse<Unite>(
+                        uniteTexte,
+                        true,
+                        out var unite))
+                    {
+                        unite = Unite.CTN;
+                    }
+
+                    if (!Enum.TryParse<Departement>(
+                        departementTexte,
+                        true,
+                        out var departement))
+                    {
+                        departement = Departement.IT;
+                    }
+
+                    var type = typeTexte.Contains(
+                        "house",
+                        StringComparison.OrdinalIgnoreCase)
+                        ? TypeProjet.InHouse
+                        : TypeProjet.Outsourced;
+
+                    if (!Enum.TryParse<Plateforme>(
+                        plateformeTexte.Replace(" ", ""),
+                        true,
+                        out var plateforme))
+                    {
+                        plateforme = Plateforme.WEB;
+                    }
+
+                    if (!Enum.TryParse<StatutProjet>(
+                        statutTexte,
+                        true,
+                        out var statut))
+                    {
+                        statut = StatutProjet.WaitingRFC;
+                    }
+
+                    var priorite = PrioriteProjet.Medium;
+
+                    if (Enum.TryParse<PrioriteProjet>(
+                        prioriteTexte,
+                        true,
+                        out var prioriteParsee)
+                        &&
+                        Enum.IsDefined(
+                            typeof(PrioriteProjet),
+                            prioriteParsee))
+                    {
+                        priorite = prioriteParsee;
+                    }
+
+                    var ownerIt = await ObtenirOuCreerUtilisateur(ownerItNom);
+                    var powerUser = await ObtenirOuCreerUtilisateur(powerUserNom);
+
+                    var projet = new Projet
+                    {
+                        TicketId = string.IsNullOrWhiteSpace(ticketId)
+                            ? $"IMPORT-{nbImportes + 1}"
+                            : ticketId,
+
+                        Reference = reference,
+                        Nom = nom,
+                        Unite = unite,
+                        Departement = departement,
+                        Type = type,
+                        Plateforme = plateforme,
+                        Priorite = priorite,
+                        Deadline = deadline,
+                        PourcentageAvancement = pourcentageAvancement,
+                        OwnerItId = ownerIt?.Id,
+                        PowerUserId = powerUser?.Id,
+                        Statut = statut
+                    };
+
+                    _context.Projets.Add(projet);
+
+                    if (!string.IsNullOrWhiteSpace(commentaireExcel))
+                    {
+                        var commentaire = new Commentaire
+                        {
+                            Projet = projet,
+                            AuteurId = auteur.Id,
+                            Contenu = commentaireExcel,
+                            DatePublication = DateTime.Now
+                        };
+
+                        _context.Commentaires.Add(commentaire);
+                    }
+
+                    nbImportes++;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["Succes"] =
+                $"{nbImportes} projet(s) importé(s) avec succès. " +
+                $"{nbIgnores} ligne(s) ignorée(s) (données incomplètes).";
+
+            return RedirectToAction("Index");
+        }
+
+        //User
+        private async Task<Utilisateur?> ObtenirOuCreerUtilisateur(string nom)
+        {
+            if (string.IsNullOrWhiteSpace(nom) || nom == "-")
+            {
+                return null;
+            }
+
+            var utilisateur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.Nom == nom);
+            if (utilisateur == null)
+            {
+                utilisateur = new Utilisateur
+                {
+                    NomADUtilisateur = $"IMPORT\\{nom}",
+                    Nom = nom,
+                    Email = string.Empty,
+                    Role = RoleUtilisateur.Lecteur
+                };
+                _context.Utilisateurs.Add(utilisateur);
+                await _context.SaveChangesAsync();
+            }
+
+            return utilisateur;
+        }
 
         // Kanban
         public async Task<IActionResult> Kanban()

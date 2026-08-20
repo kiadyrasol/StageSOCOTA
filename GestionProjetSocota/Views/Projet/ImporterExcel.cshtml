@@ -1,0 +1,22 @@
+<h1 class="h3 mb-3">Importer depuis Excel</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p class="text-muted">
+            Sélectionnez le fichier de suivi Excel.
+        </p>
+
+        @if (TempData["Erreur"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Erreur"]</div>
+        }
+
+        <form asp-action="ImporterExcel" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Fichier Excel (.xlsx)</label>
+                <input type="file" name="fichier" accept=".xlsx" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-socota"><i class="fas fa-file-import"></i> Importer</button>
+        </form>
+    </div>
+</div>
