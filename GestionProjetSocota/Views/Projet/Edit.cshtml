@@ -1,92 +1,273 @@
 @model GestionProjetSocota.ViewModels.ProjetEditViewModel
 
-<h1 class="h3 mb-3">Modifier le projet</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Modifier le projet</h1>
+        <p class="text-muted mb-0">
+            Modifiez les informations du projet.
+        </p>
+    </div>
 
-<div class="card">
-    <div class="card-body">
+    <a href="/Projet/Details/@Model.Id"
+       class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>
+        Retour
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+
         <form asp-action="Edit" method="post">
+
             <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Ticket ID</label>
-                    <input asp-for="TicketId" type="text" class="form-control" />
-                    <span asp-validation-for="TicketId" class="text-danger small"></span>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Référence</label>
-                    <input asp-for="Reference" type="text" class="form-control" />
-                </div>
-
-                <div class="col-12 mb-3">
-                    <label class="form-label">Nom du projet</label>
-                    <input asp-for="Nom" type="text" class="form-control" />
-                    <span asp-validation-for="Nom" class="text-danger small"></span>
-                </div>
-
-                <div class="col-12 mb-3">
-                    <label class="form-label">Description</label>
-                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Unité</label>
-                    <select asp-for="Unite" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Unite>()" class="form-select"></select>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Département</label>
-                    <select asp-for="Departement" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Departement>()" class="form-select"></select>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Type</label>
-                    <select asp-for="Type" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.TypeProjet>()" class="form-select"></select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Plateforme</label>
-                    <select asp-for="Plateforme" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Plateforme>()" class="form-select"></select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Priorité</label>
-                    <select asp-for="Priorite" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()" class="form-select"></select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold text-success">Statut</label>
-                    <select asp-for="Statut" asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()" class="form-select border-success"></select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Avancement (%)</label>
-                    <input asp-for="PourcentageAvancement" type="number" min="0" max="100" class="form-control" />
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Owner IT</label>
-                    <select asp-for="OwnerItId" asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))" class="form-select">
-                        <option value="">-- Aucun --</option>
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Power User</label>
-                    <select asp-for="PowerUserId" asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))" class="form-select">
-                        <option value="">-- Aucun --</option>
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Deadline</label>
-                    <input asp-for="Deadline" type="date" class="form-control" />
-                </div>
+            <div asp-validation-summary="ModelOnly"
+                 class="alert alert-danger"
+                 role="alert">
             </div>
 
-            <button type="submit" class="btn btn-socota"><i class="fas fa-save"></i> Enregistrer les modifications</button>
+            <!-- Informations générales -->
+            <h5 class="mb-3">
+                Informations générales
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TicketId" class="form-label">
+                        Ticket ID
+                    </label>
+
+                    <input asp-for="TicketId"
+                           class="form-control" />
+
+                    <span asp-validation-for="TicketId"
+                          class="text-danger small">
+                    </span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Reference" class="form-label">
+                        Référence
+                    </label>
+
+                    <input asp-for="Reference"
+                           class="form-control" />
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label asp-for="Nom" class="form-label">
+                        Nom du projet
+                    </label>
+
+                    <input asp-for="Nom"
+                           class="form-control" />
+
+                    <span asp-validation-for="Nom"
+                          class="text-danger small">
+                    </span>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label asp-for="Description" class="form-label">
+                        Description
+                    </label>
+
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4">
+                    </textarea>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Classification -->
+            <h5 class="mb-3">
+                Classification
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Unite" class="form-label">
+                        Unité
+                    </label>
+
+                    <select asp-for="Unite"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Unite>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Departement" class="form-label">
+                        Département
+                    </label>
+
+                    <select asp-for="Departement"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Departement>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Type" class="form-label">
+                        Type
+                    </label>
+
+                    <select asp-for="Type"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.TypeProjet>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Plateforme" class="form-label">
+                        Plateforme
+                    </label>
+
+                    <select asp-for="Plateforme"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Plateforme>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Priorite" class="form-label">
+                        Priorité
+                    </label>
+
+                    <select asp-for="Priorite"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Pilotage -->
+            <h5 class="mb-3">
+                Pilotage du projet
+            </h5>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Statut"
+                           class="form-label text-socota">
+                        Statut
+                    </label>
+
+                    <select asp-for="Statut"
+                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()"
+                            class="form-select border-socota">
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PourcentageAvancement"
+                           class="form-label">
+                        Avancement (%)
+                    </label>
+
+                    <input asp-for="PourcentageAvancement"
+                           type="number"
+                           min="0"
+                           max="100"
+                           class="form-control" />
+
+                    <span asp-validation-for="PourcentageAvancement"
+                          class="text-danger small">
+                    </span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="OwnerItId"
+                           class="form-label">
+                        Owner IT
+                    </label>
+
+                    <select asp-for="OwnerItId"
+                            asp-items="@(new SelectList(
+                                Model.UtilisateursDisponibles,
+                                "Id",
+                                "Nom"
+                            ))"
+                            class="form-select">
+
+                        <option value="">
+                            -- Aucun --
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PowerUserId"
+                           class="form-label">
+                        Power User
+                    </label>
+
+                    <select asp-for="PowerUserId"
+                            asp-items="@(new SelectList(
+                                Model.UtilisateursDisponibles,
+                                "Id",
+                                "Nom"
+                            ))"
+                            class="form-select">
+
+                        <option value="">
+                            -- Aucun --
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Deadline"
+                           class="form-label">
+                        Deadline
+                    </label>
+
+                    <input asp-for="Deadline"
+                           type="date"
+                           class="form-control" />
+
+                    <span asp-validation-for="Deadline"
+                          class="text-danger small">
+                    </span>
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Actions -->
+            <div class="d-flex gap-2">
+
+                <button type="submit"
+                        class="btn btn-socota">
+
+                    <i class="fas fa-save me-1"></i>
+                    Enregistrer les modifications
+
+                </button>
+
+                <a href="/Projet/Details/@Model.Id"
+                   class="btn btn-outline-secondary">
+
+                    Annuler
+
+                </a>
+
+            </div>
+
         </form>
+
     </div>
 </div>

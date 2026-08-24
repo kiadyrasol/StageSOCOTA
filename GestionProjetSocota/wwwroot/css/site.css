@@ -1,31 +1,41 @@
-html {
-  font-size: 14px;
+:root {
+    --socota-green: #8BC53F;
+    --socota-green-light: rgba(139, 197, 63, 0.12);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.text-socota {
+    color: var(--socota-green);
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.bg-socota {
+    background-color: var(--socota-green);
+    color: #fff;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.border-socota {
+    border-color: var(--socota-green);
 }
 
-body {
-  margin-bottom: 60px;
+/* Boutons */
+.btn-socota {
+    background-color: var(--socota-green);
+    border-color: var(--socota-green);
+    color: #fff;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.btn-socota:hover {
+    background-color: #78ad32;
+    border-color: #78ad32;
+    color: #fff;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.btn-outline-socota {
+    color: var(--socota-green);
+    border-color: var(--socota-green);
+}
+
+.btn-outline-socota:hover {
+    background-color: var(--socota-green);
+    border-color: var(--socota-green);
+    color: #fff;
 }

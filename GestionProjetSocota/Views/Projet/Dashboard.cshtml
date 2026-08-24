@@ -1,105 +1,565 @@
 @model GestionProjetSocota.ViewModels.DashboardViewModel
 
-<h1 class="h3 mb-3">Dashboard Exécutif</h1>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --dashboard-border: #e4e7eb;
+        --dashboard-muted: #6c757d;
+        --dashboard-card: #ffffff;
+    }
 
-<div class="row mb-4">
-    <div class="col">
-        <div class="card"><div class="card-body">
-            <p class="text-muted small mb-1">Total projets</p>
-            <p class="h4 mb-0">@Model.TotalProjets</p>
-        </div></div>
-    </div>
-    <div class="col">
-        <div class="card bg-light-success"><div class="card-body">
-            <p class="text-success small mb-1">Actifs</p>
-            <p class="h4 mb-0 text-success">@Model.ProjetsActifs</p>
-        </div></div>
-    </div>
-    <div class="col">
-        <div class="card"><div class="card-body">
-            <p class="text-muted small mb-1">Terminés</p>
-            <p class="h4 mb-0">@Model.ProjetsTermines</p>
-        </div></div>
-    </div>
-    <div class="col">
-        <div class="card"><div class="card-body">
-            <p class="text-muted small mb-1">Bloqués (Suspendus)</p>
-            <p class="h4 mb-0">@Model.ProjetsSuspendus</p>
-        </div></div>
-    </div>
-    <div class="col">
-        <div class="card border-danger"><div class="card-body">
-            <p class="text-danger small mb-1">En retard</p>
-            <p class="h4 mb-0 text-danger">@Model.ProjetsEnRetard</p>
-        </div></div>
-    </div>
+    /* =========================
+       TITRE
+       ========================= */
+
+    .dashboard-title {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .dashboard-subtitle {
+        color: var(--dashboard-muted);
+        font-size: 0.9rem;
+        margin-bottom: 22px;
+    }
+
+
+    /* =========================
+       KPI
+       ========================= */
+
+    .dashboard-kpi {
+        height: 100%;
+        border: 1px solid var(--dashboard-border);
+        border-radius: 10px;
+        background-color: var(--dashboard-card);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dashboard-kpi:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+    }
+
+    .dashboard-kpi-body {
+        padding: 18px;
+    }
+
+    .dashboard-kpi-label {
+        color: var(--dashboard-muted);
+        font-size: 0.78rem;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+
+    .dashboard-kpi-value {
+        font-size: 1.65rem;
+        font-weight: 600;
+        line-height: 1;
+        margin: 0;
+    }
+
+    .kpi-active {
+        border-left: 4px solid var(--socota-green);
+    }
+
+    .kpi-active .dashboard-kpi-label,
+    .kpi-active .dashboard-kpi-value {
+        color: var(--socota-green);
+    }
+
+    .kpi-danger {
+        border-left: 4px solid #dc3545;
+    }
+
+
+    /* =========================
+       GRAPHIQUES
+       ========================= */
+
+    .dashboard-chart-card {
+        height: 100%;
+        border: 1px solid var(--dashboard-border);
+        border-radius: 10px;
+        background-color: var(--dashboard-card);
+    }
+
+    .dashboard-chart-header {
+        padding: 15px 18px 0;
+    }
+
+    .dashboard-chart-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .dashboard-chart-body {
+        padding: 14px 18px 18px;
+    }
+
+    .dashboard-chart {
+        position: relative;
+        height: 235px;
+    }
+
+
+    /* =========================
+       MODE SOMBRE
+       ========================= */
+
+    body[data-bs-theme="dark"] {
+        --dashboard-border: #3b4147;
+        --dashboard-muted: #a8adb3;
+        --dashboard-card: #2b2f33;
+    }
+
+    body[data-bs-theme="dark"] .dashboard-kpi,
+    body[data-bs-theme="dark"] .dashboard-chart-card {
+        box-shadow: none;
+    }
+</style>
+
+
+<div class="mb-4">
+
+    <h1 class="h3 dashboard-title">
+        Dashboard Exécutif
+    </h1>
+
+    <p class="dashboard-subtitle">
+        Vue synthétique du portefeuille projets
+    </p>
+
 </div>
 
-<div class="row mb-3">
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition par statut</p>
-            <div style="height:220px;"><canvas id="chartStatut"></canvas></div>
-        </div></div>
+
+<!-- =========================
+     INDICATEURS
+     ========================= -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-xl col-md-6">
+        <div class="dashboard-kpi">
+
+            <div class="dashboard-kpi-body">
+
+                <div class="dashboard-kpi-label">
+                    Total projets
+                </div>
+
+                <p class="dashboard-kpi-value">
+                    @Model.TotalProjets
+                </p>
+
+            </div>
+
+        </div>
     </div>
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition par entité (unité)</p>
-            <div style="height:220px;"><canvas id="chartUnite"></canvas></div>
-        </div></div>
+
+
+    <div class="col-xl col-md-6">
+        <div class="dashboard-kpi kpi-active">
+
+            <div class="dashboard-kpi-body">
+
+                <div class="dashboard-kpi-label">
+                    Projets actifs
+                </div>
+
+                <p class="dashboard-kpi-value">
+                    @Model.ProjetsActifs
+                </p>
+
+            </div>
+
+        </div>
     </div>
+
+
+    <div class="col-xl col-md-6">
+        <div class="dashboard-kpi">
+
+            <div class="dashboard-kpi-body">
+
+                <div class="dashboard-kpi-label">
+                    Projets terminés
+                </div>
+
+                <p class="dashboard-kpi-value">
+                    @Model.ProjetsTermines
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="col-xl col-md-6">
+        <div class="dashboard-kpi">
+
+            <div class="dashboard-kpi-body">
+
+                <div class="dashboard-kpi-label">
+                    Bloqués / suspendus
+                </div>
+
+                <p class="dashboard-kpi-value">
+                    @Model.ProjetsSuspendus
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="col-xl col-md-6">
+        <div class="dashboard-kpi kpi-danger">
+
+            <div class="dashboard-kpi-body">
+
+                <div class="dashboard-kpi-label text-danger">
+                    Projets en retard
+                </div>
+
+                <p class="dashboard-kpi-value text-danger">
+                    @Model.ProjetsEnRetard
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition par département</p>
-            <div style="height:220px;"><canvas id="chartDepartement"></canvas></div>
-        </div></div>
+
+<!-- =========================
+     GRAPHIQUES — LIGNE 1
+     ========================= -->
+
+<div class="row g-3 mb-3">
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-chart-card">
+
+            <div class="dashboard-chart-header">
+                <p class="dashboard-chart-title">
+                    Répartition par statut
+                </p>
+            </div>
+
+            <div class="dashboard-chart-body">
+
+                <div class="dashboard-chart">
+                    <canvas id="chartStatut"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition par responsable IT</p>
-            <div style="height:220px;"><canvas id="chartResponsable"></canvas></div>
-        </div></div>
+
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-chart-card">
+
+            <div class="dashboard-chart-header">
+                <p class="dashboard-chart-title">
+                    Répartition par entité
+                </p>
+            </div>
+
+            <div class="dashboard-chart-body">
+
+                <div class="dashboard-chart">
+                    <canvas id="chartUnite"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>
+
+
+<!-- =========================
+     GRAPHIQUES — LIGNE 2
+     ========================= -->
+
+<div class="row g-3">
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-chart-card">
+
+            <div class="dashboard-chart-header">
+                <p class="dashboard-chart-title">
+                    Répartition par département
+                </p>
+            </div>
+
+            <div class="dashboard-chart-body">
+
+                <div class="dashboard-chart">
+                    <canvas id="chartDepartement"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-6">
+
+        <div class="dashboard-chart-card">
+
+            <div class="dashboard-chart-header">
+                <p class="dashboard-chart-title">
+                    Charge par responsable IT
+                </p>
+            </div>
+
+            <div class="dashboard-chart-body">
+
+                <div class="dashboard-chart">
+                    <canvas id="chartResponsable"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
 <script>
-    new Chart(document.getElementById('chartStatut'), {
-        type: 'bar',
-        data: {
-            labels: @Html.Raw(Json.Serialize(Model.RepartitionParStatut.Select(s => s.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.RepartitionParStatut.Select(s => s.Valeur))), backgroundColor: '#228B22' }]
+    const socotaGreen = '#8BC53F';
+    const chartSecondary = '#5F5E5A';
+    const chartLight = '#E1E0DB';
+
+    const chartTextColor =
+        document.body.getAttribute('data-bs-theme') === 'dark'
+            ? '#e0e0e0'
+            : '#495057';
+
+    const chartGridColor =
+        document.body.getAttribute('data-bs-theme') === 'dark'
+            ? '#3b4147'
+            : '#e9ecef';
+
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+            legend: {
+                display: false
+            }
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+
+        scales: {
+            x: {
+                ticks: {
+                    color: chartTextColor
+                },
+                grid: {
+                    display: false
+                }
+            },
+
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: chartTextColor,
+                    precision: 0
+                },
+                grid: {
+                    color: chartGridColor
+                }
+            }
+        }
+    };
+
+
+    /* =========================
+       STATUT
+       ========================= */
+
+    new Chart(document.getElementById('chartStatut'), {
+
+        type: 'bar',
+
+        data: {
+            labels: @Html.Raw(Json.Serialize(
+                Model.RepartitionParStatut.Select(s => s.Label)
+            )),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.RepartitionParStatut.Select(s => s.Valeur)
+                )),
+
+                backgroundColor: socotaGreen,
+                borderRadius: 5,
+                borderSkipped: false
+            }]
+        },
+
+        options: chartOptions
     });
+
+
+    /* =========================
+       UNITÉ
+       ========================= */
 
     new Chart(document.getElementById('chartUnite'), {
+
         type: 'doughnut',
+
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.RepartitionParUnite.Select(u => u.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.RepartitionParUnite.Select(u => u.Valeur))), backgroundColor: ['#228B22', '#5F5E5A', '#E1E0DB'] }]
+            labels: @Html.Raw(Json.Serialize(
+                Model.RepartitionParUnite.Select(u => u.Label)
+            )),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.RepartitionParUnite.Select(u => u.Valeur)
+                )),
+
+                backgroundColor: [
+                    socotaGreen,
+                    chartSecondary,
+                    chartLight
+                ],
+
+                borderWidth: 2,
+                borderColor:
+                    document.body.getAttribute('data-bs-theme') === 'dark'
+                        ? '#2b2f33'
+                        : '#ffffff'
+            }]
         },
-        options: { maintainAspectRatio: false }
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            cutout: '65%',
+
+            plugins: {
+                legend: {
+                    position: 'bottom',
+
+                    labels: {
+                        color: chartTextColor,
+                        padding: 15,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
     });
+
+
+    /* =========================
+       DÉPARTEMENT
+       ========================= */
 
     new Chart(document.getElementById('chartDepartement'), {
+
         type: 'bar',
+
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.RepartitionParDepartement.Select(d => d.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.RepartitionParDepartement.Select(d => d.Valeur))), backgroundColor: '#155D15' }]
+            labels: @Html.Raw(Json.Serialize(
+                Model.RepartitionParDepartement.Select(d => d.Label)
+            )),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.RepartitionParDepartement.Select(d => d.Valeur)
+                )),
+
+                backgroundColor: socotaGreen,
+                borderRadius: 5,
+                borderSkipped: false
+            }]
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+
+        options: chartOptions
     });
 
+
+    /* =========================
+       RESPONSABLE IT
+       ========================= */
+
     new Chart(document.getElementById('chartResponsable'), {
+
         type: 'bar',
+
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.ChargeParOwnerIt.Select(c => c.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.ChargeParOwnerIt.Select(c => c.Valeur))), backgroundColor: '#228B22' }]
+            labels: @Html.Raw(Json.Serialize(
+                Model.ChargeParOwnerIt.Select(c => c.Label)
+            )),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.ChargeParOwnerIt.Select(c => c.Valeur)
+                )),
+
+                backgroundColor: socotaGreen,
+                borderRadius: 5,
+                borderSkipped: false
+            }]
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+
+        options: {
+            ...chartOptions,
+
+            indexAxis: 'y',
+
+            scales: {
+                x: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        color: chartTextColor,
+                        precision: 0
+                    },
+
+                    grid: {
+                        color: chartGridColor
+                    }
+                },
+
+                y: {
+                    ticks: {
+                        color: chartTextColor
+                    },
+
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
     });
 </script>

@@ -4,13 +4,28 @@
 }
 
 <h1 class="h3 mb-3">Compte-rendu généré par IA</h1>
-<p class="text-muted small mb-3">Projet : <b>@projet?.Nom</b></p>
+
+<p class="text-muted small mb-3">
+    Projet :
+    <strong>@projet?.Nom</strong>
+</p>
 
 <div class="card mb-3">
-    <div class="card-body" style="white-space:pre-wrap; line-height:1.6;">
+    <div class="card-body compte-rendu">
         @compteRendu
     </div>
 </div>
 
-<a href="/Projet/GenererCompteRendu/@projet?.Id" class="btn btn-socota"><i class="fas fa-sync"></i> Régénérer</a>
-<a href="/Projet/Details/@projet?.Id" class="btn btn-outline-secondary">← Retour au projet</a>
+<div class="d-flex gap-2">
+    <a href="/Projet/GenererCompteRendu/@projet?.Id"
+       class="btn btn-socota">
+        <i class="fas fa-sync me-1"></i>
+        Régénérer
+    </a>
+
+    <a href="/Projet/Details/@projet?.Id"
+       class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>
+        Retour au projet
+    </a>
+</div>

@@ -1,32 +1,416 @@
 @model List<GestionProjetSocota.Models.Projet>
+
 @{
     var statuts = ViewBag.StatutsAffiches as List<GestionProjetSocota.Models.StatutProjet>;
 }
 
-<h1 class="h3 mb-3">Kanban</h1>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --kanban-bg: #f5f6f8;
+        --kanban-card: #ffffff;
+        --kanban-text: #212529;
+        --kanban-muted: #6c757d;
+        --kanban-border: #e2e5e9;
+    }
 
-<div class="d-flex flex-column gap-3">
+    /* =========================
+       EN-TÊTE
+       ========================= */
+
+    .kanban-title {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .kanban-subtitle {
+        color: var(--kanban-muted);
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       CONTENEUR
+       ========================= */
+
+    .kanban-container {
+        display: flex;
+        gap: 18px;
+        overflow-x: auto;
+        align-items: flex-start;
+        padding: 4px 4px 18px;
+    }
+
+
+    /* =========================
+       COLONNES
+       ========================= */
+
+    .kanban-column {
+        width: 285px;
+        min-width: 285px;
+        background-color: var(--kanban-bg);
+        border: 1px solid var(--kanban-border);
+        border-radius: 10px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .kanban-header {
+        min-height: 52px;
+        padding: 12px 14px;
+        color: #ffffff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .kanban-header .badge {
+        background-color: rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+        border-radius: 20px;
+        padding: 5px 9px;
+        font-size: 0.75rem;
+    }
+
+
+    /* =========================
+       COULEURS DES STATUTS
+       ========================= */
+
+    .status-todo {
+        background-color: #6c757d;
+    }
+
+    .status-waiting-rfc {
+        background-color: #e9a23b;
+    }
+
+    .status-rfc-approved {
+        background-color: var(--socota-green);
+    }
+
+    .status-in-progress {
+        background-color: #0d6efd;
+    }
+
+    .status-go-live {
+        background-color: #20a879;
+    }
+
+    .status-closed {
+        background-color: #198754;
+    }
+
+    .status-suspended {
+        background-color: #dc3545;
+    }
+
+    .status-cancelled {
+        background-color: #6c757d;
+    }
+
+    .status-default {
+        background-color: var(--socota-green);
+    }
+
+
+    /* =========================
+       CORPS DE COLONNE
+       ========================= */
+
+    .kanban-body {
+        padding: 12px;
+        min-height: 110px;
+    }
+
+
+    /* =========================
+       CARTE PROJET
+       ========================= */
+
+    .kanban-card {
+        display: block;
+        background-color: var(--kanban-card);
+        color: var(--kanban-text);
+        text-decoration: none;
+        border: 1px solid var(--kanban-border);
+        border-left: 4px solid var(--socota-green);
+        border-radius: 8px;
+        padding: 13px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .kanban-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .kanban-card:hover {
+        color: var(--kanban-text);
+        text-decoration: none;
+        transform: translateY(-2px);
+        border-color: var(--socota-green);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.10);
+    }
+
+    .kanban-card-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1.35;
+        margin-bottom: 10px;
+    }
+
+    .kanban-card-info {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--kanban-muted);
+        font-size: 0.78rem;
+        margin-top: 5px;
+    }
+
+    .kanban-card-info i {
+        width: 15px;
+        text-align: center;
+        color: var(--socota-green);
+    }
+
+
+    /* =========================
+       AVANCEMENT
+       ========================= */
+
+    .kanban-progress {
+        height: 5px;
+        margin-top: 10px;
+        background-color: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .kanban-progress-bar {
+        height: 100%;
+        background-color: var(--socota-green);
+        border-radius: 10px;
+    }
+
+
+    /* =========================
+       COLONNE VIDE
+       ========================= */
+
+    .kanban-empty {
+        padding: 25px 10px;
+        text-align: center;
+        color: var(--kanban-muted);
+        font-size: 0.8rem;
+    }
+
+    .kanban-empty i {
+        display: block;
+        font-size: 1.4rem;
+        margin-bottom: 7px;
+        opacity: 0.5;
+    }
+
+
+    /* =========================
+       SCROLLBAR
+       ========================= */
+
+    .kanban-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .kanban-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .kanban-container::-webkit-scrollbar-thumb {
+        background-color: var(--socota-green);
+        border-radius: 10px;
+    }
+
+
+    /* =========================
+       MODE SOMBRE
+       ========================= */
+
+    body[data-bs-theme="dark"] {
+        --kanban-bg: #25292d;
+        --kanban-card: #2b2f33;
+        --kanban-text: #e7e9eb;
+        --kanban-muted: #a8adb3;
+        --kanban-border: #3b4147;
+    }
+
+    body[data-bs-theme="dark"] .kanban-column {
+        background-color: var(--kanban-bg);
+        border-color: var(--kanban-border);
+    }
+
+    body[data-bs-theme="dark"] .kanban-card {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.20);
+    }
+
+    body[data-bs-theme="dark"] .kanban-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.30);
+    }
+
+    body[data-bs-theme="dark"] .kanban-progress {
+        background-color: #3a3f44;
+    }
+</style>
+
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+
+    <div>
+        <h1 class="h3 kanban-title">
+            Kanban
+        </h1>
+
+        <p class="kanban-subtitle">
+            Suivi des projets par étape
+        </p>
+    </div>
+
+</div>
+
+
+<div class="kanban-container">
+
     @foreach (var statut in statuts!)
     {
-        var projetsDuStatut = Model.Where(p => p.Statut == statut).ToList();
+        var projetsDuStatut = Model
+            .Where(p => p.Statut == statut)
+            .ToList();
 
-        <div class="card w-100">
-            <div class="card-header d-flex justify-content-between align-items-center py-2">
-                <span class="small fw-bold">@statut</span>
-                <span class="badge bg-secondary">@projetsDuStatut.Count</span>
+        var statutNom = statut
+            .ToString()
+            .ToLowerInvariant();
+
+        var classeStatut = "status-default";
+
+        if (statutNom.Contains("waitingrfc") ||
+            statutNom.Contains("waiting_rfc"))
+        {
+            classeStatut = "status-waiting-rfc";
+        }
+        else if (statutNom.Contains("rfcapproved") ||
+                 statutNom.Contains("rfc_approved"))
+        {
+            classeStatut = "status-rfc-approved";
+        }
+        else if (statutNom.Contains("progress") ||
+                 statutNom.Contains("ongoing") ||
+                 statutNom.Contains("inprogress"))
+        {
+            classeStatut = "status-in-progress";
+        }
+        else if (statutNom.Contains("golive") ||
+                 statutNom.Contains("go_live"))
+        {
+            classeStatut = "status-go-live";
+        }
+        else if (statutNom.Contains("closed") ||
+                 statutNom.Contains("completed") ||
+                 statutNom.Contains("done"))
+        {
+            classeStatut = "status-closed";
+        }
+        else if (statutNom.Contains("suspend"))
+        {
+            classeStatut = "status-suspended";
+        }
+        else if (statutNom.Contains("cancel"))
+        {
+            classeStatut = "status-cancelled";
+        }
+        else if (statutNom.Contains("todo") ||
+                 statutNom.Contains("new") ||
+                 statutNom.Contains("draft"))
+        {
+            classeStatut = "status-todo";
+        }
+
+
+        <div class="kanban-column">
+
+            <div class="kanban-header @classeStatut">
+
+                <span>
+                    @statut
+                </span>
+
+                <span class="badge">
+                    @projetsDuStatut.Count
+                </span>
+
             </div>
-            <div class="card-body p-2">
-                @foreach (var projet in projetsDuStatut)
+
+
+            <div class="kanban-body">
+
+                @if (projetsDuStatut.Any())
                 {
-                    <a href="/Projet/Details/@projet.Id" class="card mb-2 text-decoration-none text-dark">
-                        <div class="card-body p-2">
-                            <div class="fw-bold small">@projet.Nom</div>
-                            <div class="text-muted small">@projet.TicketId</div>
-                            <div class="text-muted small">@(projet.OwnerIt?.Nom ?? "-")</div>
-                        </div>
-                    </a>
+                    @foreach (var projet in projetsDuStatut)
+                    {
+                        <a href="/Projet/Details/@projet.Id"
+                           class="kanban-card">
+
+                            <div class="kanban-card-title">
+                                @projet.Nom
+                            </div>
+
+                            <div class="kanban-card-info">
+                                <i class="fas fa-ticket-alt"></i>
+                                <span>@projet.TicketId</span>
+                            </div>
+
+                            <div class="kanban-card-info">
+                                <i class="fas fa-user"></i>
+                                <span>
+                                    @(projet.OwnerIt?.Nom ?? "-")
+                                </span>
+                            </div>
+
+                            <div class="kanban-card-info">
+                                <i class="fas fa-chart-line"></i>
+                                <span>
+                                    @projet.PourcentageAvancement%
+                                </span>
+                            </div>
+
+                            <div class="kanban-progress">
+                                <div class="kanban-progress-bar"
+                                     style="width:@projet.PourcentageAvancement%">
+                                </div>
+                            </div>
+
+                        </a>
+                    }
                 }
+                else
+                {
+                    <div class="kanban-empty">
+
+                        <i class="fas fa-inbox"></i>
+
+                        Aucun projet
+
+                    </div>
+                }
+
             </div>
+
         </div>
     }
+
 </div>

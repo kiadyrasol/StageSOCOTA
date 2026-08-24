@@ -2,21 +2,40 @@
 
 <div class="card">
     <div class="card-body">
+
         <p class="text-muted">
             Sélectionnez le fichier de suivi Excel.
         </p>
 
         @if (TempData["Erreur"] != null)
         {
-            <div class="alert alert-danger">@TempData["Erreur"]</div>
+            <div class="alert alert-danger" role="alert">
+                @TempData["Erreur"]
+            </div>
         }
 
-        <form asp-action="ImporterExcel" method="post" enctype="multipart/form-data">
+        <form asp-action="ImporterExcel"
+              method="post"
+              enctype="multipart/form-data">
+
             <div class="mb-3">
-                <label class="form-label">Fichier Excel (.xlsx)</label>
-                <input type="file" name="fichier" accept=".xlsx" class="form-control" />
+                <label for="fichier" class="form-label">
+                    Fichier Excel (.xlsx)
+                </label>
+
+                <input id="fichier"
+                       type="file"
+                       name="fichier"
+                       accept=".xlsx"
+                       class="form-control" />
             </div>
-            <button type="submit" class="btn btn-socota"><i class="fas fa-file-import"></i> Importer</button>
+
+            <button type="submit" class="btn btn-socota">
+                <i class="fas fa-file-import me-1"></i>
+                Importer
+            </button>
+
         </form>
+
     </div>
 </div>

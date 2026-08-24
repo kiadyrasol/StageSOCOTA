@@ -1,111 +1,229 @@
 @model List<GestionProjetSocota.Models.Projet>
+
 @{
     var utilisateurs = ViewBag.Utilisateurs as List<GestionProjetSocota.Models.Utilisateur>;
 }
-
-<style>
-    .filtres-recherche { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
-    .filtres-recherche > div { flex: 1; min-width: 140px; }
-
-    @@media (max-width: 650px) {
-        .filtres-recherche { flex-direction: column; align-items: stretch; }
-        .filtres-recherche > div { min-width: 100%; }
-    }
-</style>
 
 <h1 class="h3 mb-3">Recherche multicritères</h1>
 
 <div class="card mb-3">
     <div class="card-body">
-        <form method="get" asp-action="Recherche" class="filtres-recherche">
-            <div>
-                <label class="form-label small">Unité</label>
-                <select name="unite" class="form-select form-select-sm">
+
+        <form method="get"
+              asp-action="Recherche"
+              class="filtres-recherche">
+
+            <div class="filtre-item">
+                <label class="form-label small" for="unite">
+                    Unité
+                </label>
+
+                <select id="unite"
+                        name="unite"
+                        class="form-select form-select-sm">
+
                     <option value="">Toutes</option>
-                    @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.Unite>())
+
+                    @foreach (var unite in Enum.GetValues<GestionProjetSocota.Models.Unite>())
                     {
-                        <option value="@v" selected="@(Context.Request.Query["unite"] == v.ToString())">@v</option>
+                        <option value="@unite"
+                                selected="@(Context.Request.Query["unite"] == unite.ToString())">
+                            @unite
+                        </option>
                     }
+
                 </select>
             </div>
-            <div>
-                <label class="form-label small">Département</label>
-                <select name="departement" class="form-select form-select-sm">
+
+            <div class="filtre-item">
+                <label class="form-label small" for="departement">
+                    Département
+                </label>
+
+                <select id="departement"
+                        name="departement"
+                        class="form-select form-select-sm">
+
                     <option value="">Tous</option>
-                    @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.Departement>())
+
+                    @foreach (var departement in Enum.GetValues<GestionProjetSocota.Models.Departement>())
                     {
-                        <option value="@v" selected="@(Context.Request.Query["departement"] == v.ToString())">@v</option>
+                        <option value="@departement"
+                                selected="@(Context.Request.Query["departement"] == departement.ToString())">
+                            @departement
+                        </option>
                     }
+
                 </select>
             </div>
-            <div>
-                <label class="form-label small">Statut</label>
-                <select name="statut" class="form-select form-select-sm">
+
+            <div class="filtre-item">
+                <label class="form-label small" for="statut">
+                    Statut
+                </label>
+
+                <select id="statut"
+                        name="statut"
+                        class="form-select form-select-sm">
+
                     <option value="">Tous</option>
-                    @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.StatutProjet>())
+
+                    @foreach (var statut in Enum.GetValues<GestionProjetSocota.Models.StatutProjet>())
                     {
-                        <option value="@v" selected="@(Context.Request.Query["statut"] == v.ToString())">@v</option>
+                        <option value="@statut"
+                                selected="@(Context.Request.Query["statut"] == statut.ToString())">
+                            @statut
+                        </option>
                     }
+
                 </select>
             </div>
-            <div>
-                <label class="form-label small">Type</label>
-                <select name="type" class="form-select form-select-sm">
+
+            <div class="filtre-item">
+                <label class="form-label small" for="type">
+                    Type
+                </label>
+
+                <select id="type"
+                        name="type"
+                        class="form-select form-select-sm">
+
                     <option value="">Tous</option>
-                    @foreach (var v in Enum.GetValues<GestionProjetSocota.Models.TypeProjet>())
+
+                    @foreach (var type in Enum.GetValues<GestionProjetSocota.Models.TypeProjet>())
                     {
-                        <option value="@v" selected="@(Context.Request.Query["type"] == v.ToString())">@v</option>
+                        <option value="@type"
+                                selected="@(Context.Request.Query["type"] == type.ToString())">
+                            @type
+                        </option>
                     }
+
                 </select>
             </div>
-            <div>
-                <label class="form-label small">Responsable IT</label>
-                <select name="ownerItId" class="form-select form-select-sm">
+
+            <div class="filtre-item">
+                <label class="form-label small" for="ownerItId">
+                    Responsable IT
+                </label>
+
+                <select id="ownerItId"
+                        name="ownerItId"
+                        class="form-select form-select-sm">
+
                     <option value="">Tous</option>
+
                     @if (utilisateurs != null)
                     {
-                        @foreach (var u in utilisateurs)
+                        @foreach (var utilisateur in utilisateurs)
                         {
-                            <option value="@u.Id" selected="@(Context.Request.Query["ownerItId"] == u.Id.ToString())">@u.Nom</option>
+                            <option value="@utilisateur.Id"
+                                    selected="@(Context.Request.Query["ownerItId"] == utilisateur.Id.ToString())">
+                                @utilisateur.Nom
+                            </option>
                         }
                     }
+
                 </select>
             </div>
-            <div>
-                <button type="submit" class="btn btn-socota btn-sm w-100">Filtrer</button>
+
+            <div class="filtre-action">
+                <button type="submit"
+                        class="btn btn-socota btn-sm w-100">
+                    <i class="fas fa-filter me-1"></i>
+                    Filtrer
+                </button>
             </div>
+
         </form>
-        <a href="/Projet/Recherche" class="small text-muted d-inline-block mt-2">Réinitialiser</a>
+
+        <a asp-action="Recherche"
+           class="small text-muted d-inline-block mt-2">
+            Réinitialiser
+        </a>
+
     </div>
 </div>
 
 <div class="mb-2">
-    <a href="/Projet/ExporterExcel@(Context.Request.QueryString)" class="btn btn-outline-success btn-sm"><i class="fas fa-file-excel"></i> Export Excel</a>
-    <a href="/Projet/ExporterPdf@(Context.Request.QueryString)" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-pdf"></i> Export PDF</a>
+
+    <a href="/Projet/ExporterExcel@(Context.Request.QueryString)"
+       class="btn btn-outline-socota btn-sm">
+        <i class="fas fa-file-excel me-1"></i>
+        Export Excel
+    </a>
+
+    <a href="/Projet/ExporterPdf@(Context.Request.QueryString)"
+       class="btn btn-outline-danger btn-sm">
+        <i class="fas fa-file-pdf me-1"></i>
+        Export PDF
+    </a>
+
 </div>
 
-<p class="text-muted small">@Model.Count résultat(s)</p>
+<p class="text-muted small">
+    @Model.Count résultat(s)
+</p>
 
 <div class="card">
     <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr><th>Ticket ID</th><th>Nom</th><th>Unité</th><th>Statut</th><th>Owner IT</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var projet in Model)
-                    {
+
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+
+                <table class="table table-hover mb-0">
+
+                    <thead class="table-light">
                         <tr>
-                            <td>@projet.TicketId</td>
-                            <td><a href="/Projet/Details/@projet.Id">@projet.Nom</a></td>
-                            <td>@projet.Unite</td>
-                            <td><span class="badge bg-success">@projet.Statut</span></td>
-                            <td>@(projet.OwnerIt?.Nom ?? "-")</td>
+                            <th>Ticket ID</th>
+                            <th>Nom</th>
+                            <th>Unité</th>
+                            <th>Statut</th>
+                            <th>Owner IT</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var projet in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @projet.TicketId
+                                </td>
+
+                                <td>
+                                    <a href="/Projet/Details/@projet.Id">
+                                        @projet.Nom
+                                    </a>
+                                </td>
+
+                                <td>
+                                    @projet.Unite
+                                </td>
+
+                                <td>
+                                    <span class="badge badge-socota">
+                                        @projet.Statut
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @(projet.OwnerIt?.Nom ?? "-")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="p-4 text-center text-muted">
+                Aucun projet ne correspond aux critères sélectionnés.
+            </div>
+        }
+
     </div>
 </div>

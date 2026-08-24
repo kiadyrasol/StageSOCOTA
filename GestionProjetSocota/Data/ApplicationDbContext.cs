@@ -16,6 +16,7 @@ namespace GestionProjetSocota.Data
         public DbSet<RFC> RFCs { get; set; }
         public DbSet<ActionProjet> Actions { get; set; }
         public DbSet<Commentaire> Commentaires { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<PieceJointe> PiecesJointes { get; set; }
         public DbSet<HistoriqueProjet> HistoriqueProjets { get; set; }
 

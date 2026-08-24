@@ -16,13 +16,20 @@ namespace GestionProjetSocota.Controllers
         private readonly WorkflowService _workflowService;
         private readonly GeminiService _geminiService;
         private readonly ScoreRisqueService _scoreRisqueService;
+        private readonly NotificationService _notificationService;
 
-        public ProjetController(ApplicationDbContext context, WorkflowService workflowService, GeminiService geminiService, ScoreRisqueService scoreRisqueService)
+        public ProjetController(
+            ApplicationDbContext context,
+            WorkflowService workflowService,
+            GeminiService geminiService,
+            ScoreRisqueService scoreRisqueService,
+            NotificationService notificationService)
         {
             _context = context;
             _workflowService = workflowService;
             _geminiService = geminiService;
             _scoreRisqueService = scoreRisqueService;
+            _notificationService = notificationService;
         }
 
 
@@ -52,6 +59,16 @@ namespace GestionProjetSocota.Controllers
             return View(projets);
         }
 
+        // Notifications
+        public async Task<IActionResult> Notifications()
+        {
+            var notifications = await _context.Notifications
+                .Include(n => n.Projet)
+                .OrderByDescending(n => n.DateEnvoi)
+                .ToListAsync();
+
+            return View(notifications);
+        }
 
         // Recherche
         public async Task<IActionResult> Recherche(Unite? unite, Departement? departement, StatutProjet? statut, TypeProjet? type, int? ownerItId)
@@ -238,7 +255,7 @@ namespace GestionProjetSocota.Controllers
                 TempData["Erreur"] = "Aucun fichier sélectionné.";
                 return RedirectToAction("ImporterExcel");
             }
-            
+
             var nomUtilisateur = User.Identity?.Name;
 
             var auteur = await _context.Utilisateurs
@@ -444,28 +461,51 @@ namespace GestionProjetSocota.Controllers
         public async Task<IActionResult> Kanban()
         {
             var projets = await _context.Projets
-                .Include(p => p.OwnerIt)
+                .AsNoTracking()
+                .Select(p => new Projet
+                {
+                    Id = p.Id,
+                    TicketId = p.TicketId,
+                    Reference = p.Reference,
+                    Nom = p.Nom,
+                    Unite = p.Unite,
+                    Departement = p.Departement,
+                    Type = p.Type,
+                    Plateforme = p.Plateforme,
+                    Statut = p.Statut,
+                    Priorite = p.Priorite,
+                    Deadline = p.Deadline,
+                    PourcentageAvancement = p.PourcentageAvancement,
+                    OwnerItId = p.OwnerItId,
+
+                    OwnerIt = p.OwnerIt == null
+                        ? null
+                        : new Utilisateur
+                        {
+                            Id = p.OwnerIt.Id,
+                            Nom = p.OwnerIt.Nom
+                        }
+                })
                 .ToListAsync();
 
             var statutsAffiches = new List<StatutProjet>
-            {
-                StatutProjet.WaitingRFC,
-                StatutProjet.RFCApproved,
-                StatutProjet.Analyse,
-                StatutProjet.DevStarted,
-                StatutProjet.Testing,
-                StatutProjet.Debugging,
-                StatutProjet.Formation,
-                StatutProjet.GoLive,
-                StatutProjet.Support,
-                StatutProjet.Closed
-            };
+    {
+        StatutProjet.WaitingRFC,
+        StatutProjet.RFCApproved,
+        StatutProjet.Analyse,
+        StatutProjet.DevStarted,
+        StatutProjet.Testing,
+        StatutProjet.Debugging,
+        StatutProjet.Formation,
+        StatutProjet.GoLive,
+        StatutProjet.Support,
+        StatutProjet.Closed
+    };
 
             ViewBag.StatutsAffiches = statutsAffiches;
 
             return View(projets);
         }
-
 
         // Roadmap
         public async Task<IActionResult> Roadmap()
@@ -517,93 +557,15 @@ namespace GestionProjetSocota.Controllers
         public async Task<IActionResult> Dashboard()
         {
             var projets = await _context.Projets
-                .Include(p => p.OwnerIt)
-                .ToListAsync();
-
-            var stats = new DashboardViewModel
-            {
-                TotalProjets = projets.Count,
-                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
-                ProjetsTermines = projets.Count(p => p.Statut == StatutProjet.Closed),
-                ProjetsSuspendus = projets.Count(p => p.Statut == StatutProjet.Suspendu),
-                ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < DateTime.Now && p.Statut != StatutProjet.Closed),
-
-                RepartitionParStatut = projets
-                    .GroupBy(p => p.Statut)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-                    .ToList(),
-
-                RepartitionParUnite = projets
-                    .GroupBy(p => p.Unite)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-                    .ToList(),
-
-                RepartitionParDepartement = projets
-                    .GroupBy(p => p.Departement)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-                    .ToList(),
-
-                ChargeParOwnerIt = projets
-                    .Where(p => p.OwnerIt != null)
-                    .GroupBy(p => p.OwnerIt!.Nom)
-                    .Select(g => new StatDonnee { Label = g.Key, Valeur = g.Count() })
-                    .ToList()
-            };
-
-            return View(stats);
-        }
-
-
-        // Dashboard COMEX
-        public async Task<IActionResult> DashboardComex()
-        {
-            var projets = await _context.Projets.ToListAsync();
-
-            int vert = 0, orange = 0, rouge = 0;
-
-            foreach (var p in projets.Where(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled))
-            {
-                if (!p.Deadline.HasValue || p.Deadline >= DateTime.Now)
+                .AsNoTracking()
+                .Select(p => new
                 {
-                    vert++;
-                }
-                else
-                {
-                    var joursRetard = (DateTime.Now - p.Deadline.Value).Days;
-                    if (joursRetard < 30) orange++;
-                    else rouge++;
-                }
-            }
-
-            var stats = new DashboardViewModel
-            {
-                TotalProjets = projets.Count,
-                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
-
-                PortfolioVert = vert,
-                PortfolioOrange = orange,
-                PortfolioRouge = rouge,
-
-                RepartitionParType = projets
-                    .GroupBy(p => p.Type)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-                    .ToList(),
-
-                RepartitionParPlateforme = projets
-                    .GroupBy(p => p.Plateforme)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
-                    .ToList()
-            };
-
-            return View(stats);
-        }
-
-
-        // Dashboard IT Manager
-        public async Task<IActionResult> DashboardItManager()
-        {
-            var projets = await _context.Projets
-                .Include(p => p.OwnerIt)
+                    p.Statut,
+                    p.Unite,
+                    p.Departement,
+                    p.Deadline,
+                    OwnerItNom = p.OwnerIt != null ? p.OwnerIt.Nom : null
+                })
                 .ToListAsync();
 
             var maintenant = DateTime.Now;
@@ -611,42 +573,252 @@ namespace GestionProjetSocota.Controllers
             var stats = new DashboardViewModel
             {
                 TotalProjets = projets.Count,
-                ProjetsActifs = projets.Count(p => p.Statut != StatutProjet.Closed && p.Statut != StatutProjet.Cancelled),
-                ProjetsEnRetard = projets.Count(p => p.Deadline.HasValue && p.Deadline < maintenant && p.Statut != StatutProjet.Closed),
 
-                ProjetsCritiques = projets.Count(p => p.Priorite == PrioriteProjet.High && p.Statut != StatutProjet.Closed),
+                ProjetsActifs = projets.Count(p =>
+                    p.Statut != StatutProjet.Closed &&
+                    p.Statut != StatutProjet.Cancelled),
 
-                DeadlinesDuMois = projets
-                    .Where(p => p.Deadline.HasValue
-                        && p.Deadline.Value.Date >= maintenant.Date
-                        && p.Deadline.Value.Date <= maintenant.Date.AddDays(30)
-                        && p.Statut != StatutProjet.Closed)
-                    .OrderBy(p => p.Deadline)
-                    .ToList(),
+                ProjetsTermines = projets.Count(p =>
+                    p.Statut == StatutProjet.Closed),
+
+                ProjetsSuspendus = projets.Count(p =>
+                    p.Statut == StatutProjet.Suspendu),
+
+                ProjetsEnRetard = projets.Count(p =>
+                    p.Deadline.HasValue &&
+                    p.Deadline < maintenant &&
+                    p.Statut != StatutProjet.Closed),
 
                 RepartitionParStatut = projets
                     .GroupBy(p => p.Statut)
-                    .Select(g => new StatDonnee { Label = g.Key.ToString(), Valeur = g.Count() })
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
+                    .ToList(),
+
+                RepartitionParUnite = projets
+                    .GroupBy(p => p.Unite)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
+                    .ToList(),
+
+                RepartitionParDepartement = projets
+                    .GroupBy(p => p.Departement)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
                     .ToList(),
 
                 ChargeParOwnerIt = projets
-                    .Where(p => p.OwnerIt != null && p.Statut != StatutProjet.Closed)
-                    .GroupBy(p => p.OwnerIt!.Nom)
-                    .Select(g => new StatDonnee { Label = g.Key, Valeur = g.Count() })
-                    .ToList(),
-
-                AgingProjets = new List<StatDonnee>
-                {
-                    new() { Label = "0-30 jours", Valeur = projets.Count(p => (maintenant - p.DateCreation).Days <= 30 && p.Statut != StatutProjet.Closed) },
-                    new() { Label = "31-60 jours", Valeur = projets.Count(p => (maintenant - p.DateCreation).Days > 30 && (maintenant - p.DateCreation).Days <= 60 && p.Statut != StatutProjet.Closed) },
-                    new() { Label = "61-90 jours", Valeur = projets.Count(p => (maintenant - p.DateCreation).Days > 60 && (maintenant - p.DateCreation).Days <= 90 && p.Statut != StatutProjet.Closed) },
-                    new() { Label = "90+ jours", Valeur = projets.Count(p => (maintenant - p.DateCreation).Days > 90 && p.Statut != StatutProjet.Closed) }
-                }
+                    .Where(p => p.OwnerItNom != null)
+                    .GroupBy(p => p.OwnerItNom!)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key,
+                        Valeur = g.Count()
+                    })
+                    .ToList()
             };
 
             return View(stats);
         }
 
+        // Dashboard COMEX
+        public async Task<IActionResult> DashboardComex()
+        {
+            var projets = await _context.Projets
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    p.Statut,
+                    p.Type,
+                    p.Plateforme,
+                    p.Deadline
+                })
+                .ToListAsync();
+
+            var maintenant = DateTime.Now;
+
+            int vert = 0;
+            int orange = 0;
+            int rouge = 0;
+
+            foreach (var p in projets)
+            {
+                if (p.Statut == StatutProjet.Closed ||
+                    p.Statut == StatutProjet.Cancelled)
+                {
+                    continue;
+                }
+
+                if (!p.Deadline.HasValue || p.Deadline >= maintenant)
+                {
+                    vert++;
+                }
+                else
+                {
+                    var joursRetard = (maintenant - p.Deadline.Value).Days;
+
+                    if (joursRetard < 30)
+                    {
+                        orange++;
+                    }
+                    else
+                    {
+                        rouge++;
+                    }
+                }
+            }
+
+            var stats = new DashboardViewModel
+            {
+                TotalProjets = projets.Count,
+
+                ProjetsActifs = projets.Count(p =>
+                    p.Statut != StatutProjet.Closed &&
+                    p.Statut != StatutProjet.Cancelled),
+
+                PortfolioVert = vert,
+                PortfolioOrange = orange,
+                PortfolioRouge = rouge,
+
+                RepartitionParType = projets
+                    .GroupBy(p => p.Type)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
+                    .ToList(),
+
+                RepartitionParPlateforme = projets
+                    .GroupBy(p => p.Plateforme)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
+                    .ToList()
+            };
+
+            return View(stats);
+        }
+
+        // Dashboard IT Manager
+        public async Task<IActionResult> DashboardItManager()
+        {
+            var projets = await _context.Projets
+                .AsNoTracking()
+                .Select(p => new
+                {
+                    p.Statut,
+                    p.Priorite,
+                    p.Deadline,
+                    p.DateCreation,
+                    OwnerItNom = p.OwnerIt != null ? p.OwnerIt.Nom : null
+                })
+                .ToListAsync();
+
+            var maintenant = DateTime.Now;
+            var aujourdHui = maintenant.Date;
+            var dans30Jours = aujourdHui.AddDays(30);
+
+            var stats = new DashboardViewModel
+            {
+                TotalProjets = projets.Count,
+
+                ProjetsActifs = projets.Count(p =>
+                    p.Statut != StatutProjet.Closed &&
+                    p.Statut != StatutProjet.Cancelled),
+
+                ProjetsEnRetard = projets.Count(p =>
+                    p.Deadline.HasValue &&
+                    p.Deadline.Value < maintenant &&
+                    p.Statut != StatutProjet.Closed),
+
+                ProjetsCritiques = projets.Count(p =>
+                    p.Priorite == PrioriteProjet.High &&
+                    p.Statut != StatutProjet.Closed),
+
+                DeadlinesDuMois = await _context.Projets
+                    .AsNoTracking()
+                    .Include(p => p.OwnerIt)
+                    .Where(p =>
+                        p.Deadline.HasValue &&
+                        p.Deadline.Value.Date >= aujourdHui &&
+                        p.Deadline.Value.Date <= dans30Jours &&
+                        p.Statut != StatutProjet.Closed)
+                    .OrderBy(p => p.Deadline)
+                    .ToListAsync(),
+
+                RepartitionParStatut = projets
+                    .GroupBy(p => p.Statut)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key.ToString(),
+                        Valeur = g.Count()
+                    })
+                    .ToList(),
+
+                ChargeParOwnerIt = projets
+                    .Where(p =>
+                        p.OwnerItNom != null &&
+                        p.Statut != StatutProjet.Closed)
+                    .GroupBy(p => p.OwnerItNom!)
+                    .Select(g => new StatDonnee
+                    {
+                        Label = g.Key,
+                        Valeur = g.Count()
+                    })
+                    .ToList(),
+
+                AgingProjets = new List<StatDonnee>
+        {
+            new()
+            {
+                Label = "0-30 jours",
+                Valeur = projets.Count(p =>
+                    (maintenant - p.DateCreation).Days <= 30 &&
+                    p.Statut != StatutProjet.Closed)
+            },
+
+            new()
+            {
+                Label = "31-60 jours",
+                Valeur = projets.Count(p =>
+                    (maintenant - p.DateCreation).Days > 30 &&
+                    (maintenant - p.DateCreation).Days <= 60 &&
+                    p.Statut != StatutProjet.Closed)
+            },
+
+            new()
+            {
+                Label = "61-90 jours",
+                Valeur = projets.Count(p =>
+                    (maintenant - p.DateCreation).Days > 60 &&
+                    (maintenant - p.DateCreation).Days <= 90 &&
+                    p.Statut != StatutProjet.Closed)
+            },
+
+            new()
+            {
+                Label = "90+ jours",
+                Valeur = projets.Count(p =>
+                    (maintenant - p.DateCreation).Days > 90 &&
+                    p.Statut != StatutProjet.Closed)
+            }
+        }
+            };
+
+            return View(stats);
+        }
 
         // Details
         public async Task<IActionResult> Details(int id)
@@ -922,41 +1094,119 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
-        public async Task<IActionResult> ChangerStatut(int id, StatutProjet nouveauStatut)
+        public async Task<IActionResult> ChangerStatut(
+    int id,
+    StatutProjet nouveauStatut)
         {
-            var projet = await _context.Projets.FindAsync(id);
+            var projet = await _context.Projets
+                .Include(p => p.OwnerIt)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (projet == null)
             {
                 return NotFound();
             }
 
-            var transitionsAutorisees = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
+            var transitionsAutorisees =
+                _workflowService.GetTransitionsPossibles(
+                    projet.Statut,
+                    projet.StatutPrecedent,
+                    projet.Type);
 
             if (!transitionsAutorisees.Contains(nouveauStatut))
             {
-                TempData["Erreur"] = "Transition de statut non autorisée.";
-                return RedirectToAction("ChangerStatut", new { id });
+                TempData["Erreur"] =
+                    "Transition de statut non autorisée.";
+
+                return RedirectToAction(
+                    "ChangerStatut",
+                    new { id });
             }
 
+            var ancienStatut = projet.Statut;
+
             var nomAD = User.Identity?.Name;
-            var auteur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.NomADUtilisateur == nomAD);
 
-            _context.HistoriqueProjets.Add(new HistoriqueProjet
-            {
-                ProjetId = projet.Id,
-                UtilisateurId = auteur?.Id ?? 0,
-                TypeAction = "Changement de statut",
-                Detail = $"{projet.Statut} → {nouveauStatut}"
-            });
+            var auteur = await _context.Utilisateurs
+                .FirstOrDefaultAsync(
+                    u => u.NomADUtilisateur == nomAD);
 
-            projet.StatutPrecedent = projet.Statut;
+            _context.HistoriqueProjets.Add(
+                new HistoriqueProjet
+                {
+                    ProjetId = projet.Id,
+                    UtilisateurId = auteur?.Id ?? 0,
+                    TypeAction = "Changement de statut",
+                    Detail = $"{ancienStatut} → {nouveauStatut}"
+                });
+
+            projet.StatutPrecedent = ancienStatut;
             projet.Statut = nouveauStatut;
+
             await _context.SaveChangesAsync();
-            TempData["Succes"] = $"Statut changé vers {nouveauStatut}.";
+
+            if (projet.OwnerIt != null &&
+                !string.IsNullOrWhiteSpace(projet.OwnerIt.Email))
+            {
+                var sujet =
+                    $"Projet {projet.TicketId} - Changement de statut";
+
+                var message = $"""
+        Bonjour {projet.OwnerIt.Nom},
+
+        Le statut du projet suivant vient d'être modifié :
+
+        Projet : {projet.Nom}
+        Ticket ID : {projet.TicketId}
+
+        Ancien statut : {ancienStatut}
+        Nouveau statut : {nouveauStatut}
+
+        Responsable IT : {projet.OwnerIt.Nom}
+
+        Vous pouvez consulter le projet dans
+        l'application Gestion Projet SOCOTA.
+
+        Cordialement,
+        Gestion Projet SOCOTA
+        """;
+
+                try
+                {
+                    await _notificationService
+                        .EnvoyerNotificationProjet(
+                            projet,
+                            "ChangementStatut",
+                            projet.OwnerIt.Email,
+                            sujet,
+                            message);
+
+                    TempData["Succes"] =
+                        $"Statut changé vers {nouveauStatut}. " +
+                        "Une notification a été envoyée.";
+                }
+                catch (Exception)
+                {
+                    TempData["Succes"] =
+                        $"Statut changé vers {nouveauStatut}.";
+
+                    TempData["Erreur"] =
+                        "Le statut a été modifié, " +
+                        "mais la notification email n'a pas pu être envoyée.";
+                }
+            }
+            else
+            {
+                TempData["Succes"] =
+                    $"Statut changé vers {nouveauStatut}.";
+
+                TempData["Erreur"] =
+                    "Aucune adresse email n'est associée au Owner IT.";
+            }
+
 
             return RedirectToAction("Index");
         }
-
 
         // Delete
         [Authorize(Roles = "Administrateur")]

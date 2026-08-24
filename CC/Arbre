@@ -1,0 +1,62 @@
+GestionProjetSocota/
+│
+├── appsettings.json                    (non suivi par Git — protégé via .gitignore)
+├── Program.cs                          (config DbContext, Auth AD, Localisation, Middlewares)
+│
+├── Controllers/
+│   ├── HomeController.cs
+│   ├── ProjetController.cs             (Index, Recherche, Export Excel/PDF, Import Excel,
+│   │                                     Kanban, Roadmap, Gantt, Dashboards x3, Details,
+│   │                                     GenererCompteRendu, Create, Edit, ChangerStatut, Delete)
+│   ├── RFCController.cs                (Create, Valider, AnnulerValidation)
+│   ├── ActionProjetController.cs       (Create, ChangerStatut, Delete)
+│   ├── CommentaireController.cs        (Create, Delete)
+│   ├── PieceJointeController.cs        (Create, Delete)
+│   └── CultureController.cs            (changement de langue FR/EN)
+│
+├── Models/
+│   ├── Utilisateur.cs                  (+ enum RoleUtilisateur)
+│   ├── Projet.cs                       (+ enums Unite, Departement, TypeProjet, Plateforme,
+│   │                                     PrioriteProjet, StatutProjet)
+│   ├── RFC.cs
+│   ├── ActionProjet.cs                 (+ enum StatutAction)
+│   ├── Commentaire.cs
+│   ├── PieceJointe.cs                  (+ enum TypePieceJointe)
+│   ├── HistoriqueProjet.cs
+│   └── ErrorViewModel.cs
+│
+├── ViewModels/
+│   ├── ProjetCreateViewModel.cs
+│   ├── ProjetEditViewModel.cs
+│   ├── RFCCreateViewModel.cs
+│   ├── ActionCreateViewModel.cs
+│   ├── CommentaireCreateViewModel.cs
+│   ├── PieceJointeCreateViewModel.cs
+│   └── DashboardViewModel.cs           (+ classe StatDonnee)
+│
+├── Services/
+│   ├── WorkflowService.cs              (transitions de statut par type de projet)
+│   ├── GeminiService.cs                (appel API Gemini, compte-rendu IA)
+│   └── ScoreRisqueService.cs           (calcul du score de risque automatique)
+│
+├── Middlewares/
+│   └── SyncUtilisateurMiddleware.cs    (synchronisation AD → table Utilisateurs)
+│
+├── Data/
+│   └── ApplicationDbContext.cs         (7 DbSet + règles OnDelete)
+│
+├── Migrations/                         (historique des évolutions de la base)
+│
+├── Views/
+│   ├── Home/
+│   ├── Projet/                         (Index, Create, Edit, Delete, Details, ChangerStatut,
+│   │                                     Kanban, Roadmap, Gantt, Dashboard, DashboardComex,
+│   │                                     DashboardItManager, Recherche, ImporterExcel,
+│   │                                     GenererCompteRendu)
+│   ├── RFC/
+│   ├── ActionProjet/
+│   └── Shared/
+│       └── _Layout.cshtml              (AdminLTE, sidebar, mode sombre, sélecteur langue)
+│
+└── wwwroot/
+    └── uploads/                        (pièces jointes stockées localement)

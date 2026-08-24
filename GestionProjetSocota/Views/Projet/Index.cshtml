@@ -1,21 +1,65 @@
 @model List<GestionProjetSocota.Models.Projet>
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h3">Projets</h1>
-    <a href="/Projet/Create" class="btn btn-socota"><i class="fas fa-plus"></i> Nouveau projet</a>
+@{
+    var scores = ViewBag.Scores as Dictionary<int, (int score, string couleur)>;
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+
+    <div>
+        <h1 class="h3 fw-bold mb-1">Projets</h1>
+        <p class="text-muted mb-0">
+            Gestion et suivi des projets de digitalisation
+        </p>
+    </div>
+
+    <a href="/Projet/Create" class="btn btn-socota">
+        <i class="fas fa-plus me-1"></i>
+        Nouveau projet
+    </a>
+
 </div>
 
-<div class="card">
+<div class="card shadow-sm">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <div>
+            <h5 class="mb-0 fw-semibold">
+                Liste des projets
+            </h5>
+
+            <small class="text-muted">
+                @Model.Count projet(s)
+            </small>
+        </div>
+
+        <i class="fas fa-folder-open text-socota"></i>
+
+    </div>
+
     <div class="card-body p-0">
+
         @if (!Model.Any())
         {
-            <p class="text-muted p-3 mb-0">Aucun projet pour le moment.</p>
+            <div class="text-center py-5">
+
+                <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+
+                <p class="text-muted mb-0">
+                    Aucun projet pour le moment.
+                </p>
+
+            </div>
         }
         else
         {
             <div class="table-responsive">
+
                 <table class="table table-hover align-middle mb-0">
+
                     <thead class="table-light">
+
                         <tr>
                             <th>Référence</th>
                             <th>Ticket ID</th>
@@ -27,67 +71,178 @@
                             <th>Type</th>
                             <th>Plateforme</th>
                             <th>Deadline</th>
-                            <th>Avancement</th>
+                            <th style="min-width: 130px;">Avancement</th>
                             <th>Risque</th>
                             <th class="text-end">Actions</th>
                         </tr>
+
                     </thead>
+
                     <tbody>
+
                         @foreach (var projet in Model)
                         {
                             <tr>
-                                <td>@(string.IsNullOrEmpty(projet.Reference) ? "-" : projet.Reference)</td>
-                                <td>@projet.TicketId</td>
-                                <td>@projet.Nom</td>
-                                <td>@projet.Unite</td>
-                                <td><span class="badge bg-success">@projet.Statut</span></td>
-                                <td>@(projet.OwnerIt?.Nom ?? "-")</td>
-                                <td>@(projet.PowerUser?.Nom ?? "-")</td>
-                                <td>@projet.Type</td>
-                                <td>@projet.Plateforme</td>
+
+                                <td class="fw-semibold">
+                                    @(string.IsNullOrWhiteSpace(projet.Reference)
+                                        ? "-"
+                                        : projet.Reference)
+                                </td>
+
+                                <td>
+                                    <span class="text-muted">
+                                        @projet.TicketId
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="fw-semibold">
+                                        @projet.Nom
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @projet.Unite
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-socota">
+                                        @projet.Statut
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @(projet.OwnerIt?.Nom ?? "-")
+                                </td>
+
+                                <td>
+                                    @(projet.PowerUser?.Nom ?? "-")
+                                </td>
+
+                                <td>
+                                    @projet.Type
+                                </td>
+
+                                <td>
+                                    @projet.Plateforme
+                                </td>
+
                                 <td>
                                     @if (projet.Deadline.HasValue)
                                     {
-                                        <span class="@(projet.Deadline.Value < DateTime.Now ? "text-danger fw-bold" : "")">
+                                        var dateEnRetard =
+                                            projet.Deadline.Value < DateTime.Now;
+
+                                        <span class="@(dateEnRetard
+                                            ? "text-danger fw-semibold"
+                                            : "")">
+
                                             @projet.Deadline.Value.ToString("dd/MM/yyyy")
+
                                         </span>
                                     }
                                     else
                                     {
-                                        <span class="text-muted">-</span>
+                                        <span class="text-muted">
+                                            -
+                                        </span>
                                     }
                                 </td>
-                                <td style="min-width: 120px;">
-                                    <div class="progress" style="height:18px;">
-                                        <div class="progress-bar bg-success" role="progressbar"
-                                             style="width:@(projet.PourcentageAvancement)%">
-                                            @projet.PourcentageAvancement%
-                                        </div>
-                                    </div>
-                                </td>
+
                                 <td>
-                                    @{
-                                        var scores = ViewBag.Scores as Dictionary<int, (int score, string couleur)>;
-                                        var (score, couleur) = scores != null && scores.ContainsKey(projet.Id) ? scores[projet.Id] :
-                                                (0, "secondary");
-                                    }
-                                    <span class="badge bg-@couleur">@score</span>
+
+                                    <div class="progress"
+                                         role="progressbar"
+                                         aria-valuenow="@projet.PourcentageAvancement"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"
+                                         style="height: 18px;">
+
+                                        <div class="progress-bar bg-socota"
+                                             style="width: @projet.PourcentageAvancement%;">
+
+                                            <span class="small fw-semibold">
+                                                @projet.PourcentageAvancement%
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
                                 </td>
+
+                                <td>
+
+                                    @{
+                                        var scoreData =
+                                            scores != null &&
+                                            scores.TryGetValue(projet.Id, out var resultat)
+                                                ? resultat
+                                                : (score: 0, couleur: "success");
+
+                                        var classeRisque =
+                                            scoreData.couleur == "success"
+                                                ? "bg-socota"
+                                                : $"bg-{scoreData.couleur}";
+                                    }
+
+                                    <span class="badge @classeRisque">
+                                        @scoreData.score
+                                    </span>
+
+                                </td>
+
                                 <td class="text-end text-nowrap">
-                                    <a href="/Projet/Details/@projet.Id" class="btn btn-sm btn-outline-secondary"
-                                       title="Voir"><i class="fas fa-eye"></i></a>
-                                    <a href="/Projet/ChangerStatut/@projet.Id" class="btn btn-sm btn-outline-success"
-                                       title="Changer Statut"><i class="fas fa-exchange-alt"></i></a>
-                                    <a href="/Projet/Edit/@projet.Id" class="btn btn-sm btn-outline-primary" title="Éditer"><i
-                                        class="fas fa-edit"></i></a>
-                                        <a href="/Projet/Delete/@projet.Id" class="btn btn-sm btn-outline-danger"
-                                           title="Supprimer"><i class="fas fa-trash"></i></a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-        </div>
+
+                                    <div class="btn-group" role="group">
+
+                                        <a href="/Projet/Details/@projet.Id"
+                                           class="btn btn-sm btn-outline-secondary"
+                                           title="Voir">
+
+                                            <i class="fas fa-eye"></i>
+
+                                        </a>
+
+                                        <a href="/Projet/ChangerStatut/@projet.Id"
+                                           class="btn btn-sm btn-outline-socota"
+                                           title="Changer le statut">
+
+                                            <i class="fas fa-exchange-alt"></i>
+
+                                        </a>
+
+                                        <a href="/Projet/Edit/@projet.Id"
+                                           class="btn btn-sm btn-outline-primary"
+                                           title="Modifier">
+
+                                            <i class="fas fa-edit"></i>
+
+                                        </a>
+
+                                        <a href="/Projet/Delete/@projet.Id"
+                                           class="btn btn-sm btn-outline-danger"
+                                           title="Supprimer">
+
+                                            <i class="fas fa-trash"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
     </div>
+
+</div>

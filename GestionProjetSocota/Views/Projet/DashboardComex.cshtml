@@ -1,61 +1,315 @@
 @model GestionProjetSocota.ViewModels.DashboardViewModel
 
-<h1 class="h3 mb-3">Dashboard COMEX</h1>
+<style>
+    .comex-page {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --comex-warning: #f0ad4e;
+        --comex-danger: #dc3545;
+    }
 
-<p class="fw-bold small">Portfolio Health</p>
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card border-success"><div class="card-body">
-            <p class="text-success small mb-1">délai respecté</p>
-            <p class="h4 mb-0 text-success">@Model.PortfolioVert</p>
-        </div></div>
+    .comex-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .comex-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .comex-section-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.75rem;
+    }
+
+    .comex-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .comex-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .comex-health-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .comex-health-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: var(--socota-green);
+    }
+
+    .comex-health-card.warning::before {
+        background-color: var(--comex-warning);
+    }
+
+    .comex-health-card.danger::before {
+        background-color: var(--comex-danger);
+    }
+
+    .comex-label {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .comex-value {
+        font-size: 1.8rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .comex-green {
+        color: var(--socota-green);
+    }
+
+    .comex-warning {
+        color: var(--comex-warning);
+    }
+
+    .comex-danger {
+        color: var(--comex-danger);
+    }
+
+    .comex-chart-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .comex-chart-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .comex-chart {
+        height: 240px;
+        position: relative;
+    }
+
+    body[data-bs-theme="dark"] .comex-card,
+    body[data-bs-theme="dark"] .comex-chart-card {
+        border-color: #3a3f44;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    body[data-bs-theme="dark"] .comex-label,
+    body[data-bs-theme="dark"] .comex-subtitle {
+        color: #a0a0a0;
+    }
+</style>
+
+<div class="comex-page">
+
+    <div class="mb-4">
+        <h1 class="h3 comex-title">
+            Dashboard COMEX
+        </h1>
+
+        <p class="comex-subtitle mb-0">
+            Vue synthétique de la santé du portefeuille projets
+        </p>
     </div>
-    <div class="col-md-4">
-        <div class="card border-warning"><div class="card-body">
-            <p class="text-warning small mb-1">retard &lt; 30</p>
-            <p class="h4 mb-0">@Model.PortfolioOrange</p>
-        </div></div>
+
+
+    <!-- PORTFOLIO HEALTH -->
+
+    <div class="comex-section-title">
+        Portfolio Health
     </div>
-    <div class="col-md-4">
-        <div class="card border-danger"><div class="card-body">
-            <p class="text-danger small mb-1">retard &gt; 30j</p>
-            <p class="h4 mb-0 text-danger">@Model.PortfolioRouge</p>
-        </div></div>
+
+    <div class="row g-3 mb-4">
+
+        <!-- Vert -->
+        <div class="col-md-4">
+            <div class="card comex-card comex-health-card h-100">
+                <div class="card-body">
+
+                    <div class="comex-label">
+                        Délai respecté
+                    </div>
+
+                    <div class="comex-value comex-green">
+                        @Model.PortfolioVert
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Orange -->
+        <div class="col-md-4">
+            <div class="card comex-card comex-health-card warning h-100">
+                <div class="card-body">
+
+                    <div class="comex-label">
+                        Retard inférieur à 30 jours
+                    </div>
+
+                    <div class="comex-value comex-warning">
+                        @Model.PortfolioOrange
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Rouge -->
+        <div class="col-md-4">
+            <div class="card comex-card comex-health-card danger h-100">
+                <div class="card-body">
+
+                    <div class="comex-label">
+                        Retard supérieur à 30 jours
+                    </div>
+
+                    <div class="comex-value comex-danger">
+                        @Model.PortfolioRouge
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
+    <!-- GRAPHIQUES -->
+
+    <div class="row g-3">
+
+        <!-- TYPE -->
+        <div class="col-md-6">
+
+            <div class="card comex-chart-card h-100">
+
+                <div class="card-body">
+
+                    <div class="comex-chart-title">
+                        Répartition In House / Outsourced
+                    </div>
+
+                    <div class="comex-chart">
+                        <canvas id="chartType"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PLATEFORME -->
+        <div class="col-md-6">
+
+            <div class="card comex-chart-card h-100">
+
+                <div class="card-body">
+
+                    <div class="comex-chart-title">
+                        Répartition par plateforme
+                    </div>
+
+                    <div class="comex-chart">
+                        <canvas id="chartPlateforme"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition In House / Outsourced</p>
-            <div style="height:220px;"><canvas id="chartType"></canvas></div>
-        </div></div>
-    </div>
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Répartition par plateforme</p>
-            <div style="height:220px;"><canvas id="chartPlateforme"></canvas></div>
-        </div></div>
-    </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
 <script>
-    new Chart(document.getElementById('chartType'), {
-        type: 'doughnut',
+    const chartTypeElement = document.getElementById("chartType");
+    const chartPlateformeElement = document.getElementById("chartPlateforme");
+
+    new Chart(chartTypeElement, {
+        type: "doughnut",
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.RepartitionParType.Select(t => t.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.RepartitionParType.Select(t => t.Valeur))), backgroundColor: ['#228B22', '#5F5E5A'] }]
+            labels: @Html.Raw(Json.Serialize(
+                Model.RepartitionParType.Select(t => t.Label)
+            )),
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.RepartitionParType.Select(t => t.Valeur)
+                )),
+                backgroundColor: [
+                    "#8BC53F",
+                    "#5F5E5A"
+                ],
+                borderWidth: 0
+            }]
         },
-        options: { maintainAspectRatio: false }
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
     });
 
-    new Chart(document.getElementById('chartPlateforme'), {
-        type: 'bar',
+
+    new Chart(chartPlateformeElement, {
+        type: "bar",
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.RepartitionParPlateforme.Select(p => p.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.RepartitionParPlateforme.Select(p => p.Valeur))), backgroundColor: '#228B22' }]
+            labels: @Html.Raw(Json.Serialize(
+                Model.RepartitionParPlateforme.Select(p => p.Label)
+            )),
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.RepartitionParPlateforme.Select(p => p.Valeur)
+                )),
+                backgroundColor: "#8BC53F",
+                borderRadius: 5,
+                borderWidth: 0
+            }]
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
     });
 </script>

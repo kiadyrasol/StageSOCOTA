@@ -2,34 +2,155 @@
     var trimestres = ViewBag.Trimestres as List<(string Label, List<GestionProjetSocota.Models.Projet> Projets)>;
 }
 
+<style>
+    /* =========================
+       ROADMAP
+       ========================= */
+
+    .roadmap-header {
+        background-color: #8BC53F !important;
+        color: #ffffff !important;
+        border-color: #8BC53F !important;
+    }
+
+    .roadmap-projet {
+        display: block;
+        text-decoration: none;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 10px;
+        transition: all 0.2s ease;
+    }
+
+    .roadmap-projet:hover {
+        border-color: #8BC53F;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+    }
+
+    .roadmap-projet-nom {
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .roadmap-projet-date {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .roadmap-statut {
+        background-color: #8BC53F !important;
+        color: #ffffff !important;
+    }
+
+    /* =========================
+       MODE SOMBRE
+       ========================= */
+
+    body[data-bs-theme="dark"] .roadmap-projet {
+        background-color: #2b2f33;
+        border-color: #555b61;
+        color: #e0e0e0 !important;
+    }
+
+    body[data-bs-theme="dark"] .roadmap-projet:hover {
+        border-color: #8BC53F;
+        background-color: #33383d;
+    }
+
+    body[data-bs-theme="dark"] .roadmap-projet-nom {
+        color: #ffffff !important;
+    }
+
+    body[data-bs-theme="dark"] .roadmap-projet-date {
+        color: #adb5bd !important;
+    }
+
+    body[data-bs-theme="dark"] .card {
+        background-color: #2b2f33;
+        color: #e0e0e0;
+        border-color: #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .card-body {
+        background-color: #2b2f33;
+    }
+
+    body[data-bs-theme="dark"] .text-muted {
+        color: #adb5bd !important;
+    }
+
+    /* Le titre du trimestre reste toujours vert */
+    body[data-bs-theme="dark"] .roadmap-header {
+        background-color: #8BC53F !important;
+        color: #ffffff !important;
+    }
+</style>
+
+
 <h1 class="h3 mb-3">Roadmap trimestrielle</h1>
 
+
 <div class="row">
+
     @foreach (var trimestre in trimestres!)
     {
         <div class="col-md-3 mb-3">
+
             <div class="card h-100">
-                <div class="card-header bg-success text-white text-center">
+
+                <!-- TITRE DU TRIMESTRE -->
+                <div class="card-header roadmap-header text-center">
                     <b>@trimestre.Label</b>
                 </div>
+
+
+                <!-- PROJETS -->
                 <div class="card-body">
+
                     @if (!trimestre.Projets.Any())
                     {
-                        <p class="text-muted small mb-0">Aucun projet</p>
+                        <p class="text-muted small mb-0">
+                            Aucun projet
+                        </p>
                     }
                     else
                     {
                         @foreach (var projet in trimestre.Projets)
                         {
-                            <a href="/Projet/Details/@projet.Id" class="d-block text-decoration-none text-dark border rounded p-2 mb-2">
-                                <div class="fw-bold small">@projet.Nom</div>
-                                <div class="text-muted small">@projet.Deadline?.ToString("dd/MM/yyyy")</div>
-                                <span class="badge bg-secondary">@projet.Statut</span>
+                            <a href="/Projet/Details/@projet.Id"
+                               class="roadmap-projet">
+
+                                <div class="roadmap-projet-nom">
+                                    @projet.Nom
+                                </div>
+
+                                <div class="roadmap-projet-date">
+                                    @if (projet.Deadline.HasValue)
+                                    {
+                                        @projet.Deadline.Value.ToString("dd/MM/yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </div>
+
+                                <!-- STATUT -->
+                                <span class="badge roadmap-statut">
+                                    @projet.Statut
+                                </span>
+
                             </a>
                         }
                     }
+
                 </div>
+
             </div>
+
         </div>
     }
+
 </div>

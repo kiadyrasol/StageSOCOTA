@@ -1,88 +1,530 @@
 @model GestionProjetSocota.ViewModels.DashboardViewModel
 
-<h1 class="h3 mb-3">Dashboard IT Manager</h1>
+<style>
+    .it-manager-page {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --warning: #f0ad4e;
+        --danger: #dc3545;
+    }
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card border-success"><div class="card-body">
-            <p class="text-success small mb-1">Projets actifs</p>
-            <p class="h4 mb-0 text-success">@Model.ProjetsActifs</p>
-        </div></div>
+    .it-manager-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .it-manager-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .it-section-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.75rem;
+    }
+
+    .it-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .it-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .it-stat-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .it-stat-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: var(--socota-green);
+    }
+
+    .it-stat-card.warning::before {
+        background-color: var(--warning);
+    }
+
+    .it-stat-card.danger::before {
+        background-color: var(--danger);
+    }
+
+    .it-stat-label {
+        color: #6c757d;
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .it-stat-value {
+        font-size: 1.8rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    .it-green {
+        color: var(--socota-green);
+    }
+
+    .it-warning {
+        color: var(--warning);
+    }
+
+    .it-danger {
+        color: var(--danger);
+    }
+
+    .it-chart-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .it-chart-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .it-chart {
+        height: 240px;
+        position: relative;
+    }
+
+    .it-deadline-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .it-deadline-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .it-deadline-table {
+        margin-bottom: 0;
+    }
+
+    .it-deadline-table th {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border-bottom-width: 1px;
+    }
+
+    .it-deadline-table td {
+        font-size: 0.88rem;
+        vertical-align: middle;
+    }
+
+    .it-project-link {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .it-project-link:hover {
+        color: var(--socota-green);
+    }
+
+    .it-status {
+        background-color: var(--socota-green);
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    .it-empty {
+        padding: 1.5rem;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    body[data-bs-theme="dark"] .it-card,
+    body[data-bs-theme="dark"] .it-chart-card {
+        border-color: #3a3f44;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    body[data-bs-theme="dark"] .it-stat-label,
+    body[data-bs-theme="dark"] .it-deadline-table th,
+    body[data-bs-theme="dark"] .it-subtitle {
+        color: #a0a0a0;
+    }
+</style>
+
+
+<div class="it-manager-page">
+
+    <!-- TITRE -->
+
+    <div class="mb-4">
+        <h1 class="h3 it-manager-title">
+            Dashboard IT Manager
+        </h1>
+
+        <p class="it-manager-subtitle mb-0">
+            Suivi opérationnel de la charge, des risques et des échéances
+        </p>
     </div>
-    <div class="col-md-4">
-        <div class="card border-danger"><div class="card-body">
-            <p class="text-danger small mb-1">En retard</p>
-            <p class="h4 mb-0 text-danger">@Model.ProjetsEnRetard</p>
-        </div></div>
+
+
+    <!-- INDICATEURS -->
+
+    <div class="it-section-title">
+        Vue opérationnelle
     </div>
-    <div class="col-md-4">
-        <div class="card border-warning"><div class="card-body">
-            <p class="text-warning small mb-1">Projets critiques (High)</p>
-            <p class="h4 mb-0">@Model.ProjetsCritiques</p>
-        </div></div>
+
+    <div class="row g-3 mb-4">
+
+        <!-- PROJETS ACTIFS -->
+
+        <div class="col-md-4">
+            <div class="card it-card it-stat-card h-100">
+
+                <div class="card-body">
+
+                    <div class="it-stat-label">
+                        Projets actifs
+                    </div>
+
+                    <div class="it-stat-value it-green">
+                        @Model.ProjetsActifs
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- EN RETARD -->
+
+        <div class="col-md-4">
+            <div class="card it-card it-stat-card danger h-100">
+
+                <div class="card-body">
+
+                    <div class="it-stat-label">
+                        Projets en retard
+                    </div>
+
+                    <div class="it-stat-value it-danger">
+                        @Model.ProjetsEnRetard
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- CRITIQUES -->
+
+        <div class="col-md-4">
+            <div class="card it-card it-stat-card warning h-100">
+
+                <div class="card-body">
+
+                    <div class="it-stat-label">
+                        Projets critiques
+                    </div>
+
+                    <div class="it-stat-value it-warning">
+                        @Model.ProjetsCritiques
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
+
+
+    <!-- GRAPHIQUES -->
+
+    <div class="it-section-title">
+        Analyse des projets
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <!-- CHARGE EQUIPE -->
+
+        <div class="col-md-6">
+
+            <div class="card it-chart-card h-100">
+
+                <div class="card-body">
+
+                    <div class="it-chart-title">
+                        Charge équipe
+                        <span class="text-muted fw-normal">
+                            — par responsable IT
+                        </span>
+                    </div>
+
+                    <div class="it-chart">
+                        <canvas id="chartCharge"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- AGING -->
+
+        <div class="col-md-6">
+
+            <div class="card it-chart-card h-100">
+
+                <div class="card-body">
+
+                    <div class="it-chart-title">
+                        Aging des projets
+                    </div>
+
+                    <div class="it-chart">
+                        <canvas id="chartAging"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEADLINES -->
+
+    <div class="card it-card">
+
+        <div class="card-body">
+
+            <div class="it-deadline-header mb-3">
+
+                <div>
+                    <p class="it-deadline-title">
+                        Deadlines à venir
+                    </p>
+
+                    <small class="text-muted">
+                        Projets avec échéance dans les 30 prochains jours
+                    </small>
+                </div>
+
+            </div>
+
+
+            @if (Model.DeadlinesDuMois.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover it-deadline-table">
+
+                        <thead>
+                            <tr>
+                                <th>Projet</th>
+                                <th>Deadline</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var projet in Model.DeadlinesDuMois)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <a href="/Projet/Details/@projet.Id"
+                                           class="it-project-link">
+
+                                            @projet.Nom
+
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        @projet.Deadline?.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        <span class="badge it-status">
+                                            @projet.Statut
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="it-empty">
+
+                    <i class="fas fa-calendar-check mb-2"></i>
+
+                    <div>
+                        Aucune deadline dans les 30 prochains jours.
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="row mb-3">
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Charge équipe (par responsable IT)</p>
-            <div style="height:220px;"><canvas id="chartCharge"></canvas></div>
-        </div></div>
-    </div>
-    <div class="col-md-6">
-        <div class="card"><div class="card-body">
-            <p class="fw-bold small">Aging des projets</p>
-            <div style="height:220px;"><canvas id="chartAging"></canvas></div>
-        </div></div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header"><b>Deadlines du mois</b></div>
-    <div class="card-body">
-        @if (Model.DeadlinesDuMois.Any())
-        {
-            <table class="table table-sm mb-0">
-                <thead>
-                    <tr><th>Projet</th><th>Deadline</th><th>Statut</th></tr>
-                </thead>
-                <tbody>
-                    @foreach (var p in Model.DeadlinesDuMois)
-                    {
-                        <tr>
-                            <td><a href="/Projet/Details/@p.Id">@p.Nom</a></td>
-                            <td>@p.Deadline?.ToString("dd/MM/yyyy")</td>
-                            <td><span class="badge bg-success">@p.Statut</span></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="text-muted mb-0">Aucune deadline ce mois-ci.</p>
-        }
-    </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
 <script>
-    new Chart(document.getElementById('chartCharge'), {
-        type: 'bar',
+
+    const chartChargeElement =
+        document.getElementById("chartCharge");
+
+    const chartAgingElement =
+        document.getElementById("chartAging");
+
+
+    new Chart(chartChargeElement, {
+
+        type: "bar",
+
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.ChargeParOwnerIt.Select(c => c.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.ChargeParOwnerIt.Select(c => c.Valeur))), backgroundColor: '#155D15' }]
+
+            labels: @Html.Raw(Json.Serialize(
+                Model.ChargeParOwnerIt.Select(c => c.Label)
+            )),
+
+            datasets: [{
+                data: @Html.Raw(Json.Serialize(
+                    Model.ChargeParOwnerIt.Select(c => c.Valeur)
+                )),
+
+                backgroundColor: "#8BC53F",
+
+                borderRadius: 5,
+
+                borderWidth: 0
+            }]
+
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+
+        options: {
+
+            maintainAspectRatio: false,
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+
+            },
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    }
+                }
+
+            }
+
+        }
+
     });
 
-    new Chart(document.getElementById('chartAging'), {
-        type: 'bar',
+
+    new Chart(chartAgingElement, {
+
+        type: "bar",
+
         data: {
-            labels: @Html.Raw(Json.Serialize(Model.AgingProjets.Select(a => a.Label))),
-            datasets: [{ data: @Html.Raw(Json.Serialize(Model.AgingProjets.Select(a => a.Valeur))), backgroundColor: '#228B22' }]
+
+            labels: @Html.Raw(Json.Serialize(
+                Model.AgingProjets.Select(a => a.Label)
+            )),
+
+            datasets: [{
+
+                data: @Html.Raw(Json.Serialize(
+                    Model.AgingProjets.Select(a => a.Valeur)
+                )),
+
+                backgroundColor: "#8BC53F",
+
+                borderRadius: 5,
+
+                borderWidth: 0
+
+            }]
+
         },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+
+        options: {
+
+            maintainAspectRatio: false,
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+
+            },
+
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    }
+                }
+
+            }
+
+        }
+
     });
+
 </script>

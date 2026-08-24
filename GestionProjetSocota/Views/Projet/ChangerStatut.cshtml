@@ -1,43 +1,100 @@
 @model GestionProjetSocota.Models.Projet
 
-<h1 class="h3 mb-3">Changer le statut</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Changer le statut</h1>
+        <p class="text-muted mb-0">Faites évoluer le projet vers une nouvelle étape.</p>
+    </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="border rounded p-3 mb-3 bg-light">
-            <p class="mb-1"><b>Projet :</b> @Model.Nom</p>
-            <p class="mb-1"><b>Type :</b> @Model.Type</p>
-            <p class="mb-0"><b>Statut actuel :</b> <span class="badge bg-success">@Model.Statut</span></p>
+    <a href="/Projet/Details/@Model.Id" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-1"></i>
+        Retour
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-4">
+
+        <div class="bg-light rounded p-3 mb-4">
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <span class="text-muted small d-block">Projet</span>
+                    <span class="fw-semibold">@Model.Nom</span>
+                </div>
+
+                <div class="col-md-3">
+                    <span class="text-muted small d-block">Type</span>
+                    <span class="fw-semibold">@Model.Type</span>
+                </div>
+
+                <div class="col-md-3">
+                    <span class="text-muted small d-block">Statut actuel</span>
+                    <span class="badge bg-socota mt-1">@Model.Statut</span>
+                </div>
+
+            </div>
         </div>
 
         @if (TempData["Erreur"] != null)
         {
-            <div class="alert alert-danger">@TempData["Erreur"]</div>
+            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                <i class="fas fa-circle-exclamation me-2"></i>
+                <span>@TempData["Erreur"]</span>
+            </div>
         }
 
-        @if (Model.Statut == GestionProjetSocota.Models.StatutProjet.Suspendu || Model.Statut == GestionProjetSocota.Models.StatutProjet.Cancelled)
+        @if (Model.Statut == GestionProjetSocota.Models.StatutProjet.Suspendu ||
+             Model.Statut == GestionProjetSocota.Models.StatutProjet.Cancelled)
         {
-            <div class="alert alert-warning">
-                Ce projet est actuellement <b>@Model.Statut</b>. Vous pouvez le réactiver : il reprendra son statut précédent (<b>@Model.StatutPrecedent</b>).
+            <div class="alert alert-warning border-0">
+                <div class="d-flex align-items-start">
+                    <i class="fas fa-triangle-exclamation mt-1 me-3"></i>
+
+                    <div>
+                        <div class="fw-semibold mb-1">
+                            Projet @Model.Statut
+                        </div>
+
+                        <div>
+                            Vous pouvez réactiver ce projet.
+                            Il reprendra son statut précédent :
+                            <strong>@Model.StatutPrecedent</strong>.
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <form asp-action="ChangerStatut" method="post">
                 <input type="hidden" name="id" value="@Model.Id" />
                 <input type="hidden" name="nouveauStatut" value="@Model.StatutPrecedent" />
-                <button type="submit" class="btn btn-socota"><i class="fas fa-redo"></i> Réactiver le projet</button>
+
+                <button type="submit" class="btn btn-socota">
+                    <i class="fas fa-rotate-left me-1"></i>
+                    Réactiver le projet
+                </button>
             </form>
         }
         else
         {
+            var transitions =
+                ViewBag.TransitionsPossibles
+                as List<GestionProjetSocota.Models.StatutProjet>;
+
             <form asp-action="ChangerStatut" method="post">
+
                 <input type="hidden" name="id" value="@Model.Id" />
 
-                <div class="mb-3">
-                    <label class="form-label">Nouveau statut</label>
-                    <select name="nouveauStatut" class="form-select">
-                        @{
-                            var transitions = ViewBag.TransitionsPossibles as List<GestionProjetSocota.Models.StatutProjet>;
-                        }
+                <div class="mb-4">
+                    <label for="nouveauStatut" class="form-label fw-semibold">
+                        Nouveau statut
+                    </label>
+
+                    <select id="nouveauStatut"
+                            name="nouveauStatut"
+                            class="form-select"
+                            @(transitions == null || !transitions.Any() ? "disabled" : null)>
+
                         @if (transitions != null && transitions.Any())
                         {
                             @foreach (var statut in transitions)
@@ -47,13 +104,34 @@
                         }
                         else
                         {
-                            <option disabled>Aucune transition possible</option>
+                            <option>Aucune transition possible</option>
                         }
+
                     </select>
+
+                    <div class="form-text">
+                        Sélectionnez le prochain statut autorisé pour ce projet.
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-socota">Valider le changement</button>
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-socota"
+                            @(transitions == null || !transitions.Any() ? "disabled" : null)>
+                        <i class="fas fa-check me-1"></i>
+                        Valider le changement
+                    </button>
+
+                    <a href="/Projet/Details/@Model.Id"
+                       class="btn btn-outline-secondary">
+                        Annuler
+                    </a>
+
+                </div>
+
             </form>
         }
+
     </div>
 </div>

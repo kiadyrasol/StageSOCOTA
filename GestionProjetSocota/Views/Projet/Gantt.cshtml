@@ -4,37 +4,81 @@
 
 <div class="card">
     <div class="card-body">
+
         @if (!Model.Any(p => p.DateDebut.HasValue || p.Deadline.HasValue))
         {
-            <p class="text-muted mb-0">Aucun projet avec des dates définies (début ou deadline) pour afficher le Gantt.</p>
+            <p class="text-muted mb-0">
+                Aucun projet avec des dates définies
+                (début ou deadline) pour afficher le Gantt.
+            </p>
         }
         else
         {
-            <svg id="gantt"></svg>
+            <div class="gantt-wrapper">
+                <svg id="gantt"></svg>
+            </div>
         }
+
     </div>
 </div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css">
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css">
+
+<style>
+    .gantt-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .gantt .bar {
+        fill: var(--socota-green);
+    }
+
+    .gantt .bar-progress {
+        fill: #70A130;
+    }
+
+    .gantt .bar-label {
+        fill: #ffffff;
+    }
+
+    .gantt .bar-wrapper:hover .bar {
+        fill: #70A130;
+    }
+</style>
+
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.min.js"></script>
+
 <script>
-    const taches = @Html.Raw(Json.Serialize(Model
-        .Where(p => p.DateDebut.HasValue || p.Deadline.HasValue)
-        .Select(p => new
-        {
-            id = p.Id.ToString(),
-            name = p.Nom,
-            start = (p.DateDebut ?? p.Deadline!.Value.AddDays(-14)).ToString("yyyy-MM-dd"),
-            end = (p.Deadline ?? p.DateDebut!.Value.AddDays(14)).ToString("yyyy-MM-dd"),
-            progress = p.PourcentageAvancement
-        })));
+    const taches = @Html.Raw(
+        Json.Serialize(
+            Model
+                .Where(p => p.DateDebut.HasValue || p.Deadline.HasValue)
+                .Select(p => new
+                {
+                    id = p.Id.ToString(),
+                    name = p.Nom,
+                    start = (
+                        p.DateDebut ??
+                        p.Deadline!.Value.AddDays(-14)
+                    ).ToString("yyyy-MM-dd"),
+                    end = (
+                        p.Deadline ??
+                        p.DateDebut!.Value.AddDays(14)
+                    ).ToString("yyyy-MM-dd"),
+                    progress = p.PourcentageAvancement
+                })
+        )
+    );
 
     if (taches.length > 0) {
-        const gantt = new Gantt("#gantt", taches, {
-            on_click: (tache) => {
+        new Gantt("#gantt", taches, {
+            view_mode: "Month",
+
+            on_click: function (tache) {
                 window.location.href = "/Projet/Details/" + tache.id;
-            },
-            view_mode: 'Month'
+            }
         });
     }
 </script>
