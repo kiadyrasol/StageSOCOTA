@@ -29,20 +29,17 @@
     </div>
 
     <div class="d-flex gap-2">
-        <a href="/Projet/ChangerStatut/@Model.Id"
-           class="btn btn-outline-socota">
+        <a href="/Projet/ChangerStatut/@Model.Id" class="btn btn-outline-socota">
             <i class="fas fa-exchange-alt me-1"></i>
             Statut
         </a>
 
-        <a href="/Projet/Edit/@Model.Id"
-           class="btn btn-outline-primary">
+        <a href="/Projet/Edit/@Model.Id" class="btn btn-outline-primary">
             <i class="fas fa-edit me-1"></i>
             Modifier
         </a>
 
-        <a href="/Projet"
-           class="btn btn-outline-secondary">
+        <a href="/Projet" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i>
             Retour
         </a>
@@ -143,8 +140,7 @@
 
                 <div class="project-progress">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-socota"
-                             role="progressbar"
+                        <div class="progress-bar progress-bar-socota" role="progressbar"
                              style="width: @Model.PourcentageAvancement%">
                             @Model.PourcentageAvancement%
                         </div>
@@ -166,8 +162,7 @@
         }
 
         <div class="mt-4">
-            <a href="/Projet/GenererCompteRendu/@Model.Id"
-               class="btn btn-outline-socota btn-sm">
+            <a href="/Projet/GenererCompteRendu/@Model.Id" class="btn btn-outline-socota btn-sm">
                 <i class="fas fa-magic me-1"></i>
                 Générer un compte-rendu IA
             </a>
@@ -200,9 +195,7 @@
 
             <div class="risk-progress">
                 <div class="progress">
-                    <div class="progress-bar @progressRisqueClasse"
-                         role="progressbar"
-                         style="width: @scoreRisque%">
+                    <div class="progress-bar @progressRisqueClasse" role="progressbar" style="width: @scoreRisque%">
                     </div>
                 </div>
             </div>
@@ -232,8 +225,7 @@
                     Aucun RFC pour ce projet.
                 </p>
 
-                <a href="/RFC/Create?projetId=@Model.Id"
-                   class="btn btn-socota btn-sm">
+                <a href="/RFC/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">
                     <i class="fas fa-plus me-1"></i>
                     Créer un RFC
                 </a>
@@ -301,16 +293,11 @@
 
                 @if (!rfc.EstValide)
                 {
-                    <form asp-controller="RFC"
-                          asp-action="Valider"
-                          method="post">
+                    <form asp-controller="RFC" asp-action="Valider" method="post">
 
-                        <input type="hidden"
-                               name="id"
-                               value="@rfc.Id" />
+                        <input type="hidden" name="id" value="@rfc.Id" />
 
-                        <button type="submit"
-                                class="btn btn-socota btn-sm">
+                        <button type="submit" class="btn btn-socota btn-sm">
                             <i class="fas fa-check me-1"></i>
                             Valider ce RFC
                         </button>
@@ -318,16 +305,11 @@
                 }
                 else
                 {
-                    <form asp-controller="RFC"
-                          asp-action="AnnulerValidation"
-                          method="post">
+                    <form asp-controller="RFC" asp-action="AnnulerValidation" method="post">
 
-                        <input type="hidden"
-                               name="id"
-                               value="@rfc.Id" />
+                        <input type="hidden" name="id" value="@rfc.Id" />
 
-                        <button type="submit"
-                                class="btn btn-outline-danger btn-sm">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
                             <i class="fas fa-rotate-left me-1"></i>
                             Annuler la validation
                         </button>
@@ -348,8 +330,7 @@
             Actions
         </h2>
 
-        <a href="/ActionProjet/Create?projetId=@Model.Id"
-           class="btn btn-socota btn-sm">
+        <a href="/ActionProjet/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">
             <i class="fas fa-plus me-1"></i>
             Nouvelle action
         </a>
@@ -381,8 +362,8 @@
 
                     <div class="project-action-status">
                         <span class="badge @(action.Statut == GestionProjetSocota.Models.StatutAction.Closed
-                            ? "badge-socota"
-                            : "bg-warning text-dark")">
+                                                                                        ? "badge-socota"
+                                                                                        : "bg-warning text-dark")">
                             @action.Statut
                         </span>
                     </div>
@@ -391,20 +372,13 @@
 
                         @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
                         {
-                            <form asp-controller="ActionProjet"
-                                  asp-action="ChangerStatut"
-                                  method="post">
+                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
 
-                                <input type="hidden"
-                                       name="id"
-                                       value="@action.Id" />
+                                <input type="hidden" name="id" value="@action.Id" />
 
-                                <input type="hidden"
-                                       name="nouveauStatut"
-                                       value="Ongoing" />
+                                <input type="hidden" name="nouveauStatut" value="Ongoing" />
 
-                                <button type="submit"
-                                        class="btn btn-outline-secondary btn-sm">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
                                     En cours
                                 </button>
                             </form>
@@ -412,35 +386,23 @@
 
                         @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
                         {
-                            <form asp-controller="ActionProjet"
-                                  asp-action="ChangerStatut"
-                                  method="post">
+                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
 
-                                <input type="hidden"
-                                       name="id"
-                                       value="@action.Id" />
+                                <input type="hidden" name="id" value="@action.Id" />
 
-                                <input type="hidden"
-                                       name="nouveauStatut"
-                                       value="Closed" />
+                                <input type="hidden" name="nouveauStatut" value="Closed" />
 
-                                <button type="submit"
-                                        class="btn btn-socota btn-sm">
+                                <button type="submit" class="btn btn-socota btn-sm">
                                     Clôturer
                                 </button>
                             </form>
                         }
 
-                        <form asp-controller="ActionProjet"
-                              asp-action="Delete"
-                              method="post">
+                        <form asp-controller="ActionProjet" asp-action="Delete" method="post">
 
-                            <input type="hidden"
-                                   name="id"
-                                   value="@action.Id" />
+                            <input type="hidden" name="id" value="@action.Id" />
 
-                            <button type="submit"
-                                    class="btn btn-outline-danger btn-sm">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
                                 Supprimer
                             </button>
                         </form>
@@ -464,35 +426,31 @@
 </div>
 
 
+```html
 <!-- PIÈCES JOINTES -->
 
 <div class="card mb-4">
     <div class="card-header">
         <h2 class="h6 mb-0 fw-bold">
+            <i class="fas fa-paperclip me-2"></i>
             Pièces jointes
         </h2>
     </div>
 
     <div class="card-body">
 
-        <form asp-controller="PieceJointe"
-              asp-action="Create"
-              method="post"
-              enctype="multipart/form-data"
+        <!-- FORMULAIRE D'IMPORT -->
+        <form asp-controller="PieceJointe" asp-action="Create" method="post" enctype="multipart/form-data"
               class="attachment-form mb-4">
 
-            <input type="hidden"
-                   name="ProjetId"
-                   value="@Model.Id" />
+            <input type="hidden" name="ProjetId" value="@Model.Id" />
 
             <div>
                 <label class="form-label small fw-semibold">
                     Fichier
                 </label>
 
-                <input type="file"
-                       name="Fichier"
-                       class="form-control form-control-sm" />
+                <input type="file" name="Fichier" class="form-control form-control-sm" />
             </div>
 
             <div>
@@ -500,18 +458,26 @@
                     Type
                 </label>
 
-                <select name="Type"
-                        class="form-select form-select-sm">
+                <select name="Type" class="form-select form-select-sm">
 
                     <option value="RFC">RFC</option>
-                    <option value="MOM">Compte-rendu (MOM)</option>
-                    <option value="Analyse">Analyse</option>
+
+                    <option value="MOM">
+                        Compte-rendu (MOM)
+                    </option>
+
+                    <option value="Analyse">
+                        Analyse
+                    </option>
+
                     <option value="CahierDesCharges">
                         Cahier des charges
                     </option>
+
                     <option value="CaptureEcran">
                         Capture d'écran
                     </option>
+
                     <option value="PlanDeTests">
                         Plan de tests
                     </option>
@@ -520,62 +486,82 @@
             </div>
 
             <div class="attachment-submit">
-                <button type="submit"
-                        class="btn btn-socota btn-sm">
+                <button type="submit" class="btn btn-socota btn-sm">
+
                     <i class="fas fa-upload me-1"></i>
                     Importer
+
                 </button>
             </div>
 
         </form>
 
 
+        <!-- LISTE DES PIÈCES JOINTES -->
+
         @if (piecesJointes != null && piecesJointes.Any())
         {
             foreach (var pj in piecesJointes)
             {
-                <div class="attachment-item">
-
+                <div class="attachment-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
                     <div>
-                        <a href="@pj.CheminStockage"
-                           target="_blank"
-                           class="fw-semibold text-decoration-none">
+
+                        <div class="fw-semibold">
 
                             <i class="fas fa-paperclip me-1"></i>
+
                             @pj.NomFichier
-                        </a>
+
+                        </div>
 
                         <div class="text-muted small mt-1">
-                            @pj.Type ·
-                            @pj.DateAjout.ToString("dd/MM/yyyy")
+
+                            @pj.Type
+                            ·
+                            @pj.DateAjout.ToString("dd/MM/yyyy HH:mm")
+
                         </div>
+
                     </div>
 
-                    <form asp-controller="PieceJointe"
-                          asp-action="Delete"
-                          method="post">
+                    <div class="d-flex gap-2">
 
-                        <input type="hidden"
-                               name="id"
-                               value="@pj.Id" />
+                        <a asp-controller="PieceJointe" asp-action="Download" asp-route-id="@pj.Id"
+                           class="btn btn-sm btn-outline-primary">
 
-                        <button type="submit"
-                                class="btn btn-link text-danger btn-sm">
-                            Supprimer
-                        </button>
-                    </form>
+                            <i class="fas fa-download me-1"></i>
+                            Télécharger
+
+                        </a>
+
+                        <form asp-controller="PieceJointe" asp-action="Delete" method="post" class="d-inline">
+
+                            <input type="hidden" name="id" value="@pj.Id" />
+
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+
+                                <i class="fas fa-trash me-1"></i>
+                                Supprimer
+
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
             }
         }
         else
         {
-            <div class="empty-state">
-                <i class="fas fa-paperclip"></i>
+            <div class="empty-state text-center py-3">
+
+                <i class="fas fa-paperclip fa-2x mb-2"></i>
 
                 <p class="mb-0">
                     Aucune pièce jointe pour ce projet.
                 </p>
+
             </div>
         }
 
@@ -594,22 +580,14 @@
 
     <div class="card-body">
 
-        <form asp-controller="Commentaire"
-              asp-action="Create"
-              method="post"
-              class="mb-4">
+        <form asp-controller="Commentaire" asp-action="Create" method="post" class="mb-4">
 
-            <input type="hidden"
-                   name="ProjetId"
-                   value="@Model.Id" />
+            <input type="hidden" name="ProjetId" value="@Model.Id" />
 
-            <textarea name="Contenu"
-                      placeholder="Ajouter un commentaire..."
-                      class="form-control mb-2"
+            <textarea name="Contenu" placeholder="Ajouter un commentaire..." class="form-control mb-2"
                       rows="3"></textarea>
 
-            <button type="submit"
-                    class="btn btn-socota btn-sm">
+            <button type="submit" class="btn btn-socota btn-sm">
                 <i class="fas fa-paper-plane me-1"></i>
                 Publier
             </button>
@@ -639,16 +617,11 @@
                         @commentaire.Contenu
                     </p>
 
-                    <form asp-controller="Commentaire"
-                          asp-action="Delete"
-                          method="post">
+                    <form asp-controller="Commentaire" asp-action="Delete" method="post">
 
-                        <input type="hidden"
-                               name="id"
-                               value="@commentaire.Id" />
+                        <input type="hidden" name="id" value="@commentaire.Id" />
 
-                        <button type="submit"
-                                class="btn btn-link text-danger btn-sm p-0">
+                        <button type="submit" class="btn btn-link text-danger btn-sm p-0">
                             Supprimer
                         </button>
 
@@ -689,28 +662,28 @@
 
                 foreach (var item in historique)
                 {
-                    <div class="history-item">
+                <div class="history-item">
 
-                        <div>
-                            <div class="fw-semibold">
-                                @@item.TypeAction
-                            </div>
-
-                            <div>
-                                @@item.Detail
-                            </div>
-
-                            <small class="text-muted">
-                                Par :
-                                @@(item.Utilisateur?.Nom ?? "Système")
-                            </small>
+                    <div>
+                        <div class="fw-semibold">
+                            @@item.TypeAction
                         </div>
 
-                        <span class="badge bg-secondary">
-                            @@tem.DateAction.ToString("dd/MM/yyyy HH:mm")
-                        </span>
+                        <div>
+                            @@item.Detail
+                        </div>
 
+                        <small class="text-muted">
+                            Par :
+                            @@(item.Utilisateur?.Nom ?? "Système")
+                        </small>
                     </div>
+
+                    <span class="badge bg-secondary">
+                        @@tem.DateAction.ToString("dd/MM/yyyy HH:mm")
+                    </span>
+
+                </div>
                 }
 
             </div>

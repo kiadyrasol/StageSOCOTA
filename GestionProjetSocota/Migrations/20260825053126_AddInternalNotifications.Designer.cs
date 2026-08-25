@@ -4,6 +4,7 @@ using GestionProjetSocota.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionProjetSocota.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260825053126_AddInternalNotifications")]
+    partial class AddInternalNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,7 +140,7 @@ namespace GestionProjetSocota.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjetId")
+                    b.Property<int>("ProjetId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -410,7 +413,9 @@ namespace GestionProjetSocota.Migrations
                 {
                     b.HasOne("GestionProjetSocota.Models.Projet", "Projet")
                         .WithMany()
-                        .HasForeignKey("ProjetId");
+                        .HasForeignKey("ProjetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("GestionProjetSocota.Models.Utilisateur", "Utilisateur")
                         .WithMany()

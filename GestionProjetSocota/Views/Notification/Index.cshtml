@@ -1,0 +1,100 @@
+@model List<GestionProjetSocota.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">
+        <i class="fas fa-bell text-primary"></i>
+        Notifications
+    </h1>
+
+    @if (Model.Any(n => !n.EstLue))
+    {
+        <form asp-action="ToutMarquerCommeLu" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-check-double me-1"></i>
+                Tout marquer comme lu
+            </button>
+        </form>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card shadow-sm">
+        <div class="card-body text-center text-muted py-5">
+            <i class="fas fa-bell-slash fa-3x mb-3 text-black-50"></i>
+            <p class="mb-0 fs-5">Aucune notification pour le moment.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="list-group list-group-flush">
+
+            @foreach (var notification in Model)
+            {
+                <div class="list-group-item @(notification.EstLue ? "" : "bg-light border-start border-success border-3")">
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div class="me-3">
+                            <div class="d-flex align-items-center gap-2">
+                                @if (!notification.EstLue)
+                                {
+                                    <span class="badge bg-success">Nouveau</span>
+                                }
+                                <strong class="text-dark">@notification.Type</strong>
+                            </div>
+
+                            <p class="mb-1 mt-2 text-secondary">
+                                @notification.Message
+                            </p>
+
+                            @if (notification.Projet != null)
+                            {
+                                <div class="mt-1">
+                                    <a href="@Url.Action("Details", "Projet", new { id = notification.ProjetId })" class="small text-decoration-none text-primary">
+                                        <i class="fas fa-project-diagram me-1"></i>@notification.Projet.Nom
+                                    </a>
+                                </div>
+                            }
+
+                            <div class="text-muted small mt-2">
+                                <i class="far fa-clock me-1"></i>@notification.DateCreation.ToString("dd/MM/yyyy HH:mm")
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            @if (!notification.EstLue)
+                            {
+                                <form asp-action="MarquerCommeLue" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@notification.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Marquer comme lue">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                            }
+
+                            <form asp-action="Supprimer" method="post" onsubmit="return confirm('Voulez-vous vraiment supprimer cette notification ?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@notification.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer définitivement">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+}

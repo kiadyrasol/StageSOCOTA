@@ -1,89 +1,92 @@
+
 using GestionProjetSocota.Data;
 using GestionProjetSocota.Models;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 
 namespace GestionProjetSocota.Services
 {
     public class NotificationService
     {
         private readonly ApplicationDbContext _context;
-        private readonly EmailSettings _emailSettings;
 
-        public NotificationService(
-            ApplicationDbContext context,
-            EmailSettings emailSettings)
+        public NotificationService(ApplicationDbContext context)
         {
             _context = context;
-            _emailSettings = emailSettings;
         }
 
-        public async Task EnvoyerNotificationProjet(
-            Projet projet,
+
+        public async Task CreerNotificationAsync(
+            int projetId,
+            int utilisateurId,
             string type,
-            string destinataire,
-            string sujet,
             string message)
         {
-            if (string.IsNullOrWhiteSpace(destinataire))
-                return;
-
-            // Vérifier si cette notification a déjà été envoyée
-            var dejaEnvoyee = await _context.Notifications
-                .AnyAsync(n =>
-                    n.ProjetId == projet.Id &&
-                    n.Type == type &&
-                    n.Destinataire == destinataire);
-
-            if (dejaEnvoyee)
-                return;
-
-            var email = new MimeMessage();
-
-            email.From.Add(
-                new MailboxAddress(
-                    _emailSettings.FromName,
-                    _emailSettings.From));
-
-            email.To.Add(
-                MailboxAddress.Parse(destinataire));
-
-            email.Subject = sujet;
-
-            email.Body = new TextPart("plain")
+            var notification = new Notification
             {
-                Text = message
+                ProjetId = projetId,
+                UtilisateurId = utilisateurId,
+                Type = type,
+                Message = message,
+                DateCreation = DateTime.Now,
+                EstLue = false
             };
 
-            using var smtp = new SmtpClient();
+            _context.Notifications.Add(notification);
 
-            await smtp.ConnectAsync(
-                _emailSettings.Host,
-                _emailSettings.Port,
-                _emailSettings.EnableSsl
-                    ? SecureSocketOptions.StartTls
-                    : SecureSocketOptions.None);
+            await _context.SaveChangesAsync();
+        }
 
-            await smtp.AuthenticateAsync(
-                _emailSettings.UserName,
-                _emailSettings.Password);
 
-            await smtp.SendAsync(email);
+        public async Task<List<Notification>> GetNotificationsUtilisateurAsync(
+            int utilisateurId)
+        {
+            return await _context.Notifications
+                .Include(n => n.Projet)
+                .Where(n => n.UtilisateurId == utilisateurId)
+                .OrderByDescending(n => n.DateCreation)
+                .ToListAsync();
+        }
 
-            await smtp.DisconnectAsync(true);
+        public async Task<int> GetNombreNonLuesAsync(
+            int utilisateurId)
+        {
+            return await _context.Notifications
+                .CountAsync(n =>
+                    n.UtilisateurId == utilisateurId &&
+                    !n.EstLue);
+        }
 
-            // Historiser l'envoi
-            _context.Notifications.Add(new Notification
+        public async Task MarquerCommeLueAsync(int id, int utilisateurId)
+        {
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(n =>
+                    n.Id == id &&
+                    n.UtilisateurId == utilisateurId);
+
+            if (notification == null)
+                return;
+
+            notification.EstLue = true;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task MarquerToutesCommeLuesAsync(
+            int utilisateurId)
+        {
+            var notifications = await _context.Notifications
+                .Where(n =>
+                    n.UtilisateurId == utilisateurId &&
+                    !n.EstLue)
+                .ToListAsync();
+
+            foreach (var notification in notifications)
             {
-                ProjetId = projet.Id,
-                Type = type,
-                Destinataire = destinataire,
-                DateEnvoi = DateTime.Now
-            });
+                notification.EstLue = true;
+            }
 
             await _context.SaveChangesAsync();
         }
     }
 }
+

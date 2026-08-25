@@ -1,4 +1,3 @@
-USE GestionProjetSocotaDb;
-
-SELECT Id, Nom, NomADUtilisateur, Email, Role
-FROM Utilisateurs;
+SELECT *
+FROM Notifications
+ORDER BY DateCreation DESC;

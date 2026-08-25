@@ -59,17 +59,6 @@ namespace GestionProjetSocota.Controllers
             return View(projets);
         }
 
-        // Notifications
-        public async Task<IActionResult> Notifications()
-        {
-            var notifications = await _context.Notifications
-                .Include(n => n.Projet)
-                .OrderByDescending(n => n.DateEnvoi)
-                .ToListAsync();
-
-            return View(notifications);
-        }
-
         // Recherche
         public async Task<IActionResult> Recherche(Unite? unite, Departement? departement, StatutProjet? statut, TypeProjet? type, int? ownerItId)
         {
@@ -1023,34 +1012,47 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             return View(model);
         }
 
+
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> Edit(ProjetEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync();
+                model.UtilisateursDisponibles =
+                    await _context.Utilisateurs.ToListAsync();
+
                 return View(model);
             }
 
-            var projet = await _context.Projets.FindAsync(model.Id);
+            var projet = await _context.Projets
+                .FirstOrDefaultAsync(p => p.Id == model.Id);
+
             if (projet == null)
             {
                 return NotFound();
             }
 
-            if (projet.Statut != model.Statut)
+            var ancienStatut = projet.Statut;
+            var statutChange = ancienStatut != model.Statut;
+
+            if (statutChange)
             {
                 var nomAD = User.Identity?.Name;
-                var auteur = await _context.Utilisateurs.FirstOrDefaultAsync(u => u.NomADUtilisateur == nomAD);
 
-                _context.HistoriqueProjets.Add(new HistoriqueProjet
-                {
-                    ProjetId = projet.Id,
-                    UtilisateurId = auteur?.Id ?? 0,
-                    TypeAction = "Modification",
-                    Detail = $"Statut : {projet.Statut} → {model.Statut}"
-                });
+                var auteur = await _context.Utilisateurs
+                    .FirstOrDefaultAsync(
+                        u => u.NomADUtilisateur == nomAD);
+
+                _context.HistoriqueProjets.Add(
+                    new HistoriqueProjet
+                    {
+                        ProjetId = projet.Id,
+                        UtilisateurId = auteur?.Id ?? 0,
+                        TypeAction = "Modification",
+                        Detail =
+                            $"Statut : {ancienStatut} → {model.Statut}"
+                    });
             }
 
             projet.TicketId = model.TicketId;
@@ -1061,33 +1063,57 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             projet.Departement = model.Departement;
             projet.Type = model.Type;
             projet.Plateforme = model.Plateforme;
-            projet.StatutPrecedent = projet.Statut;
+            projet.StatutPrecedent = ancienStatut;
             projet.Statut = model.Statut;
             projet.Priorite = model.Priorite;
             projet.Deadline = model.Deadline;
-            projet.PourcentageAvancement = (model.Statut == StatutProjet.WaitingRFC) ? 0 : model.PourcentageAvancement;
+
+            projet.PourcentageAvancement =
+                model.Statut == StatutProjet.WaitingRFC
+                    ? 0
+                    : model.PourcentageAvancement;
+
             projet.OwnerItId = model.OwnerItId;
             projet.PowerUserId = model.PowerUserId;
 
             await _context.SaveChangesAsync();
-            TempData["Succes"] = "Les modifications ont été enregistrées.";
+
+            if (statutChange &&
+                projet.OwnerItId.HasValue)
+            {
+                await _notificationService.CreerNotificationAsync(
+                    projet.Id,
+                    projet.OwnerItId.Value,
+                    "ChangementStatut",
+                    $"Le projet \"{projet.Nom}\" est passé de " +
+                    $"{ancienStatut} à {projet.Statut}."
+                );
+            }
+
+            TempData["Succes"] =
+                "Les modifications ont été enregistrées.";
 
             return RedirectToAction("Index");
         }
 
-
         // Changer statut
+
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
         public async Task<IActionResult> ChangerStatut(int id)
         {
             var projet = await _context.Projets.FindAsync(id);
+
             if (projet == null)
             {
                 return NotFound();
             }
 
-            ViewBag.TransitionsPossibles = _workflowService.GetTransitionsPossibles(projet.Statut, projet.StatutPrecedent, projet.Type);
+            ViewBag.TransitionsPossibles =
+                _workflowService.GetTransitionsPossibles(
+                    projet.Statut,
+                    projet.StatutPrecedent,
+                    projet.Type);
 
             return View(projet);
         }
@@ -1095,8 +1121,8 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
         public async Task<IActionResult> ChangerStatut(
-    int id,
-    StatutProjet nouveauStatut)
+            int id,
+            StatutProjet nouveauStatut)
         {
             var projet = await _context.Projets
                 .Include(p => p.OwnerIt)
@@ -1145,65 +1171,19 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
             await _context.SaveChangesAsync();
 
-            if (projet.OwnerIt != null &&
-                !string.IsNullOrWhiteSpace(projet.OwnerIt.Email))
+            if (projet.OwnerItId.HasValue)
             {
-                var sujet =
-                    $"Projet {projet.TicketId} - Changement de statut";
-
-                var message = $"""
-        Bonjour {projet.OwnerIt.Nom},
-
-        Le statut du projet suivant vient d'être modifié :
-
-        Projet : {projet.Nom}
-        Ticket ID : {projet.TicketId}
-
-        Ancien statut : {ancienStatut}
-        Nouveau statut : {nouveauStatut}
-
-        Responsable IT : {projet.OwnerIt.Nom}
-
-        Vous pouvez consulter le projet dans
-        l'application Gestion Projet SOCOTA.
-
-        Cordialement,
-        Gestion Projet SOCOTA
-        """;
-
-                try
-                {
-                    await _notificationService
-                        .EnvoyerNotificationProjet(
-                            projet,
-                            "ChangementStatut",
-                            projet.OwnerIt.Email,
-                            sujet,
-                            message);
-
-                    TempData["Succes"] =
-                        $"Statut changé vers {nouveauStatut}. " +
-                        "Une notification a été envoyée.";
-                }
-                catch (Exception)
-                {
-                    TempData["Succes"] =
-                        $"Statut changé vers {nouveauStatut}.";
-
-                    TempData["Erreur"] =
-                        "Le statut a été modifié, " +
-                        "mais la notification email n'a pas pu être envoyée.";
-                }
-            }
-            else
-            {
-                TempData["Succes"] =
-                    $"Statut changé vers {nouveauStatut}.";
-
-                TempData["Erreur"] =
-                    "Aucune adresse email n'est associée au Owner IT.";
+                await _notificationService.CreerNotificationAsync(
+                    projet.Id,
+                    projet.OwnerItId.Value,
+                    "ChangementStatut",
+                    $"Le projet \"{projet.Nom}\" est passé de " +
+                    $"{ancienStatut} à {nouveauStatut}."
+                );
             }
 
+            TempData["Succes"] =
+                $"Statut changé vers {nouveauStatut}.";
 
             return RedirectToAction("Index");
         }
@@ -1239,5 +1219,6 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             TempData["Succes"] = "Le projet a été supprimé.";
             return RedirectToAction("Index");
         }
+
     }
 }

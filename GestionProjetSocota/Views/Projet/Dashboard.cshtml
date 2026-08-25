@@ -9,10 +9,6 @@
         --dashboard-card: #ffffff;
     }
 
-    /* =========================
-       TITRE
-       ========================= */
-
     .dashboard-title {
         font-weight: 600;
         margin-bottom: 4px;
@@ -23,11 +19,6 @@
         font-size: 0.9rem;
         margin-bottom: 22px;
     }
-
-
-    /* =========================
-       KPI
-       ========================= */
 
     .dashboard-kpi {
         height: 100%;
@@ -73,11 +64,6 @@
         border-left: 4px solid #dc3545;
     }
 
-
-    /* =========================
-       GRAPHIQUES
-       ========================= */
-
     .dashboard-chart-card {
         height: 100%;
         border: 1px solid var(--dashboard-border);
@@ -104,11 +90,6 @@
         height: 235px;
     }
 
-
-    /* =========================
-       MODE SOMBRE
-       ========================= */
-
     body[data-bs-theme="dark"] {
         --dashboard-border: #3b4147;
         --dashboard-muted: #a8adb3;
@@ -133,11 +114,6 @@
     </p>
 
 </div>
-
-
-<!-- =========================
-     INDICATEURS
-     ========================= -->
 
 <div class="row g-3 mb-4">
 
@@ -237,11 +213,6 @@
 
 </div>
 
-
-<!-- =========================
-     GRAPHIQUES — LIGNE 1
-     ========================= -->
-
 <div class="row g-3 mb-3">
 
     <div class="col-lg-6">
@@ -290,11 +261,6 @@
     </div>
 
 </div>
-
-
-<!-- =========================
-     GRAPHIQUES — LIGNE 2
-     ========================= -->
 
 <div class="row g-3">
 
@@ -397,11 +363,6 @@
         }
     };
 
-
-    /* =========================
-       STATUT
-       ========================= */
-
     new Chart(document.getElementById('chartStatut'), {
 
         type: 'bar',
@@ -424,11 +385,6 @@
 
         options: chartOptions
     });
-
-
-    /* =========================
-       UNITÉ
-       ========================= */
 
     new Chart(document.getElementById('chartUnite'), {
 
@@ -478,11 +434,6 @@
         }
     });
 
-
-    /* =========================
-       DÉPARTEMENT
-       ========================= */
-
     new Chart(document.getElementById('chartDepartement'), {
 
         type: 'bar',
@@ -505,11 +456,6 @@
 
         options: chartOptions
     });
-
-
-    /* =========================
-       RESPONSABLE IT
-       ========================= */
 
     new Chart(document.getElementById('chartResponsable'), {
 
