@@ -1,0 +1,15 @@
+﻿<Window x:Class="GestionProjetSocota.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="GestionProjetSocota - SOCOTA"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized">
+
+    <Grid>
+        <wv2:WebView2 x:Name="WebView"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch" />
+    </Grid>
+
+</Window>

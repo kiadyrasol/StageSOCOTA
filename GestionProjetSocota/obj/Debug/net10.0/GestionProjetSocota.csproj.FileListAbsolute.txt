@@ -275,3 +275,4 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\GestionProjetSocota.pdb
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\GestionProjetSocota.genruntimeconfig.cache
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\ref\GestionProjetSocota.dll
+C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\y39xudmuuf-{0}-e3xzxzq7w2-e3xzxzq7w2.gz

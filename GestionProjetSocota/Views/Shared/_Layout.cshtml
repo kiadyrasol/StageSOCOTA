@@ -1,4 +1,4 @@
-﻿```html
+﻿
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -8,274 +8,274 @@
 
     <title>@ViewData["Title"] - GestionProjetSocota</title>
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="icon"
+      type="image/png"
+      href="~/Logo/logosocota.ico" />
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@@fortawesome/fontawesome-free@6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fortawesome/fontawesome-free@6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
 
     <style>
-        :root {
-            --socota-green: #8BC53F;
-            --socota-green-dark: #70A130;
+            :root {
+                --socota-green: #8BC53F;
+                --socota-green-dark: #70A130;
 
-            --light-bg: #f4f6f9;
-            --dark-bg: #1a1d21;
-            --dark-card: #2b2f33;
-            --dark-border: #3a3f44;
-            --dark-header: #33383d;
+                --light-bg: #f4f6f9;
+                --dark-bg: #1a1d21;
+                --dark-card: #2b2f33;
+                --dark-border: #3a3f44;
+                --dark-header: #33383d;
 
-            --transition: 0.2s ease;
-            --radius: 8px;
-        }
+                --transition: 0.2s ease;
+                --radius: 8px;
+            }
 
-        body {
-            background-color: var(--light-bg);
-        }
+            body {
+                background-color: var(--light-bg);
+            }
 
-        .brand-link {
-            background-color: var(--socota-green);
-            border-bottom: 0;
-        }
+            .brand-link {
+                background-color: var(--socota-green);
+                border-bottom: 0;
+            }
 
-        .brand-link:hover {
-            background-color: var(--socota-green-dark);
-        }
+            .brand-link:hover {
+                background-color: var(--socota-green-dark);
+            }
 
-        .main-header.navbar {
-            background-color: var(--socota-green);
-            border-bottom: 0;
-        }
+            .main-header.navbar {
+                background-color: var(--socota-green);
+                border-bottom: 0;
+            }
 
-        .main-header .nav-link {
-            color: #fff;
-        }
+            .main-header .nav-link {
+                color: #fff;
+            }
 
-        .main-header .nav-link:hover {
-            color: #fff;
-            opacity: 0.85;
-        }
+            .main-header .nav-link:hover {
+                color: #fff;
+                opacity: 0.85;
+            }
 
-        .nav-sidebar .nav-link {
-            transition: background-color var(--transition),
-                color var(--transition);
-        }
+            .nav-sidebar .nav-link {
+                transition: background-color var(--transition),
+                    color var(--transition);
+            }
 
-        .nav-sidebar .nav-link.active {
-            background-color: var(--socota-green);
-            color: #fff;
-        }
+            .nav-sidebar .nav-link.active {
+                background-color: var(--socota-green);
+                color: #fff;
+            }
 
-        .nav-sidebar .nav-link.active .nav-icon {
-            color: #fff;
-        }
+            .nav-sidebar .nav-link.active .nav-icon {
+                color: #fff;
+            }
 
-        .nav-sidebar .nav-link:not(.active):hover {
-            background-color: rgba(139, 197, 63, 0.15);
-        }
+            .nav-sidebar .nav-link:not(.active):hover {
+                background-color: rgba(139, 197, 63, 0.15);
+            }
 
-        .bg-socota {
-            background-color: var(--socota-green);
-            color: #fff;
-        }
+            .bg-socota {
+                background-color: var(--socota-green);
+                color: #fff;
+            }
 
-        .text-socota {
-            color: var(--socota-green);
-        }
+            .text-socota {
+                color: var(--socota-green);
+            }
 
-        .border-socota {
-            border-color: var(--socota-green);
-        }
+            .border-socota {
+                border-color: var(--socota-green);
+            }
 
-        .btn-socota {
-            background-color: var(--socota-green);
-            border-color: var(--socota-green);
-            color: #fff;
-            transition: background-color var(--transition),
-                border-color var(--transition),
-                transform var(--transition);
-        }
+            .btn-socota {
+                background-color: var(--socota-green);
+                border-color: var(--socota-green);
+                color: #fff;
+                transition: background-color var(--transition),
+                    border-color var(--transition),
+                    transform var(--transition);
+            }
 
-        .btn-socota:hover {
-            background-color: var(--socota-green-dark);
-            border-color: var(--socota-green-dark);
-            color: #fff;
-            transform: translateY(-1px);
-        }
+            .btn-socota:hover {
+                background-color: var(--socota-green-dark);
+                border-color: var(--socota-green-dark);
+                color: #fff;
+                transform: translateY(-1px);
+            }
 
-        .btn-outline-socota {
-            background-color: transparent;
-            border: 1px solid var(--socota-green);
-            color: var(--socota-green);
-            transition: all var(--transition);
-        }
+            .btn-outline-socota {
+                background-color: transparent;
+                border: 1px solid var(--socota-green);
+                color: var(--socota-green);
+                transition: all var(--transition);
+            }
 
-        .btn-outline-socota:hover {
-            background-color: var(--socota-green);
-            border-color: var(--socota-green);
-            color: #fff;
-        }
+            .btn-outline-socota:hover {
+                background-color: var(--socota-green);
+                border-color: var(--socota-green);
+                color: #fff;
+            }
 
-        .alert-success {
-            background-color: var(--socota-green);
-            border-color: var(--socota-green);
-            color: #fff;
-            border-radius: var(--radius);
-        }
+            .alert-success {
+                background-color: var(--socota-green);
+                border-color: var(--socota-green);
+                color: #fff;
+                border-radius: var(--radius);
+            }
 
-        .alert-success .btn-close {
-            filter: brightness(0) invert(1);
-        }
+            .alert-success .btn-close {
+                filter: brightness(0) invert(1);
+            }
 
-        .risk-low,
-        .badge-risk-low,
-        .bg-risk-low {
-            background-color: var(--socota-green);
-            color: #fff;
-        }
+            .risk-low,
+            .badge-risk-low,
+            .bg-risk-low {
+                background-color: var(--socota-green);
+                color: #fff;
+            }
 
-        .text-risk-low {
-            color: var(--socota-green);
-        }
+            .text-risk-low {
+                color: var(--socota-green);
+            }
 
-        .border-risk-low {
-            border-color: var(--socota-green);
-        }
+            .border-risk-low {
+                border-color: var(--socota-green);
+            }
 
-        .content-wrapper {
-            min-height: calc(100vh - 57px);
-        }
+            .content-wrapper {
+                min-height: calc(100vh - 57px);
+            }
 
-        .content {
-            padding-bottom: 20px;
-        }
+            .content {
+                padding-bottom: 20px;
+            }
 
-        .card {
-            border-radius: var(--radius);
-            transition: box-shadow var(--transition),
-                transform var(--transition);
-        }
+            .card {
+                border-radius: var(--radius);
+                transition: box-shadow var(--transition),
+                    transform var(--transition);
+            }
 
-        .card:hover {
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-        }
+            .card:hover {
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            }
 
-        .card-header {
-            border-top-left-radius: var(--radius);
-            border-top-right-radius: var(--radius);
-        }
+            .card-header {
+                border-top-left-radius: var(--radius);
+                border-top-right-radius: var(--radius);
+            }
 
-        .main-footer {
-            background-color: #fff;
-            border-top: 1px solid #dee2e6;
-        }
+            .main-footer {
+                background-color: #fff;
+                border-top: 1px solid #dee2e6;
+            }
 
-        #toggleDarkMode {
-            width: 36px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
+            #toggleDarkMode {
+                width: 36px;
+                height: 32px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-        body[data-bs-theme="dark"] {
-            background-color: var(--dark-bg);
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] {
+                background-color: var(--dark-bg);
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .content-wrapper {
-            background-color: var(--dark-bg);
-        }
+            body[data-bs-theme="dark"] .content-wrapper {
+                background-color: var(--dark-bg);
+            }
 
-        body[data-bs-theme="dark"] .main-footer {
-            background-color: var(--dark-card);
-            border-top-color: var(--dark-border);
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] .main-footer {
+                background-color: var(--dark-card);
+                border-top-color: var(--dark-border);
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .card {
-            background-color: var(--dark-card);
-            color: #e0e0e0;
-            border-color: var(--dark-border);
-        }
+            body[data-bs-theme="dark"] .card {
+                background-color: var(--dark-card);
+                color: #e0e0e0;
+                border-color: var(--dark-border);
+            }
 
-        body[data-bs-theme="dark"] .card-header {
-            background-color: var(--dark-header);
-            color: #e0e0e0;
-            border-bottom-color: var(--dark-border);
-        }
+            body[data-bs-theme="dark"] .card-header {
+                background-color: var(--dark-header);
+                color: #e0e0e0;
+                border-bottom-color: var(--dark-border);
+            }
 
-        body[data-bs-theme="dark"] .table {
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] .table {
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .table-light {
-            background-color: var(--dark-header);
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] .table-light {
+                background-color: var(--dark-header);
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .form-control,
-        body[data-bs-theme="dark"] .form-select {
-            background-color: var(--dark-card);
-            color: #e0e0e0;
-            border-color: var(--dark-border);
-        }
+            body[data-bs-theme="dark"] .form-control,
+            body[data-bs-theme="dark"] .form-select {
+                background-color: var(--dark-card);
+                color: #e0e0e0;
+                border-color: var(--dark-border);
+            }
 
-        body[data-bs-theme="dark"] .form-control:focus,
-        body[data-bs-theme="dark"] .form-select:focus {
-            border-color: var(--socota-green);
-            box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
-        }
+            body[data-bs-theme="dark"] .form-control:focus,
+            body[data-bs-theme="dark"] .form-select:focus {
+                border-color: var(--socota-green);
+                box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
+            }
 
-        body[data-bs-theme="dark"] .text-muted {
-            color: #a0a0a0;
-        }
+            body[data-bs-theme="dark"] .text-muted {
+                color: #a0a0a0;
+            }
 
-        body[data-bs-theme="dark"] .border {
-            border-color: var(--dark-border);
-        }
+            body[data-bs-theme="dark"] .border {
+                border-color: var(--dark-border);
+            }
 
-        body[data-bs-theme="dark"] .list-group-item {
-            border-color: var(--dark-border);
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] .list-group-item {
+                border-color: var(--dark-border);
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .text-dark {
-            color: #e0e0e0;
-        }
+            body[data-bs-theme="dark"] .text-dark {
+                color: #e0e0e0;
+            }
 
-        body[data-bs-theme="dark"] .btn-outline-secondary {
-            color: #d0d0d0;
-            border-color: #666;
-        }
+            body[data-bs-theme="dark"] .btn-outline-secondary {
+                color: #d0d0d0;
+                border-color: #666;
+            }
 
-        body[data-bs-theme="dark"] .btn-outline-secondary:hover {
-            background-color: #555;
-            color: #fff;
-        }
+            body[data-bs-theme="dark"] .btn-outline-secondary:hover {
+                background-color: #555;
+                color: #fff;
+            }
 
-        #notificationBadge {
-            top: 2px;
-            right: -2px;
-            font-size: 0.65rem;
-            min-width: 18px;
-            height: 18px;
-            padding: 2px 5px;
-            border-radius: 50%;
-            display: none;
-        }
+            #notificationBadge {
+                top: 2px;
+                right: -2px;
+                font-size: 0.65rem;
+                min-width: 18px;
+                height: 18px;
+                padding: 2px 5px;
+                border-radius: 50%;
+                display: none;
+            }
 
-        .notification-link {
-            position: relative;
-        }
+            .notification-link {
+                position: relative;
+            }
     </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed"
-      data-bs-theme="light">
+<body class="hold-transition sidebar-mini layout-fixed" data-bs-theme="light">
 
     <div class="wrapper">
 
@@ -284,10 +284,7 @@
             <ul class="navbar-nav">
 
                 <li class="nav-item">
-                    <a class="nav-link"
-                       data-widget="pushmenu"
-                       href="#"
-                       role="button"
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"
                        aria-label="Ouvrir ou fermer le menu">
 
                         <i class="fas fa-bars"></i>
@@ -302,9 +299,7 @@
 
                 <li class="nav-item me-2">
 
-                    <button id="toggleDarkMode"
-                            class="btn btn-sm btn-outline-light"
-                            type="button"
+                    <button id="toggleDarkMode" class="btn btn-sm btn-outline-light" type="button"
                             aria-label="Changer de thème">
 
                         <i class="fas fa-moon"></i>
@@ -315,15 +310,12 @@
 
                 <li class="nav-item me-2">
 
-                    <a href="/Notification"
-                       class="nav-link text-white position-relative notification-link"
-                       title="Notifications"
-                       aria-label="Notifications">
+                    <a href="/Notification" class="nav-link text-white position-relative notification-link"
+                       title="Notifications" aria-label="Notifications">
 
                         <i class="fas fa-bell"></i>
 
-                        <span id="notificationBadge"
-                              class="badge bg-danger position-absolute">
+                        <span id="notificationBadge" class="badge bg-danger position-absolute">
 
                             0
 
@@ -353,12 +345,16 @@
 
             <a href="/" class="brand-link">
 
-                <span class="brand-text font-weight-light">
+                <a href="/" class="brand-link d-flex align-items-center">
 
-                    Socota PMO
+                    <img src="~/Logo/logosocota.jfif" alt="SOCOTA" class="brand-image"
+                         style="height: 35px; width: auto; object-fit: contain;" />
 
-                </span>
+                    <span class="brand-text font-weight-light ms-2">
+                        Socota PMO
+                    </span>
 
+                </a>
             </a>
 
 
@@ -366,9 +362,7 @@
 
                 <nav class="mt-2">
 
-                    <ul class="nav nav-pills nav-sidebar flex-column"
-                        data-widget="treeview"
-                        role="menu">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
 
                         <!-- PROJETS -->
@@ -539,17 +533,13 @@
 
                     @if (TempData["Succes"] != null)
                     {
-                        <div class="alert alert-success alert-dismissible fade show"
-                             role="alert">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
 
                             <i class="fas fa-check-circle me-1"></i>
 
                             @TempData["Succes"]
 
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="alert"
-                                    aria-label="Fermer">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer">
                             </button>
 
                         </div>
@@ -560,17 +550,13 @@
 
                     @if (TempData["Erreur"] != null)
                     {
-                        <div class="alert alert-danger alert-dismissible fade show"
-                             role="alert">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
                             <i class="fas fa-exclamation-circle me-1"></i>
 
                             @TempData["Erreur"]
 
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="alert"
-                                    aria-label="Fermer">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer">
                             </button>
 
                         </div>
@@ -604,148 +590,148 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
-//Mode sombre
+    //Mode sombre
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            const themeButton =
-                document.getElementById("toggleDarkMode");
+        const themeButton =
+        document.getElementById("toggleDarkMode");
 
-            const themeIcon =
-                themeButton.querySelector("i");
+        const themeIcon =
+        themeButton.querySelector("i");
 
-            const savedTheme =
-                localStorage.getItem("theme") || "light";
+        const savedTheme =
+        localStorage.getItem("theme") || "light";
 
-            applyTheme(savedTheme);
-
-
-            themeButton.addEventListener("click", function () {
-
-                const currentTheme =
-                    document.body.getAttribute("data-bs-theme");
-
-                const newTheme =
-                    currentTheme === "dark"
-                        ? "light"
-                        : "dark";
-
-                applyTheme(newTheme);
-
-                localStorage.setItem(
-                    "theme",
-                    newTheme
-                );
-
-            });
+        applyTheme(savedTheme);
 
 
-            function applyTheme(theme) {
+        themeButton.addEventListener("click", function () {
 
-                document.body.setAttribute(
-                    "data-bs-theme",
-                    theme
-                );
+        const currentTheme =
+        document.body.getAttribute("data-bs-theme");
 
-                if (theme === "dark") {
+        const newTheme =
+        currentTheme === "dark"
+        ? "light"
+        : "dark";
 
-                    themeIcon.classList.remove("fa-moon");
+        applyTheme(newTheme);
 
-                    themeIcon.classList.add("fa-sun");
+        localStorage.setItem(
+        "theme",
+        newTheme
+        );
 
-                }
-                else {
+        });
 
-                    themeIcon.classList.remove("fa-sun");
 
-                    themeIcon.classList.add("fa-moon");
+        function applyTheme(theme) {
 
-                }
+        document.body.setAttribute(
+        "data-bs-theme",
+        theme
+        );
 
-            }
+        if (theme === "dark") {
+
+        themeIcon.classList.remove("fa-moon");
+
+        themeIcon.classList.add("fa-sun");
+
+        }
+        else {
+
+        themeIcon.classList.remove("fa-sun");
+
+        themeIcon.classList.add("fa-moon");
+
+        }
+
+        }
 
         });
 
     </script>
 
 
-//Notif
+    //Notif
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            async function chargerNombreNotifications() {
+        async function chargerNombreNotifications() {
 
-                try {
+        try {
 
-                    const response =
-                        await fetch("/Notification/NombreNonLues");
+        const response =
+        await fetch("/Notification/NombreNonLues");
 
-                    if (!response.ok) {
+        if (!response.ok) {
 
-                        console.error(
-                            "Erreur HTTP notifications :",
-                            response.status
-                        );
+        console.error(
+        "Erreur HTTP notifications :",
+        response.status
+        );
 
-                        return;
-                    }
-
-
-                    const nombre =
-                        await response.json();
-
-                    const badge =
-                        document.getElementById(
-                            "notificationBadge"
-                        );
+        return;
+        }
 
 
-                    if (!badge) {
+        const nombre =
+        await response.json();
 
-                        return;
+        const badge =
+        document.getElementById(
+        "notificationBadge"
+        );
 
-                    }
+
+        if (!badge) {
+
+        return;
+
+        }
 
 
-                    if (nombre > 0) {
+        if (nombre > 0) {
 
-                        badge.textContent =
-                            nombre;
+        badge.textContent =
+        nombre;
 
-                        badge.style.display =
-                            "block";
+        badge.style.display =
+        "block";
 
-                    }
-                    else {
+        }
+        else {
 
-                        badge.textContent =
-                            "0";
+        badge.textContent =
+        "0";
 
-                        badge.style.display =
-                            "none";
+        badge.style.display =
+        "none";
 
-                    }
+        }
 
-                }
-                catch (error) {
+        }
+        catch (error) {
 
-                    console.error(
-                        "Erreur lors du chargement des notifications :",
-                        error
-                    );
+        console.error(
+        "Erreur lors du chargement des notifications :",
+        error
+        );
 
-                }
+        }
 
-            }
+        }
 
-            chargerNombreNotifications();
+        chargerNombreNotifications();
 
-            setInterval(
-                chargerNombreNotifications,
-                30000
-            );
+        setInterval(
+        chargerNombreNotifications,
+        30000
+        );
 
         });
 
