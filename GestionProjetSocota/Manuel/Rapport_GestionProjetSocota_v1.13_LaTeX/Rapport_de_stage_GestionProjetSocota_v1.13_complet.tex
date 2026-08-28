@@ -1,0 +1,1073 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{top=2.5cm,bottom=2.5cm,left=2.7cm,right=2.5cm}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+\definecolor{socotagreen}{HTML}{8BC53F}
+\definecolor{socotadark}{HTML}{5E8F28}
+\definecolor{insiteal}{HTML}{06727A}
+
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=socotadark,
+    urlcolor=insiteal,
+    citecolor=socotadark
+}
+
+\onehalfspacing
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small GestionProjetSocota}
+\rhead{\small Rapport de stage -- Version 1.13}
+\cfoot{\thepage}
+\setlength{\headheight}{15pt}
+
+\titleformat{\chapter}[display]
+{\bfseries\color{socotadark}\Huge}
+{\chaptertitlename\ \thechapter}{12pt}{\Huge}
+\titleformat{\section}
+{\Large\bfseries\color{socotadark}}
+{\thesection}{0.6em}{}
+\titleformat{\subsection}
+{\large\bfseries}{\thesubsection}{0.6em}{}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{black!4},
+    columns=fullflexible
+}
+
+\newcommand{\capture}[2]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{#1}
+\caption{#2}
+\end{figure}
+}
+
+\begin{document}
+
+% ============================================================
+% PAGE DE GARDE
+% ============================================================
+\begin{titlepage}
+\centering
+
+\vspace*{0.4cm}
+
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=4cm]{logoinsi.png}
+
+    \vspace{0.2cm}
+
+    {\Large\bfseries\color{insiteal}
+    INSTITUT NATIONAL SUPÉRIEUR D'INFORMATIQUE\par}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=4cm]{logosocota.png}
+
+    \vspace{0.2cm}
+
+    {\large\bfseries GROUPE SOCOTA\par}
+\end{minipage}
+
+\vspace{1.5cm}
+
+{\Huge\bfseries\color{socotadark}
+RAPPORT DE STAGE\par}
+
+\vspace{0.7cm}
+
+{\Large\bfseries
+Développement d'une plateforme Web de pilotage des projets de digitalisation\par}
+
+\vspace{0.7cm}
+
+{\Large\bfseries
+GestionProjetSocota -- Version 1.13\par}
+
+\vfill
+
+\begin{tabular}{>{\bfseries}p{5cm}p{8cm}}
+Étudiant & Kiady Nirina RASOLONJATOVO\\
+Formation & INSI -- Licence 1 (L1)\\
+Entreprise & Groupe SOCOTA\\
+Service & IT -- Information Technology\\
+Encadrant & Monsieur Jakson\\
+Période & 10 août -- 30 septembre 2026\\
+Année & 2026
+\end{tabular}
+
+\vfill
+
+{\large\bfseries\color{socotadark}
+Rapport de stage -- Version 1.13\par}
+
+\end{titlepage}
+
+% ============================================================
+% PRELIMINAIRES
+% ============================================================
+\pagenumbering{roman}
+
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+
+Je tiens tout d'abord à remercier le Groupe SOCOTA pour m'avoir accueilli au sein de son service IT dans le cadre de mon stage et pour m'avoir permis de découvrir le fonctionnement d'un environnement professionnel dans le domaine informatique.
+
+Je remercie particulièrement Monsieur Jakson, mon encadrant, pour son accompagnement, ses conseils et les orientations qu'il m'a apportés tout au long de la réalisation du projet. Ses remarques m'ont permis de mieux comprendre les besoins du projet, d'améliorer ma méthode de travail et de progresser dans la réalisation des différentes fonctionnalités.
+
+Je remercie également l'ensemble des personnes du service IT qui ont contribué, directement ou indirectement, au bon déroulement de mon stage. Les échanges avec les membres de l'équipe m'ont permis de mieux comprendre les contraintes d'un projet informatique utilisé dans un contexte professionnel.
+
+Enfin, je remercie l'Institut National Supérieur d'Informatique (INSI) pour la formation reçue et pour les connaissances qui m'ont permis d'aborder ce stage avec des bases en programmation, en bases de données et en développement informatique.
+
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+
+Ce rapport présente les travaux réalisés au sein du service IT du Groupe SOCOTA pendant la période du 10 août au 30 septembre 2026. La mission principale du stage a consisté à participer à la conception et au développement de \textit{GestionProjetSocota}, une application Web destinée à améliorer le suivi et le pilotage des projets de digitalisation.
+
+La réalisation du projet a suivi plusieurs étapes. J'ai commencé par mettre en place un planning afin d'organiser le travail et les différentes phases de développement. J'ai ensuite réalisé la conception du projet et les diagrammes nécessaires avec Mermaid. Après cette phase, j'ai travaillé sur la base de données avec SQL Server, puis sur les différentes couches de l'application selon l'architecture Model--View--Controller (MVC).
+
+L'application développée permet notamment de centraliser les informations relatives aux projets, de consulter leur état d'avancement et leur niveau de risque, de disposer de tableaux de bord, d'utiliser des vues Kanban, Roadmap et Gantt, de rechercher des projets selon plusieurs critères, d'importer des données provenant d'Excel et de gérer des éléments complémentaires tels que les RFC, commentaires, pièces jointes, historiques et notifications. L'authentification Windows et l'intégration avec Active Directory ont également été prises en compte.
+
+Ce stage m'a permis de mettre en pratique mes connaissances en développement Web, en programmation C\#, en gestion de bases de données et en conception d'applications. Il m'a également permis de découvrir les différentes étapes nécessaires à la réalisation d'une solution informatique dans un contexte professionnel.
+
+\textbf{Mots-clés :} gestion de projet, digitalisation, ASP.NET Core MVC, C\#, SQL Server, Entity Framework Core, IIS, Active Directory.
+
+\chapter*{Liste des abréviations}
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+
+\begin{longtable}{p{4cm}p{10cm}}
+\toprule
+\textbf{Abréviation} & \textbf{Signification}\\
+\midrule
+AD & Active Directory\\
+ASP & Active Server Pages\\
+BDD & Base de données\\
+COMEX & Comité exécutif\\
+CSS & Cascading Style Sheets\\
+DB & Database\\
+HTML & HyperText Markup Language\\
+IIS & Internet Information Services\\
+INSI & Institut National Supérieur d'Informatique\\
+IT & Information Technology\\
+L1 & Licence 1\\
+MVC & Model -- View -- Controller\\
+RFC & Request for Change\\
+SQL & Structured Query Language\\
+SSO & Single Sign-On\\
+URL & Uniform Resource Locator\\
+Web & World Wide Web\\
+XLSX & Format de fichier Microsoft Excel\\
+\bottomrule
+\end{longtable}
+
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
+
+% ============================================================
+% CHAPITRE 1
+% ============================================================
+\chapter{Introduction}
+
+\section{Contexte général du stage}
+
+Le stage constitue une étape importante dans la formation d'un étudiant en informatique. Il permet de mettre en pratique les connaissances acquises pendant la formation, mais également de découvrir les méthodes de travail, les contraintes et les exigences d'un environnement professionnel.
+
+J'ai effectué mon stage au sein du Groupe SOCOTA, dans le service IT, du 10 août au 30 septembre 2026. Durant cette période, j'ai participé à la réalisation d'un projet informatique ayant pour objectif d'améliorer le suivi des projets de digitalisation de l'entreprise.
+
+Ce stage m'a permis de travailler sur plusieurs aspects d'un projet informatique. Il ne s'agissait pas uniquement d'écrire du code : il fallait d'abord comprendre le besoin, organiser les étapes de travail, concevoir la solution, structurer les données, développer les différentes fonctionnalités, effectuer des tests et préparer l'application à son environnement de déploiement.
+
+\section{Présentation de la mission}
+
+La mission principale consistait à participer au développement de \textit{GestionProjetSocota}, une application Web permettant de centraliser et de faciliter le suivi des projets.
+
+Avant la mise en place de la plateforme, le suivi pouvait notamment s'appuyer sur des données regroupées dans un fichier Excel. Une telle organisation peut devenir moins pratique lorsque le nombre de projets et d'informations associées augmente. Il devient alors nécessaire de disposer d'une solution permettant de centraliser les informations et de proposer différentes représentations adaptées aux besoins des utilisateurs.
+
+L'application développée répond à ce besoin en regroupant les données dans une base SQL Server et en proposant une interface Web permettant leur consultation et leur gestion.
+
+\section{Problématique}
+
+La problématique principale du projet peut être formulée de la manière suivante :
+
+\begin{quote}
+\textbf{Comment centraliser et améliorer le suivi des projets de digitalisation afin de disposer d'informations structurées, accessibles et exploitables par les différents profils d'utilisateurs ?}
+\end{quote}
+
+Cette problématique implique plusieurs besoins : centraliser les données, faciliter leur consultation, représenter les projets de plusieurs manières, sécuriser les accès et permettre aux responsables de disposer d'une vision synthétique du portefeuille.
+
+\section{Objectifs du stage}
+
+L'objectif général du stage était de participer à la réalisation d'une plateforme Web de pilotage des projets de digitalisation.
+
+Les objectifs spécifiques étaient notamment :
+
+\begin{itemize}
+    \item analyser le besoin et le cahier des charges ;
+    \item organiser les étapes de réalisation à travers un planning ;
+    \item concevoir la structure générale du projet ;
+    \item mettre en place la base de données ;
+    \item développer l'application selon l'architecture MVC ;
+    \item centraliser les informations relatives aux projets ;
+    \item proposer plusieurs modes de visualisation ;
+    \item mettre en place des tableaux de bord ;
+    \item permettre l'import de données Excel ;
+    \item gérer les commentaires, pièces jointes, RFC, historiques et notifications ;
+    \item intégrer la gestion des utilisateurs, rôles et permissions ;
+    \item prendre en compte l'authentification Windows et Active Directory ;
+    \item tester les fonctionnalités et corriger les problèmes rencontrés ;
+    \item préparer le déploiement de l'application Web.
+\end{itemize}
+
+\section{Méthodologie suivie}
+
+La réalisation du projet a été progressive. J'ai d'abord étudié le cahier des charges et organisé le travail. Un planning a ensuite été établi afin de visualiser les différentes étapes.
+
+La conception a été réalisée avec Mermaid. Cette étape m'a permis de représenter la structure du projet avant de commencer la réalisation technique.
+
+Après la conception, j'ai travaillé sur la base de données, puis sur les Models, les Controllers et les Views. Les fonctionnalités ont été développées progressivement et testées au fur et à mesure.
+
+Enfin, j'ai travaillé sur les aspects liés à l'authentification, aux rôles, à Active Directory et à la préparation du déploiement.
+
+\section{Organisation du rapport}
+
+Le présent rapport est organisé de manière à suivre l'évolution du projet. Après la présentation du Groupe SOCOTA et du service IT, il présente le contexte et les objectifs du projet. Il décrit ensuite l'analyse et la conception, les technologies utilisées et les étapes de réalisation de l'application. Les fonctionnalités sont ensuite détaillées à l'aide de captures d'écran. Enfin, le rapport présente la sécurité, les tests, le déploiement, les difficultés rencontrées, les compétences acquises et le bilan du stage.
+
+\capture{accueil.png}{Page d'accueil de GestionProjetSocota.}
+
+% ============================================================
+% CHAPITRE 2
+% ============================================================
+\chapter{Présentation du Groupe SOCOTA}
+
+\section{Présentation générale}
+
+Le Groupe SOCOTA constitue l'entreprise d'accueil de mon stage. Le stage a été effectué dans son environnement informatique, au sein du service IT.
+
+Dans le cadre de ce rapport, la présentation de l'entreprise est principalement orientée vers le contexte dans lequel le projet informatique a été réalisé. Le projet GestionProjetSocota s'inscrit dans une démarche de digitalisation et d'amélioration du suivi des projets.
+
+\capture{logosocota.png}{Logo du Groupe SOCOTA.}
+
+\section{Environnement professionnel}
+
+L'environnement professionnel du stage m'a permis de découvrir les contraintes liées à la réalisation d'une application destinée à répondre à un besoin réel. Contrairement à un exercice réalisé uniquement dans le cadre de la formation, le développement d'une solution professionnelle nécessite de prendre en compte les utilisateurs, la sécurité, l'organisation des données, la maintenance et les conditions de déploiement.
+
+Cette expérience m'a également permis de comprendre l'importance de la communication avec l'encadrant et de la validation progressive des fonctionnalités.
+
+\section{Le service IT}
+
+Le service IT (\textit{Information Technology}) est le service dans lequel le stage a été réalisé. Il accompagne les besoins informatiques de l'organisation et intervient notamment dans les projets liés aux systèmes d'information et à la digitalisation.
+
+Le projet GestionProjetSocota répond à un besoin directement lié à cette activité : disposer d'un outil permettant de suivre et de piloter les projets de digitalisation.
+
+\section{Place du projet dans l'entreprise}
+
+L'application constitue un outil de centralisation et de consultation des informations relatives aux projets. Elle vise à faciliter la lecture du portefeuille grâce à plusieurs représentations : tableaux de bord, Kanban, Roadmap et Gantt.
+
+Elle permet également de regrouper des informations qui peuvent être liées à un projet, comme les commentaires, les pièces jointes, les demandes de changement et les historiques.
+
+% ============================================================
+% CHAPITRE 3
+% ============================================================
+\chapter{Contexte, analyse et cahier des charges}
+
+\section{Contexte initial}
+
+Le suivi des projets constitue une activité qui nécessite de maintenir des informations régulièrement mises à jour. Lorsque les informations sont regroupées dans un fichier Excel centralisé, leur exploitation peut devenir plus complexe à mesure que le portefeuille augmente.
+
+Une application Web permet de proposer une approche différente : les données sont enregistrées dans une base structurée et les utilisateurs disposent d'interfaces adaptées à leurs besoins.
+
+L'objectif n'était donc pas simplement de remplacer un fichier par une interface Web, mais de proposer un véritable outil de pilotage.
+
+\section{Besoins fonctionnels}
+
+Les principaux besoins fonctionnels identifiés sont les suivants :
+
+\begin{enumerate}
+    \item gérer les projets ;
+    \item consulter les informations détaillées d'un projet ;
+    \item modifier les informations selon les permissions ;
+    \item visualiser les projets sous différentes formes ;
+    \item suivre l'avancement et le risque ;
+    \item disposer de tableaux de bord ;
+    \item rechercher selon plusieurs critères ;
+    \item importer des données Excel ;
+    \item gérer les RFC ;
+    \item ajouter des commentaires ;
+    \item gérer des pièces jointes ;
+    \item conserver un historique ;
+    \item afficher des notifications ;
+    \item gérer les utilisateurs et leurs rôles ;
+    \item sécuriser l'accès à l'application.
+\end{enumerate}
+
+\section{Besoins non fonctionnels}
+
+L'application doit également répondre à des besoins non fonctionnels :
+
+\begin{itemize}
+    \item proposer une interface claire et utilisable ;
+    \item contrôler les accès selon les rôles ;
+    \item conserver une structure de données cohérente ;
+    \item permettre une maintenance et une évolution futures ;
+    \item pouvoir être hébergée dans un environnement Windows ;
+    \item permettre l'utilisation de l'authentification Windows dans l'environnement prévu.
+\end{itemize}
+
+\section{Acteurs et rôles}
+
+La gestion des rôles permet d'adapter les possibilités offertes à chaque utilisateur. L'application comporte notamment des profils liés à l'administration et à la gestion de projet.
+
+Cette séparation est importante car tous les utilisateurs ne doivent pas nécessairement disposer des mêmes droits. L'autorisation est ainsi associée aux fonctionnalités sensibles.
+
+\section{Planning du projet}
+
+La première étape de mon travail a été la mise en place d'un planning. Cette étape m'a permis de répartir le travail en plusieurs phases et d'identifier les étapes importantes du projet.
+
+Le planning a notamment permis de distinguer l'analyse, la conception, la base de données, le développement, les tests et la préparation du déploiement.
+
+\section{Diagramme général du projet}
+
+Le diagramme général ci-dessous représente la démarche suivie pour réaliser GestionProjetSocota.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+node distance=0.8cm,
+box/.style={rectangle, rounded corners, draw=socotadark, align=center, minimum width=5cm, minimum height=0.8cm},
+arrow/.style={-{Latex}, thick}
+]
+\node[box] (a) {Analyse du cahier des charges};
+\node[box, below=of a] (b) {Mise en place du planning};
+\node[box, below=of b] (c) {Conception avec Mermaid};
+\node[box, below=of c] (d) {Conception de la base de données};
+\node[box, below=of d] (e) {Models};
+\node[box, below=of e] (f) {Controllers};
+\node[box, below=of f] (g) {Views};
+\node[box, below=of g] (h) {Développement des fonctionnalités};
+\node[box, below=of h] (i) {Tests et corrections};
+\node[box, below=of i] (j) {Authentification Windows / Active Directory};
+\node[box, below=of j] (k) {Préparation du déploiement};
+
+\draw[arrow] (a)--(b);
+\draw[arrow] (b)--(c);
+\draw[arrow] (c)--(d);
+\draw[arrow] (d)--(e);
+\draw[arrow] (e)--(f);
+\draw[arrow] (f)--(g);
+\draw[arrow] (g)--(h);
+\draw[arrow] (h)--(i);
+\draw[arrow] (i)--(j);
+\draw[arrow] (j)--(k);
+\end{tikzpicture}
+\caption{Diagramme général de réalisation du projet GestionProjetSocota.}
+\end{figure}
+
+\section{Architecture générale}
+
+L'architecture générale repose sur plusieurs éléments :
+
+\begin{itemize}
+    \item l'utilisateur accède à l'application à travers un navigateur ;
+    \item l'application Web est développée avec ASP.NET Core MVC ;
+    \item les données sont stockées dans SQL Server ;
+    \item Entity Framework Core assure l'accès aux données depuis l'application ;
+    \item IIS peut assurer l'hébergement sur un serveur Windows ;
+    \item l'authentification Windows et Active Directory participent à la gestion des accès.
+\end{itemize}
+
+% ============================================================
+% CHAPITRE 4
+% ============================================================
+\chapter{Conception de la solution}
+
+\section{Choix de l'architecture MVC}
+
+L'application utilise l'architecture MVC, qui signifie \textit{Model -- View -- Controller}. Cette organisation permet de séparer les responsabilités de l'application.
+
+Le \textbf{Model} représente les données et les entités manipulées par l'application. Il permet de définir la structure des informations utilisées par le système.
+
+Le \textbf{Controller} reçoit les requêtes de l'utilisateur, effectue les traitements nécessaires et prépare les données qui seront envoyées à l'interface.
+
+La \textbf{View} correspond à l'interface présentée à l'utilisateur. Elle permet d'afficher les données et de proposer les formulaires et actions nécessaires.
+
+Cette séparation rend le projet plus organisé et facilite son évolution.
+
+\section{Conception de la base de données}
+
+La base de données a été réalisée avec SQL Server. Elle constitue le stockage central des informations de l'application.
+
+Les données sont organisées autour des projets et des différentes informations qui leur sont associées. Le système prend notamment en compte les actions, commentaires, pièces jointes, RFC, historiques et notifications.
+
+La conception de la base a constitué une étape importante car les relations entre les différentes informations doivent être cohérentes avec le fonctionnement de l'application.
+
+\section{Accès aux données}
+
+Entity Framework Core a été utilisé afin de faciliter l'accès à SQL Server depuis le code C\#. Il permet de représenter les données sous forme d'entités et de réaliser les opérations nécessaires sur la base.
+
+Cette approche permet de conserver une séparation entre la logique applicative et les détails des requêtes SQL.
+
+\section{Conception de l'interface}
+
+L'interface a été conçue pour faciliter la consultation des informations. Bootstrap et AdminLTE ont notamment été utilisés pour structurer les pages et les tableaux de bord.
+
+Une attention particulière a été portée à la cohérence visuelle de l'application, notamment avec l'utilisation de la couleur verte du projet.
+
+\section{Conception des visualisations}
+
+Le projet propose plusieurs visualisations complémentaires.
+
+La vue \textbf{Kanban} permet une lecture par statut. La \textbf{Roadmap} permet une lecture temporelle du portefeuille. Le \textbf{Gantt} représente les périodes et échéances sous forme graphique.
+
+Ces vues répondent à des besoins différents tout en utilisant les mêmes informations de base.
+
+\capture{gantt.png}{Diagramme de Gantt.}
+
+\capture{roadmap.png}{Vue Roadmap du portefeuille.}
+
+% ============================================================
+% CHAPITRE 5
+% ============================================================
+\chapter{Technologies et outils utilisés}
+
+\section{C\#}
+
+C\# est le langage de programmation principal utilisé pour le développement de l'application. Il a été utilisé pour réaliser la logique métier, les Controllers, les Models et différents services.
+
+L'utilisation de C\# m'a permis de mettre en pratique les notions de programmation étudiées durant ma formation dans un projet réel.
+
+\section{ASP.NET Core MVC}
+
+ASP.NET Core MVC est le framework utilisé pour développer l'application Web. Il fournit l'environnement nécessaire pour organiser le projet selon le modèle MVC.
+
+Il a été choisi afin de disposer d'une structure adaptée à une application Web organisée en Models, Controllers et Views.
+
+\section{SQL Server}
+
+SQL Server est le système de gestion de base de données utilisé pour stocker les informations de l'application.
+
+Il a été utilisé car le projet nécessite une base relationnelle capable de gérer les projets et les nombreuses données qui leur sont associées.
+
+\section{Entity Framework Core}
+
+Entity Framework Core est l'outil utilisé pour faciliter la communication entre l'application C\# et SQL Server.
+
+Il permet de manipuler les données sous forme d'objets et d'entités et simplifie les opérations de lecture et d'écriture.
+
+\section{HTML, CSS et JavaScript}
+
+HTML structure les pages Web, CSS permet de gérer leur présentation et JavaScript apporte des comportements interactifs.
+
+Ces technologies sont complémentaires à ASP.NET Core MVC pour construire l'interface utilisée par les utilisateurs.
+
+\section{Bootstrap}
+
+Bootstrap a été utilisé pour faciliter la construction de l'interface et obtenir une présentation cohérente des composants.
+
+\section{AdminLTE}
+
+AdminLTE a été utilisé pour structurer l'interface de type tableau de bord et certains éléments de navigation.
+
+\section{Mermaid}
+
+Mermaid est un outil permettant de produire des diagrammes à partir d'une description textuelle. Il a été utilisé pendant la phase de conception afin de représenter le projet et de faciliter sa compréhension.
+
+\section{Frappe Gantt}
+
+Frappe Gantt a été utilisé pour produire la représentation graphique des échéances et des périodes des projets sous forme de diagramme de Gantt.
+
+\section{Visual Studio et Visual Studio Code}
+
+Visual Studio et Visual Studio Code ont servi au développement et à la modification du code source. Ils ont également été utilisés pour les tests et la vérification progressive du fonctionnement de l'application.
+
+\section{IIS}
+
+IIS (\textit{Internet Information Services}) est le serveur Web de Microsoft utilisé pour héberger des applications Web sur Windows Server.
+
+Dans le cadre du projet, IIS constitue l'environnement envisagé pour le déploiement de l'application Web.
+
+\section{Active Directory}
+
+Active Directory est le service d'annuaire de Microsoft permettant notamment de gérer des utilisateurs, groupes et ressources dans un environnement Windows.
+
+Dans le projet, Active Directory intervient dans le cadre de l'authentification Windows et de la gestion des accès.
+
+\section{Pourquoi ces outils ont-ils été utilisés ?}
+
+Les outils ont été choisis selon leur rôle dans les différentes étapes du projet. C\# et ASP.NET Core MVC constituent la base du développement. SQL Server et Entity Framework Core assurent la gestion des données. Bootstrap et AdminLTE facilitent la réalisation de l'interface. Mermaid intervient dans la conception, tandis que Frappe Gantt répond au besoin de visualisation du planning.
+
+IIS et Active Directory répondent quant à eux aux besoins liés à l'environnement Windows prévu pour l'application.
+
+% ============================================================
+% CHAPITRE 6
+% ============================================================
+\chapter{Réalisation de l'application Web}
+
+\section{Organisation du développement}
+
+Après la conception et la préparation de la base de données, le développement a été réalisé progressivement. J'ai travaillé successivement sur les Models, les Controllers et les Views, puis j'ai intégré les différentes fonctionnalités.
+
+Cette progression m'a permis de tester chaque partie au fur et à mesure et de limiter les difficultés liées à l'intégration de plusieurs fonctionnalités simultanément.
+
+\section{Page d'accueil}
+
+La page d'accueil constitue le premier point d'accès à l'application. Elle permet à l'utilisateur d'entrer dans l'environnement de GestionProjetSocota.
+
+\capture{accueil.png}{Page d'accueil de l'application Web.}
+
+La page présente l'identité visuelle du projet et permet d'accéder aux différentes fonctions disponibles selon le profil de l'utilisateur.
+
+\section{Tableau de bord}
+
+Le tableau de bord fournit une synthèse du portefeuille de projets. Il permet de visualiser rapidement plusieurs indicateurs et d'identifier les situations nécessitant une attention particulière.
+
+\capture{dashboard_general.png}{Vue générale du tableau de bord.}
+
+L'intérêt d'un tableau de bord est de réduire le temps nécessaire pour obtenir une vision globale du portefeuille. Au lieu de consulter chaque projet individuellement, l'utilisateur peut commencer par consulter les indicateurs principaux.
+
+\section{Dashboard Exécutif}
+
+Le Dashboard Exécutif est destiné à fournir une vision synthétique adaptée aux besoins de pilotage.
+
+\capture{dashboard_executif.png}{Dashboard Exécutif.}
+
+Cette représentation permet de se concentrer sur les indicateurs importants du portefeuille et sur les situations qui peuvent nécessiter une décision.
+
+\section{Dashboard COMEX}
+
+Le Dashboard COMEX fournit également une vue synthétique adaptée au niveau de pilotage concerné.
+
+\capture{dashboard_comex.png}{Dashboard COMEX.}
+
+La séparation des tableaux de bord permet d'adapter la présentation de l'information aux profils et aux besoins des utilisateurs.
+
+\section{Dashboard IT Manager}
+
+Le Dashboard IT Manager propose une vision davantage orientée vers le suivi opérationnel et informatique.
+
+\capture{dashboard_it.png}{Dashboard IT Manager.}
+
+Ces différents tableaux de bord montrent l'intérêt de centraliser les données : les mêmes informations peuvent être exploitées de manière différente selon le profil de l'utilisateur.
+
+\section{Liste des projets}
+
+La liste des projets constitue une interface centrale de l'application.
+
+\capture{projets.png}{Liste des projets.}
+
+Elle regroupe notamment les informations suivantes :
+
+\begin{itemize}
+    \item référence ;
+    \item Ticket ID ;
+    \item nom du projet ;
+    \item unité ;
+    \item statut ;
+    \item responsable IT ;
+    \item Power User ;
+    \item type ;
+    \item plateforme ;
+    \item échéance ;
+    \item avancement ;
+    \item niveau de risque.
+\end{itemize}
+
+La centralisation de ces informations permet à l'utilisateur d'obtenir rapidement une vision du portefeuille.
+
+\section{Création d'un projet}
+
+La création d'un projet permet d'enregistrer un nouveau projet dans l'application.
+
+\capture{creation_projet.png}{Formulaire de création d'un projet.}
+
+Le formulaire regroupe les informations nécessaires au suivi du projet. Les données saisies sont ensuite enregistrées dans la base de données.
+
+Cette fonctionnalité constitue une opération importante car les informations créées alimentent ensuite les autres fonctionnalités, notamment les dashboards, le Kanban, la Roadmap et le Gantt.
+
+\section{Consultation d'un projet}
+
+Après sa création, un projet peut être consulté à travers une page de détail.
+
+\capture{details_projet.png}{Page de détail d'un projet.}
+
+La page de détail permet de regrouper les informations du projet et d'accéder aux éléments qui lui sont associés.
+
+\section{Gestion des statuts}
+
+Le statut permet d'indiquer l'état actuel d'un projet.
+
+\capture{statut.png}{Gestion du statut d'un projet.}
+
+La modification du statut permet de maintenir les informations à jour. Elle influence également la manière dont les projets sont représentés dans certaines vues de pilotage.
+
+\section{Vue Kanban}
+
+La vue Kanban permet de représenter les projets sous forme de colonnes correspondant aux différents états du processus.
+
+\capture{kanban.png}{Vue Kanban des projets.}
+
+Cette représentation est particulièrement utile pour avoir une lecture visuelle de la répartition des projets selon leur statut. Elle facilite l'identification des projets regroupés dans une même situation.
+
+\section{Vue Roadmap}
+
+La Roadmap apporte une lecture temporelle du portefeuille.
+
+\capture{roadmap.png}{Vue Roadmap.}
+
+Elle permet de mieux visualiser la répartition des projets dans le temps et de faciliter la compréhension des échéances.
+
+\section{Diagramme de Gantt}
+
+Le diagramme de Gantt constitue une représentation graphique du planning.
+
+\capture{gantt.png}{Diagramme de Gantt des projets.}
+
+Cette vue permet notamment de comparer les périodes des projets et de mieux identifier leur position dans le temps.
+
+\section{Recherche multicritères}
+
+La recherche multicritères permet de retrouver plus facilement un projet lorsque le portefeuille contient de nombreuses données.
+
+\capture{recherche.png}{Interface de recherche multicritères.}
+
+L'utilisateur peut utiliser plusieurs critères afin de réduire le nombre de résultats et d'obtenir les projets correspondant à son besoin.
+
+\section{Import Excel}
+
+L'application permet d'importer des données à partir d'un fichier Excel au format \texttt{.xlsx}.
+
+\capture{import_excel.png}{Interface d'import Excel.}
+
+Cette fonctionnalité est importante dans le contexte du projet car elle permet de récupérer des données existantes et de les intégrer dans la plateforme.
+
+L'import nécessite toutefois de vérifier la structure des données afin que les informations correspondent aux champs attendus par l'application.
+
+\section{Gestion des RFC}
+
+RFC signifie \textit{Request for Change}. Une RFC correspond à une demande de changement qui peut être associée au suivi d'un projet.
+
+\capture{rfc.png}{Gestion des RFC.}
+
+La gestion des RFC permet de conserver les informations relatives aux demandes de changement dans le même environnement que les projets.
+
+\section{Commentaires}
+
+Les commentaires permettent d'ajouter des informations complémentaires à un projet.
+
+Ils facilitent la communication autour du suivi du projet et permettent de conserver des informations qui ne sont pas nécessairement représentées par les champs principaux.
+
+\section{Pièces jointes}
+
+Les pièces jointes permettent d'associer des documents à un projet.
+
+\capture{pieces_jointes.png}{Gestion des pièces jointes.}
+
+Cette fonctionnalité permet de regrouper les documents nécessaires au suivi dans l'environnement du projet.
+
+\section{Historique des projets}
+
+L'historique permet de conserver une trace des évolutions importantes liées aux projets.
+
+Cette fonctionnalité contribue à la traçabilité des informations et peut faciliter la compréhension de l'évolution d'un projet.
+
+\section{Notifications}
+
+Les notifications permettent de signaler des événements ou informations nécessitant l'attention de l'utilisateur.
+
+\capture{notifications.png}{Zone de notifications.}
+
+Elles constituent un complément aux tableaux de bord en permettant de porter certaines informations directement à l'attention de l'utilisateur.
+
+\section{Gestion du risque}
+
+Le projet comporte un mécanisme de calcul du niveau de risque des projets. Le principe consiste à attribuer des points en fonction de plusieurs facteurs.
+
+Par exemple, le score peut prendre en compte l'échéance, la priorité, la suspension du projet, l'absence de responsable IT ou encore l'ancienneté d'un commentaire.
+
+L'intérêt de ce mécanisme est de fournir un indicateur synthétique permettant d'attirer l'attention sur les projets qui présentent davantage de facteurs de risque.
+
+\section{Interface et identité visuelle}
+
+L'interface a été adaptée à l'identité visuelle du projet. La couleur principale utilisée est le vert SOCOTA, notamment avec la valeur \texttt{\#8BC53F}.
+
+Cette centralisation des couleurs dans les variables CSS facilite la maintenance et permet de conserver une cohérence entre les différentes pages.
+
+% ============================================================
+% CHAPITRE 7
+% ============================================================
+\chapter{Sécurité, utilisateurs et Active Directory}
+
+\section{Importance de la sécurité}
+
+Une application de gestion de projets contient des informations qui ne doivent pas nécessairement être accessibles à tous les utilisateurs. La sécurité doit donc prendre en compte l'identification des utilisateurs et leurs droits.
+
+\section{Authentification Windows}
+
+L'authentification Windows permet à l'application de s'appuyer sur l'identité du compte Windows de l'utilisateur.
+
+Dans un environnement professionnel configuré pour cette utilisation, l'utilisateur peut accéder à l'application avec son compte Windows sans avoir à gérer un système de mot de passe distinct pour l'application.
+
+\section{Active Directory}
+
+Active Directory permet de centraliser la gestion des comptes et groupes dans un environnement Windows.
+
+L'intégration avec Active Directory permet donc de prendre en compte les utilisateurs de l'environnement de l'entreprise pour l'accès à l'application.
+
+\section{Rôles et autorisations}
+
+Les autorisations sont utilisées pour limiter certaines actions aux profils disposant des droits nécessaires.
+
+Dans le code ASP.NET Core, l'attribut \texttt{Authorize} peut être utilisé pour protéger une fonctionnalité ou un Controller.
+
+Par exemple :
+
+\begin{lstlisting}[language={[Sharp]C}]
+[Authorize(Roles = "Administrateur,ChefDeProjet")]
+public class RFCController : Controller
+{
+    // ...
+}
+\end{lstlisting}
+
+Cet exemple montre que l'accès au Controller peut être limité aux rôles \textit{Administrateur} et \textit{ChefDeProjet}.
+
+\section{Principe du contrôle d'accès}
+
+Le contrôle d'accès permet donc de distinguer l'identité de l'utilisateur et les actions qu'il est autorisé à effectuer. Cette séparation est particulièrement importante pour les opérations de création, modification ou administration.
+
+% ============================================================
+% CHAPITRE 8
+% ============================================================
+\chapter{Tests et validation}
+
+\section{Objectif des tests}
+
+Les tests ont été réalisés progressivement pendant le développement. L'objectif était de vérifier que les fonctionnalités correspondaient au besoin et que les différentes parties de l'application communiquaient correctement avec la base de données.
+
+\section{Tests fonctionnels}
+
+Les tests ont porté sur plusieurs fonctions principales.
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{p{4cm}X p{3cm}}
+\toprule
+\textbf{Fonctionnalité} & \textbf{Test effectué} & \textbf{Résultat}\\
+\midrule
+Création de projet & Saisie et enregistrement d'un projet & Vérifié\\
+Consultation & Ouverture de la page de détail & Vérifié\\
+Recherche & Utilisation de plusieurs critères & Vérifié\\
+Kanban & Affichage des projets par statut & Vérifié\\
+Roadmap & Visualisation temporelle & Vérifié\\
+Gantt & Affichage des périodes et échéances & Vérifié\\
+Import Excel & Import d'un fichier \texttt{.xlsx} & Vérifié\\
+RFC & Création et consultation d'une RFC & Vérifié\\
+Pièces jointes & Association de documents & Vérifié\\
+Notifications & Affichage des notifications & Vérifié\\
+Authentification & Contrôle de l'accès utilisateur & Vérifié\\
+\bottomrule
+\end{tabularx}
+\caption{Exemples de tests fonctionnels réalisés.}
+\end{table}
+
+\section{Tests d'interface}
+
+Les différentes pages ont également été vérifiées afin de contrôler l'affichage des éléments, les boutons, les formulaires, les tableaux et les différentes vues.
+
+Les captures présentées dans le rapport permettent de montrer les principaux écrans de l'application.
+
+\section{Problèmes rencontrés}
+
+Pendant la réalisation, plusieurs difficultés ont nécessité des recherches, des tests et des corrections. Parmi les difficultés importantes figuraient la compréhension des relations entre les données, l'intégration des différentes fonctionnalités et la gestion des droits d'accès.
+
+Les tests progressifs ont permis d'identifier les erreurs avant de poursuivre les étapes suivantes.
+
+\section{Exemple de problème lié à l'importation}
+
+Lors des tests d'import de données, des problèmes de concurrence au niveau de SQL Server peuvent apparaître lorsqu'une transaction entre en conflit avec une autre opération.
+
+Une erreur de type \textit{deadlock} signifie qu'au moins deux opérations attendent mutuellement des ressources verrouillées. SQL Server choisit alors une transaction comme victime afin de débloquer la situation.
+
+Ce type de problème montre l'importance des tests dans un environnement réel et de la prise en compte des erreurs transitoires dans l'accès aux données.
+
+% ============================================================
+% CHAPITRE 9
+% ============================================================
+\chapter{Déploiement de l'application Web}
+
+\section{Principe général}
+
+Une fois l'application développée et testée, elle peut être préparée pour être hébergée sur un serveur Windows.
+
+Le schéma général est le suivant :
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+node distance=1.2cm,
+box/.style={rectangle, rounded corners, draw=socotadark, align=center, minimum width=4cm, minimum height=1cm},
+arrow/.style={-{Latex}, thick}
+]
+\node[box] (user) {Utilisateur\\Navigateur Web};
+\node[box, right=of user] (iis) {IIS\\Serveur Web};
+\node[box, right=of iis] (app) {Application\\ASP.NET Core MVC};
+\node[box, right=of app] (db) {SQL Server\\Base de données};
+
+\draw[arrow] (user)--(iis);
+\draw[arrow] (iis)--(app);
+\draw[arrow] (app)--(db);
+\end{tikzpicture}
+\caption{Principe général de déploiement de l'application Web.}
+\end{figure}
+
+\section{Publication de l'application}
+
+La publication consiste à produire les fichiers nécessaires à l'exécution de l'application dans son environnement cible.
+
+L'application peut ensuite être installée dans un site IIS. La configuration doit notamment prendre en compte le pool d'applications, les fichiers publiés, les permissions et les paramètres de connexion à la base de données.
+
+\section{Configuration de SQL Server}
+
+L'application doit pouvoir communiquer avec la base SQL Server utilisée pour stocker les données.
+
+La chaîne de connexion doit être configurée selon l'environnement de déploiement. Il est important de ne pas conserver dans une version publique des informations sensibles telles que des mots de passe ou des identifiants de connexion.
+
+\section{Configuration de l'authentification}
+
+Dans l'environnement prévu, l'authentification Windows doit être correctement configurée sur IIS et dans l'application.
+
+Active Directory doit également être accessible afin que les comptes et groupes nécessaires puissent être reconnus.
+
+\section{Maintenance}
+
+Après le déploiement, la maintenance constitue une étape importante. Une modification de l'application nécessite généralement une nouvelle publication et un remplacement contrôlé de la version déployée.
+
+La base de données doit également faire l'objet de sauvegardes régulières afin de limiter les risques de perte de données.
+
+% ============================================================
+% CHAPITRE 10
+% ============================================================
+\chapter{Difficultés rencontrées et solutions}
+
+\section{Compréhension du cahier des charges}
+
+La première difficulté a été de transformer les besoins exprimés dans le cahier des charges en fonctionnalités concrètes.
+
+La solution a consisté à découper le projet en plusieurs parties et à établir un planning. Cette méthode m'a permis de travailler progressivement au lieu d'essayer de développer toute l'application en même temps.
+
+\section{Conception de la base de données}
+
+La base de données a demandé une attention particulière car plusieurs informations sont liées entre elles.
+
+Pour résoudre cette difficulté, j'ai commencé par identifier les données nécessaires aux projets et leurs éléments associés, puis j'ai organisé leur utilisation dans l'application.
+
+\section{Compréhension de MVC}
+
+L'architecture MVC demande de comprendre le rôle de chaque partie. Au début, il est possible de confondre la logique qui doit être placée dans un Controller avec celle qui appartient au Model ou au Service.
+
+La pratique progressive et l'organisation du projet m'ont permis de mieux comprendre la séparation entre les données, le traitement et l'affichage.
+
+\section{Gestion des rôles}
+
+La gestion des droits nécessite de déterminer quelles actions doivent être accessibles aux différents profils.
+
+L'utilisation de l'autorisation ASP.NET Core permet de protéger les Controllers ou actions concernés.
+
+\section{Import des données}
+
+L'import Excel constitue une fonctionnalité importante mais également sensible car les données importées doivent respecter le format attendu.
+
+Les tests ont permis d'identifier les problèmes liés aux données et de vérifier le comportement de l'application lors de l'import.
+
+\section{Calcul du risque}
+
+La mise en place d'un score de risque nécessite de combiner plusieurs critères. Une modification d'un seul facteur peut influencer le résultat final.
+
+Cette fonctionnalité m'a permis de comprendre l'importance de tester non seulement le fonctionnement du code, mais aussi la logique métier utilisée pour produire les indicateurs.
+
+\section{Problèmes de concurrence SQL Server}
+
+Les tests ont également permis de rencontrer des problèmes de concurrence tels que les deadlocks SQL Server. Ce type d'erreur montre qu'une application connectée à une base de données doit prendre en compte les situations dans lesquelles plusieurs opérations sont réalisées simultanément.
+
+Cette expérience m'a permis de mieux comprendre les problématiques qui apparaissent lorsqu'une application est utilisée dans des conditions plus proches d'un environnement réel.
+
+% ============================================================
+% CHAPITRE 11
+% ============================================================
+\chapter{Compétences acquises et bilan du stage}
+
+\section{Compétences techniques}
+
+Ce stage m'a permis de renforcer plusieurs compétences techniques :
+
+\begin{itemize}
+    \item programmation en C\# ;
+    \item développement Web avec ASP.NET Core MVC ;
+    \item utilisation de SQL Server ;
+    \item utilisation d'Entity Framework Core ;
+    \item conception de Models, Controllers et Views ;
+    \item réalisation d'interfaces HTML/CSS/JavaScript ;
+    \item utilisation de Bootstrap et AdminLTE ;
+    \item création de diagrammes avec Mermaid ;
+    \item utilisation de Frappe Gantt ;
+    \item découverte du déploiement avec IIS ;
+    \item compréhension de l'authentification Windows et d'Active Directory.
+\end{itemize}
+
+\section{Compétences méthodologiques}
+
+Le stage m'a également permis d'améliorer ma manière de travailler.
+
+J'ai appris l'importance de commencer par analyser le besoin et de planifier les étapes avant de développer. J'ai également compris qu'un projet informatique doit être construit progressivement et testé régulièrement.
+
+La documentation et les captures d'écran constituent également un moyen important de conserver une trace du travail réalisé.
+
+\section{Compétences professionnelles}
+
+Cette expérience m'a permis de découvrir les exigences d'un environnement professionnel. J'ai notamment appris à prendre en compte les remarques de l'encadrant, à analyser les erreurs et à rechercher des solutions lorsque je rencontrais une difficulté.
+
+Le stage m'a également permis de mieux comprendre la différence entre réaliser un exercice informatique et participer à un projet destiné à répondre à un besoin réel.
+
+\section{Bilan personnel}
+
+Ce stage représente une expérience importante dans mon parcours de formation. Il m'a permis de mettre en pratique les notions étudiées en première année et de découvrir des technologies et méthodes utilisées dans un projet Web professionnel.
+
+La réalisation de GestionProjetSocota m'a également permis de mieux comprendre l'ensemble du cycle d'un projet : analyse, conception, développement, tests et préparation du déploiement.
+
+% ============================================================
+% CHAPITRE 12
+% ============================================================
+\chapter{Limites et perspectives}
+
+\section{Limites}
+
+Comme tout projet informatique, l'application peut continuer à évoluer. Les besoins des utilisateurs peuvent changer et de nouvelles fonctionnalités peuvent être ajoutées.
+
+Certaines améliorations peuvent également être nécessaires au niveau des performances, notamment lorsque le volume de projets et d'utilisateurs augmente.
+
+\section{Perspectives fonctionnelles}
+
+Parmi les perspectives possibles figurent :
+
+\begin{itemize}
+    \item enrichir le système de notifications ;
+    \item améliorer les indicateurs des tableaux de bord ;
+    \item améliorer le suivi du score de risque ;
+    \item ajouter de nouvelles possibilités de filtrage ;
+    \item enrichir les fonctionnalités de recherche ;
+    \item améliorer la gestion documentaire ;
+    \item ajouter de nouvelles fonctionnalités selon les besoins des utilisateurs.
+\end{itemize}
+
+\section{Perspectives techniques}
+
+Sur le plan technique, l'application peut également bénéficier d'améliorations concernant les performances, la gestion des erreurs, la supervision et la maintenance.
+
+L'évolution vers un environnement serveur permanent nécessite notamment de prévoir les sauvegardes, la sécurité, les permissions et les procédures de mise à jour.
+
+% ============================================================
+% CONCLUSION
+% ============================================================
+\chapter{Conclusion générale}
+
+La réalisation de ce stage au sein du service IT du Groupe SOCOTA m'a permis de participer à un projet informatique concret répondant à un besoin de digitalisation. Le projet GestionProjetSocota avait pour objectif de centraliser les informations relatives aux projets et de proposer un outil facilitant leur suivi et leur pilotage.
+
+J'ai commencé par analyser le besoin et mettre en place un planning afin d'organiser les différentes étapes. J'ai ensuite réalisé la conception du projet avec Mermaid avant de travailler sur la base de données. Le développement a été réalisé progressivement selon l'architecture MVC, en travaillant sur les Models, Controllers et Views.
+
+La réalisation des fonctionnalités m'a permis de mettre en pratique différentes connaissances : gestion des projets, tableaux de bord, Kanban, Roadmap, Gantt, recherche multicritères, import Excel, RFC, commentaires, pièces jointes, historique, notifications et gestion du risque.
+
+Le projet m'a également permis de découvrir des aspects importants qui dépassent le simple développement d'une interface, notamment la gestion des utilisateurs et des rôles, l'authentification Windows, Active Directory, SQL Server, Entity Framework Core et la préparation du déploiement avec IIS.
+
+Les difficultés rencontrées pendant le stage ont également constitué des occasions d'apprentissage. Les problèmes liés à la structure des données, aux autorisations, à l'importation et à la concurrence avec SQL Server m'ont appris à analyser les erreurs, à tester différentes solutions et à comprendre davantage le fonctionnement d'une application professionnelle.
+
+Sur le plan personnel, ce stage m'a permis de mieux comprendre le déroulement d'un projet informatique de bout en bout. J'ai également appris que la réussite d'une application dépend autant de l'analyse et de l'organisation que du code lui-même.
+
+Enfin, GestionProjetSocota constitue une base pouvant continuer à évoluer selon les besoins de l'entreprise. Les fonctionnalités existantes peuvent être améliorées et de nouvelles fonctions peuvent être ajoutées afin d'accompagner les utilisateurs dans le suivi des projets de digitalisation.
+
+Cette expérience représente donc une étape importante dans ma formation en informatique et m'a permis de consolider mes connaissances tout en découvrant les exigences d'un environnement professionnel.
+
+% ============================================================
+% ANNEXES
+% ============================================================
+\appendix
+
+\chapter{Extraits de code}
+
+\section{Exemple de Controller}
+
+L'extrait suivant illustre le principe d'une action permettant de récupérer un projet et de transmettre les données à une View.
+
+\begin{lstlisting}[language={[Sharp]C}]
+[HttpGet]
+public IActionResult Details(int id)
+{
+    var projet = _context.Projets.Find(id);
+    return View(projet);
+}
+\end{lstlisting}
+
+Le Controller reçoit l'identifiant du projet, recherche l'élément correspondant dans le contexte de données et transmet le résultat à la View.
+
+\section{Configuration d'Entity Framework Core}
+
+L'accès à SQL Server est configuré dans l'application afin de permettre à Entity Framework Core de communiquer avec la base de données.
+
+\begin{lstlisting}[language={[Sharp]C}]
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+\end{lstlisting}
+
+Cette configuration indique à l'application d'utiliser SQL Server avec la chaîne de connexion définie dans la configuration.
+
+\section{Exemple de protection par rôle}
+
+\begin{lstlisting}[language={[Sharp]C}]
+[Authorize(Roles = "Administrateur,ChefDeProjet")]
+public class RFCController : Controller
+{
+    // Actions du controller
+}
+\end{lstlisting}
+
+L'attribut \texttt{Authorize} permet de restreindre l'accès à un Controller aux utilisateurs appartenant aux rôles indiqués.
+
+\chapter{Captures complémentaires}
+
+\capture{accueil_sombre.png}{Interface complémentaire de l'application.}
+
+\capture{dashboard_general.png}{Vue complémentaire du tableau de bord.}
+
+\end{document}

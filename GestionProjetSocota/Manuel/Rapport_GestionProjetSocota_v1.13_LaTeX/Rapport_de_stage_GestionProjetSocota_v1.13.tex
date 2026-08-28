@@ -1,0 +1,290 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\definecolor{socotagreen}{HTML}{8BC53F}
+\definecolor{socotadark}{HTML}{5E8F28}
+\definecolor{insiteal}{HTML}{06727A}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{microtype}
+\hypersetup{colorlinks=true,linkcolor=socotadark,urlcolor=insiteal}
+\pagestyle{fancy}\fancyhf{}
+\lhead{\small GestionProjetSocota}\rhead{\small Rapport de stage -- Version 1.13}\cfoot{\thepage}
+\setlength{\headheight}{15pt}
+\titleformat{\chapter}[display]{\bfseries\color{socotadark}\Huge}{\chaptertitlename\ \thechapter}{12pt}{\Huge}
+\titleformat{\section}{\Large\bfseries\color{socotadark}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.6em}{}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,frame=single,backgroundcolor=\color{black!4},columns=fullflexible}
+\newcommand{\capture}[2]{\begin{figure}[H]\centering\includegraphics[width=0.92\textwidth]{#1}\caption{#2}\end{figure}}
+\begin{document}
+
+\begin{titlepage}\centering
+\vspace*{0.5cm}
+\begin{minipage}{0.45\textwidth}\centering\includegraphics[width=4cm]{insi_logo_recreated.png}\end{minipage}\hfill
+\begin{minipage}{0.45\textwidth}\centering\includegraphics[width=4cm]{socota_logo_crop.png}\end{minipage}
+\vspace{0.8cm}
+{\Large\bfseries\color{insiteal} INSTITUT NATIONAL SUPÉRIEUR D'INFORMATIQUE\par}
+\vspace{0.4cm}{\large\bfseries GROUPE SOCOTA\par}
+\vspace{1.5cm}{\Huge\bfseries\color{socotadark} RAPPORT DE STAGE\par}
+\vspace{0.6cm}{\Large Développement d'une plateforme Web de pilotage des projets de digitalisation\par}
+\vspace{0.8cm}{\Large\bfseries GestionProjetSocota -- Version 1.13\par}
+\vfill
+\begin{tabular}{>{\bfseries}p{5cm}p{8cm}
+}Étudiant & Kiady Nirina RASOLONJATOVO\\
+Formation & INSI -- Licence 1 (L1)\\
+Entreprise & Groupe SOCOTA\\
+Service & IT -- Information Technology\\
+Encadrant & Monsieur Jakson\\
+Période & 10 août -- 30 septembre 2026\\
+Année & 2026
+\end{tabular}
+\vfill{\large\bfseries\color{socotadark} Rapport de stage -- Version 1.13\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\chapter*{Remerciements}
+Je tiens à remercier le Groupe SOCOTA pour m'avoir accueilli au sein du service IT dans le cadre de mon stage. Je remercie particulièrement Monsieur Jakson pour son encadrement, ses conseils et les orientations apportées pendant la réalisation du projet.
+
+\chapter*{Résumé}
+Ce rapport présente le travail réalisé au sein du service IT du Groupe SOCOTA du 10 août au 30 septembre 2026. La mission principale a consisté à concevoir et développer \textit{GestionProjetSocota}, une application Web destinée au pilotage des projets de digitalisation. La démarche a commencé par la planification, puis la conception avec Mermaid, la préparation de la base de données et le développement selon l'architecture MVC. L'application propose notamment la gestion des projets, des tableaux de bord, les vues Kanban, Roadmap et Gantt, la recherche multicritères, l'import Excel, les notifications, les pièces jointes et l'authentification Windows / Active Directory.
+
+\textbf{Mots-clés :} gestion de projet, digitalisation, ASP.NET Core MVC, C\#, SQL Server, Entity Framework Core, IIS, Active Directory.
+
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Introduction}
+Le stage constitue une première expérience permettant de mettre en pratique les connaissances acquises en formation et de découvrir les contraintes d'un projet informatique réel. J'ai effectué mon stage au sein du service IT du Groupe SOCOTA, du 10 août au 30 septembre 2026.
+
+Ma mission principale était de participer à la réalisation d'une application Web destinée au suivi des projets de digitalisation. J'ai commencé par mettre en place un planning, puis j'ai réalisé le diagramme du projet avec Mermaid. Après cette phase de conception, j'ai travaillé sur la base de données, puis sur les Models, Controllers et Views.
+
+\capture{accueil.png}{Page d'accueil de GestionProjetSocota.}
+
+\chapter{Présentation du Groupe SOCOTA}
+Le Groupe SOCOTA constitue l'environnement professionnel dans lequel ce stage a été réalisé. Le projet s'inscrit dans un contexte de digitalisation et de suivi des projets informatiques de l'entreprise.
+
+\capture{socota_logo_crop.png}{Logo du Groupe SOCOTA, entreprise d'accueil du stage.}
+
+\chapter{Présentation du service IT}
+Le stage a été réalisé au sein du service IT (\textit{Information Technology}). Le service accompagne les besoins informatiques et les initiatives de digitalisation. GestionProjetSocota s'inscrit dans cette activité en proposant un outil Web destiné au suivi du portefeuille de projets.
+
+\chapter{Contexte et problématique}
+Le suivi des projets reposait notamment sur un fichier Excel centralisé. Cette organisation peut rendre la consultation, la consolidation et la mise à jour des informations plus difficiles lorsque le nombre de projets augmente.
+
+La problématique retenue est la suivante : \textbf{comment centraliser et améliorer le suivi des projets de digitalisation afin de disposer d'une information structurée, accessible et exploitable ?}
+
+La réponse apportée est une application Web reliée à SQL Server et destinée à être accessible sur le réseau interne.
+
+\chapter{Objectifs du projet}
+L'objectif général était de réaliser une plateforme Web permettant le pilotage du portefeuille de projets de digitalisation.
+\begin{itemize}
+\item centraliser les informations des projets ;
+\item faciliter la consultation et la modification ;
+\item proposer Kanban, Roadmap et Gantt ;
+\item fournir des tableaux de bord adaptés aux profils ;
+\item proposer une recherche multicritères ;
+\item permettre l'import de données Excel ;
+\item gérer notifications et pièces jointes ;
+\item sécuriser l'accès avec Windows Authentication / Active Directory.
+\end{itemize}
+
+\chapter{Planification et démarche}
+La première étape a été la mise en place d'un planning afin d'organiser les différentes phases. La démarche a ensuite suivi une progression logique : analyse du besoin, conception, base de données, développement, intégration, tests, corrections et préparation du déploiement.
+
+\chapter{Analyse et conception}
+\section{Diagramme du projet}
+Après la planification, j'ai réalisé le diagramme du projet avec Mermaid afin de représenter graphiquement la structure et les relations du système.
+
+\section{Base de données}
+J'ai ensuite travaillé sur SQL Server. Les informations nécessaires au suivi des projets ont été structurées afin d'être utilisées par les différentes fonctionnalités, notamment les actions, commentaires, pièces jointes, RFC, historique et notifications.
+
+\section{Architecture}
+L'architecture associe l'utilisateur, IIS sur Windows Server, l'application ASP.NET Core MVC et SQL Server, avec Windows Authentication / Active Directory.
+
+\capture{gantt.png}{Vue Gantt utilisée pour représenter le planning.}
+\capture{roadmap.png}{Vue Roadmap pour une lecture temporelle du portefeuille.}
+
+\chapter{Technologies et outils utilisés}
+\section{C\#}
+C\# est le langage principal utilisé pour développer la logique de l'application et les composants Models, Controllers et services.
+
+\section{ASP.NET Core MVC}
+ASP.NET Core MVC fournit l'architecture Web utilisée. Le modèle MVC sépare les données, la logique de traitement et l'interface.
+
+\section{SQL Server}
+SQL Server stocke les projets et les informations associées.
+
+\section{Entity Framework Core}
+Entity Framework Core facilite l'accès à SQL Server depuis le code C\# et permet de travailler avec les entités.
+
+\section{HTML, CSS et JavaScript}
+Ces technologies construisent l'interface Web, sa présentation et ses interactions.
+
+\section{Bootstrap et AdminLTE}
+Ils ont été utilisés pour structurer l'interface et les tableaux de bord.
+
+\section{Mermaid}
+Mermaid a été utilisé pour réaliser les diagrammes de conception et de documentation.
+
+\section{Frappe Gantt}
+Frappe Gantt a été utilisé pour la représentation graphique des plannings.
+
+\section{Visual Studio et Visual Studio Code}
+Ils ont servi au développement, à la modification du code et aux tests.
+
+\section{IIS}
+IIS (\textit{Internet Information Services}) permet l'hébergement de l'application Web sur Windows Server.
+
+\section{Active Directory}
+Active Directory permet l'intégration de l'authentification Windows et la gestion des utilisateurs et groupes de l'environnement.
+
+\textbf{Remarque :} Power BI et Git ne sont pas présentés comme des outils utilisés pour développer le projet.
+
+\chapter{Réalisation de l'application}
+\section{Architecture MVC}
+J'ai travaillé sur les Models, Controllers et Views. Le Model représente les données, le Controller reçoit les requêtes et prépare les données, et la View présente les informations à l'utilisateur.
+
+\section{Création d'un projet}
+\capture{creation_projet.png}{Formulaire de création d'un projet.}
+
+\section{Consultation d'un projet}
+\capture{details_projet.png}{Page de détail d'un projet et informations de suivi.}
+
+\chapter{Fonctionnalités développées}
+\section{Gestion des projets}
+La liste centralise la référence, le ticket ID, le nom, l'unité, le statut, le responsable IT, le type, la plateforme, l'échéance, l'avancement et le risque.
+\capture{projets.png}{Liste des projets.}
+
+\section{Tableaux de bord}
+Les dashboards permettent une vision synthétique du portefeuille.
+\capture{dashboard_executif.png}{Dashboard Exécutif.}
+\capture{dashboard_comex.png}{Dashboard COMEX.}
+\capture{dashboard_it.png}{Dashboard IT Manager.}
+
+\section{Kanban}
+La vue Kanban visualise les projets par statut.
+\capture{kanban.png}{Vue Kanban du portefeuille.}
+
+\section{Roadmap}
+La Roadmap fournit une vision temporelle des projets.
+\capture{roadmap.png}{Roadmap trimestrielle.}
+
+\section{Gantt}
+La vue Gantt représente graphiquement les périodes et échéances.
+\capture{gantt.png}{Diagramme de Gantt.}
+
+\section{Recherche multicritères}
+Elle permet de filtrer les projets selon plusieurs critères.
+\capture{recherche.png}{Recherche multicritères.}
+
+\section{Import Excel}
+L'import permet d'intégrer les données d'un fichier \texttt{.xlsx}.
+\capture{import_excel.png}{Interface d'import Excel.}
+
+\section{RFC}
+La gestion des RFC (\textit{Request for Change}) permet de suivre les demandes de changement associées aux projets.
+\capture{rfc.png}{Gestion d'une RFC.}
+
+\section{Notifications}
+Les notifications signalent les événements nécessitant une attention.
+\capture{notifications.png}{Zone de notifications.}
+
+\section{Pièces jointes}
+Les pièces jointes permettent d'associer des documents aux projets.
+\capture{pieces_jointes.png}{Gestion des pièces jointes.}
+
+\section{Gestion des statuts}
+Le statut d'un projet peut être modifié afin de refléter son état d'avancement.
+\capture{statut.png}{Modification du statut d'un projet.}
+
+\chapter{Authentification Windows et Active Directory}
+L'authentification Windows / Active Directory a été intégrée conformément au besoin du cahier des charges. Elle permet d'associer l'accès à l'application au compte Windows de l'utilisateur. Le SSO (\textit{Single Sign-On}) simplifie l'accès lorsque l'environnement est correctement configuré.
+
+\chapter{Tests et corrections}
+Les tests ont porté sur l'affichage, les formulaires, les accès aux données, les filtres, les vues de pilotage, les fonctionnalités et l'authentification. Les erreurs rencontrées ont été analysées puis corrigées.
+
+\chapter{Déploiement}
+Une version Web publiée peut être hébergée sur un serveur Windows avec IIS. Le déploiement nécessite de préparer l'application, SQL Server, l'authentification Windows / AD, les permissions réseau et le stockage des pièces jointes.
+
+Si l'accès à l'application n'est plus disponible après le stage, les captures, diagrammes, extraits de code et explications permettent de présenter le travail réalisé. Si l'application est déployée sur un serveur SOCOTA, un accès temporaire de démonstration peut être accordé.
+
+\chapter{Difficultés rencontrées et solutions}
+Le passage d'un suivi Excel à une base de données structurée a demandé de comprendre les relations entre les informations. L'organisation du code selon MVC a également constitué un apprentissage important. Les tests progressifs ont permis d'identifier et de corriger les problèmes.
+
+\chapter{Compétences acquises}
+Ce stage m'a permis de renforcer mes connaissances en programmation et de découvrir les principales étapes d'un projet informatique réel. J'ai développé des compétences en C\#, ASP.NET Core MVC, SQL Server, Entity Framework Core, conception d'interfaces Web, modélisation, intégration de fonctionnalités et préparation du déploiement.
+
+\chapter{Limites et perspectives}
+L'application peut continuer à évoluer selon les besoins de l'entreprise. Les perspectives concernent notamment l'optimisation des performances, l'enrichissement des notifications, l'amélioration des dashboards et l'ajout de nouveaux besoins fonctionnels.
+
+\chapter{Conclusion}
+Ce stage au sein du service IT du Groupe SOCOTA m'a permis de participer à un projet informatique concret répondant à un besoin de digitalisation. J'ai suivi une démarche allant de la planification et de la conception jusqu'au développement, aux tests et à la préparation du déploiement. Cette expérience m'a permis de mettre en pratique mes connaissances et de mieux comprendre les exigences d'un projet informatique professionnel.
+
+\chapter{Glossaire des abréviations}
+\begin{longtable}{p{4cm}p{10cm}}\toprule
+\textbf{Abréviation}&\textbf{Signification}\\\midrule
+AD&Active Directory\\
+ASP&Active Server Pages\\
+COMEX&Comité exécutif\\
+CSS&Cascading Style Sheets\\
+DB / BDD&Database / Base de données\\
+DIG&Digitalisation\\
+HTML&HyperText Markup Language\\
+IIS&Internet Information Services\\
+IT&Information Technology\\
+L1&Licence 1\\
+MOM&Minutes of Meeting\\
+MVC&Model -- View -- Controller\\
+RFC&Request for Change\\
+SMTP&Simple Mail Transfer Protocol\\
+SQL&Structured Query Language\\
+SSO&Single Sign-On\\
+URL&Uniform Resource Locator\\
+Web&World Wide Web\\
+XLSX&Format de fichier Microsoft Excel\\
+\bottomrule\end{longtable}
+
+\appendix
+\chapter{Extraits de code}
+Le rapport ne contient pas le code source complet. Quelques extraits représentatifs suffisent.
+
+\section{Controller}
+\begin{lstlisting}[language={[Sharp]C}]
+[HttpGet]
+public IActionResult Details(int id)
+{
+    var projet = _context.Projets.Find(id);
+    return View(projet);
+}
+\end{lstlisting}
+Cet extrait récupère un projet à partir de son identifiant puis transmet les données à la View.
+
+\section{Configuration Entity Framework Core}
+\begin{lstlisting}[language={[Sharp]C}]
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
+\end{lstlisting}
+
+\section{Captures complémentaires}
+\capture{dashboard_general.png}{Capture complémentaire du tableau de bord.}
+\capture{accueil_sombre.png}{Capture complémentaire de l'interface.}
+
+\end{document}
