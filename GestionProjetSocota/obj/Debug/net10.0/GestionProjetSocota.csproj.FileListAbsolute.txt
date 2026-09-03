@@ -200,7 +200,7 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\scopedcss\bundle\GestionProjetSocota.styles.css
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\scopedcss\projectbundle\GestionProjetSocota.bundle.scp.css
-C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\7kog6isb6e-{0}-6vdl3x78py-6vdl3x78py.gz
+C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\7kog6isb6e-{0}-2pxyzaue5m-2pxyzaue5m.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\4d0mdb38t4-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\s3qfwq0x66-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\h89visil2w-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -262,6 +262,7 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\erwh31f8sg-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\5b579hkf5n-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\0j168bu772-{0}-mlv21k5csn-mlv21k5csn.gz
+C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\y39xudmuuf-{0}-e3xzxzq7w2-e3xzxzq7w2.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\vboiajvql6-{0}-y2b3mqta6w-y2b3mqta6w.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\zbxxaj710h-{0}-y2b3mqta6w-y2b3mqta6w.gz
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\staticwebassets.build.json
@@ -275,4 +276,3 @@ C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net1
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\GestionProjetSocota.pdb
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\GestionProjetSocota.genruntimeconfig.cache
 C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\ref\GestionProjetSocota.dll
-C:\Users\kiady.info\Desktop\Gestion de Projet\GestionProjetSocota\obj\Debug\net10.0\compressed\y39xudmuuf-{0}-e3xzxzq7w2-e3xzxzq7w2.gz

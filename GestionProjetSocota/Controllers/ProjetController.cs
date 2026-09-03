@@ -984,6 +984,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
         public async Task<IActionResult> Edit(int id)
         {
             var projet = await _context.Projets.FindAsync(id);
+
             if (projet == null)
             {
                 return NotFound();
@@ -1006,7 +1007,8 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 PourcentageAvancement = projet.PourcentageAvancement,
                 OwnerItId = projet.OwnerItId,
                 PowerUserId = projet.PowerUserId,
-                UtilisateursDisponibles = await _context.Utilisateurs.ToListAsync()
+                UtilisateursDisponibles =
+                    await _context.Utilisateurs.ToListAsync()
             };
 
             return View(model);
@@ -1033,10 +1035,164 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 return NotFound();
             }
 
+            var ancienTicketId = projet.TicketId;
+            var ancienneReference = projet.Reference;
+            var ancienNom = projet.Nom;
+            var ancienneDescription = projet.Description;
+            var ancienneUnite = projet.Unite;
+            var ancienDepartement = projet.Departement;
+            var ancienType = projet.Type;
+            var anciennePlateforme = projet.Plateforme;
             var ancienStatut = projet.Statut;
+            var anciennePriorite = projet.Priorite;
+            var ancienneDeadline = projet.Deadline;
+            var ancienPourcentage = projet.PourcentageAvancement;
+            var ancienOwnerItId = projet.OwnerItId;
+            var ancienPowerUserId = projet.PowerUserId;
+
             var statutChange = ancienStatut != model.Statut;
 
-            if (statutChange)
+            var nouvelAvancement =
+                model.Statut == StatutProjet.WaitingRFC
+                    ? 0
+                    : model.PourcentageAvancement;
+
+            var modifications = new List<string>();
+
+            if (ancienTicketId != model.TicketId)
+            {
+                modifications.Add(
+                    $"Ticket ID : {ancienTicketId} → {model.TicketId}");
+            }
+
+            if (ancienneReference != model.Reference)
+            {
+                modifications.Add(
+                    $"Référence : {ancienneReference} → {model.Reference}");
+            }
+
+            if (ancienNom != model.Nom)
+            {
+                modifications.Add(
+                    $"Nom : {ancienNom} → {model.Nom}");
+            }
+
+            if (ancienneDescription != (model.Description ?? string.Empty))
+            {
+                modifications.Add("Description modifiée");
+            }
+
+            if (ancienneUnite != model.Unite)
+            {
+                modifications.Add(
+                    $"Unité : {ancienneUnite} → {model.Unite}");
+            }
+
+            if (ancienDepartement != model.Departement)
+            {
+                modifications.Add(
+                    $"Département : {ancienDepartement} → {model.Departement}");
+            }
+
+            if (ancienType != model.Type)
+            {
+                modifications.Add(
+                    $"Type : {ancienType} → {model.Type}");
+            }
+
+            if (anciennePlateforme != model.Plateforme)
+            {
+                modifications.Add(
+                    $"Plateforme : {anciennePlateforme} → {model.Plateforme}");
+            }
+
+            if (ancienStatut != model.Statut)
+            {
+                modifications.Add(
+                    $"Statut : {ancienStatut} → {model.Statut}");
+            }
+
+            if (anciennePriorite != model.Priorite)
+            {
+                modifications.Add(
+                    $"Priorité : {anciennePriorite} → {model.Priorite}");
+            }
+
+            if (ancienneDeadline != model.Deadline)
+            {
+                var ancienneDate =
+                    ancienneDeadline?.ToString("dd/MM/yyyy")
+                    ?? "Non définie";
+
+                var nouvelleDate =
+                    model.Deadline?.ToString("dd/MM/yyyy")
+                    ?? "Non définie";
+
+                modifications.Add(
+                    $"Deadline : {ancienneDate} → {nouvelleDate}");
+            }
+
+            if (ancienPourcentage != nouvelAvancement)
+            {
+                modifications.Add(
+                    $"Avancement : {ancienPourcentage}% → {nouvelAvancement}%");
+            }
+
+            if (ancienOwnerItId != model.OwnerItId)
+            {
+                var ancienOwner = ancienOwnerItId.HasValue
+                    ? (await _context.Utilisateurs
+                        .FindAsync(ancienOwnerItId.Value))?.Nom
+                    : "Non assigné";
+
+                var nouvelOwner = model.OwnerItId.HasValue
+                    ? (await _context.Utilisateurs
+                        .FindAsync(model.OwnerItId.Value))?.Nom
+                    : "Non assigné";
+
+                modifications.Add(
+                    $"Owner IT : {ancienOwner ?? "Non assigné"} → " +
+                    $"{nouvelOwner ?? "Non assigné"}");
+            }
+
+            if (ancienPowerUserId != model.PowerUserId)
+            {
+                var ancienPowerUser = ancienPowerUserId.HasValue
+                    ? (await _context.Utilisateurs
+                        .FindAsync(ancienPowerUserId.Value))?.Nom
+                    : "Non assigné";
+
+                var nouveauPowerUser = model.PowerUserId.HasValue
+                    ? (await _context.Utilisateurs
+                        .FindAsync(model.PowerUserId.Value))?.Nom
+                    : "Non assigné";
+
+                modifications.Add(
+                    $"Power User : {ancienPowerUser ?? "Non assigné"} → " +
+                    $"{nouveauPowerUser ?? "Non assigné"}");
+            }
+
+            projet.TicketId = model.TicketId;
+            projet.Reference = model.Reference;
+            projet.Nom = model.Nom;
+            projet.Description = model.Description ?? string.Empty;
+            projet.Unite = model.Unite;
+            projet.Departement = model.Departement;
+            projet.Type = model.Type;
+            projet.Plateforme = model.Plateforme;
+
+            projet.StatutPrecedent = ancienStatut;
+            projet.Statut = model.Statut;
+
+            projet.Priorite = model.Priorite;
+            projet.Deadline = model.Deadline;
+
+            projet.PourcentageAvancement = nouvelAvancement;
+
+            projet.OwnerItId = model.OwnerItId;
+            projet.PowerUserId = model.PowerUserId;
+
+            if (modifications.Any())
             {
                 var nomAD = User.Identity?.Name;
 
@@ -1050,31 +1206,12 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                         ProjetId = projet.Id,
                         UtilisateurId = auteur?.Id ?? 0,
                         TypeAction = "Modification",
-                        Detail =
-                            $"Statut : {ancienStatut} → {model.Statut}"
+                        Detail = string.Join(
+                            Environment.NewLine,
+                            modifications),
+                        DateAction = DateTime.Now
                     });
             }
-
-            projet.TicketId = model.TicketId;
-            projet.Reference = model.Reference;
-            projet.Nom = model.Nom;
-            projet.Description = model.Description ?? string.Empty;
-            projet.Unite = model.Unite;
-            projet.Departement = model.Departement;
-            projet.Type = model.Type;
-            projet.Plateforme = model.Plateforme;
-            projet.StatutPrecedent = ancienStatut;
-            projet.Statut = model.Statut;
-            projet.Priorite = model.Priorite;
-            projet.Deadline = model.Deadline;
-
-            projet.PourcentageAvancement =
-                model.Statut == StatutProjet.WaitingRFC
-                    ? 0
-                    : model.PourcentageAvancement;
-
-            projet.OwnerItId = model.OwnerItId;
-            projet.PowerUserId = model.PowerUserId;
 
             await _context.SaveChangesAsync();
 

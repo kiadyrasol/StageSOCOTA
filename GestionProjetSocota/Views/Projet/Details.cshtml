@@ -660,30 +660,30 @@
         {
             <div class="history-list">
 
-                foreach (var item in historique)
+                @foreach (var item in historique)
                 {
-                <div class="history-item">
-
-                    <div>
-                        <div class="fw-semibold">
-                            @@item.TypeAction
-                        </div>
+                    <div class="history-item">
 
                         <div>
-                            @@item.Detail
+                            <div class="fw-semibold">
+                                @item.TypeAction
+                            </div>
+
+                            <div>
+                                @item.Detail
+                            </div>
+
+                            <small class="text-muted">
+                                Par :
+                                @(item.Utilisateur?.Nom ?? "Système")
+                            </small>
                         </div>
 
-                        <small class="text-muted">
-                            Par :
-                            @@(item.Utilisateur?.Nom ?? "Système")
-                        </small>
+                        <span class="badge bg-secondary">
+                            @item.DateAction.ToString("dd/MM/yyyy HH:mm")
+                        </span>
+
                     </div>
-
-                    <span class="badge bg-secondary">
-                        @@tem.DateAction.ToString("dd/MM/yyyy HH:mm")
-                    </span>
-
-                </div>
                 }
 
             </div>

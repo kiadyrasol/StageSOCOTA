@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionProjetSocota")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2d2280f570db54edc2fa0a05bc8fbfecb67f699")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04e70e5dcb1c5e3481bb874c0a4836e2f0f21410")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionProjetSocota")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionProjetSocota")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
