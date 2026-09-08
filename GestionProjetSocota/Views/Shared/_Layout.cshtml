@@ -37,8 +37,8 @@
 
 
             /* =========================================================
-                   BRAND
-                   ========================================================= */
+                                               BRAND
+                                               ========================================================= */
 
             .brand-link {
                 background-color: var(--socota-green);
@@ -51,8 +51,8 @@
 
 
             /* =========================================================
-                   HEADER
-                   ========================================================= */
+                                               HEADER
+                                               ========================================================= */
 
             .main-header.navbar {
                 background-color: var(--socota-green);
@@ -70,8 +70,8 @@
 
 
             /* =========================================================
-                   SIDEBAR
-                   ========================================================= */
+                                               SIDEBAR
+                                               ========================================================= */
 
             .nav-sidebar .nav-link {
                 transition:
@@ -82,7 +82,7 @@
 
 
             /* MENU ACTIF */
-            
+
             .nav-sidebar .nav-link.active,
             .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
             .sidebar-dark-success .nav-sidebar>.nav-item>.nav-link.active {
@@ -114,8 +114,8 @@
 
 
             /* =========================================================
-                   AUTRES STYLES
-                   ========================================================= */
+                                               AUTRES STYLES
+                                               ========================================================= */
 
             .bg-socota {
                 background-color: var(--socota-green);
@@ -238,8 +238,8 @@
 
 
             /* =========================================================
-                   DARK MODE
-                   ========================================================= */
+                                               DARK MODE
+                                               ========================================================= */
 
             body[data-bs-theme="dark"] {
                 background-color: var(--dark-bg);
@@ -319,8 +319,8 @@
 
 
             /* =========================================================
-                   NOTIFICATIONS
-                   ========================================================= */
+                                               NOTIFICATIONS
+                                               ========================================================= */
 
             #notificationBadge {
                 top: 2px;
@@ -468,55 +468,51 @@
                              KANBAN
                              ================================================= -->
 
-                        <li class="nav-item">
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        {
+                            <li class="nav-item">
 
-                            <a href="/Projet/Kanban"
-                               class="nav-link @(Context.Request.Path == "/Projet/Kanban" ? "active" : "")">
+                                <a href="/Projet/Kanban"
+                                   class="nav-link @(Context.Request.Path == "/Projet/Kanban" ? "active" : "")">
 
-                                <i class="nav-icon fas fa-columns"></i>
+                                    <i class="nav-icon fas fa-columns"></i>
 
-                                <p>Kanban</p>
+                                    <p>Kanban</p>
 
-                            </a>
+                                </a>
 
-                        </li>
+                            </li>
 
-
+                        }
                         <!-- =================================================
                              ROADMAP
                              ================================================= -->
 
-                        <li class="nav-item">
-
-                            <a href="/Projet/Roadmap"
-                               class="nav-link @(Context.Request.Path == "/Projet/Roadmap" ? "active" : "")">
-
-                                <i class="nav-icon fas fa-map"></i>
-
-                                <p>Roadmap</p>
-
-                            </a>
-
-                        </li>
-
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Projet/Roadmap"
+                                   class="nav-link @(Context.Request.Path == "/Projet/Roadmap" ? "active" : "")">
+                                    <i class="nav-icon fas fa-map"></i>
+                                    <p>Roadmap</p>
+                                </a>
+                            </li>
+                        }
 
                         <!-- =================================================
                              GANTT
                              ================================================= -->
 
-                        <li class="nav-item">
-
-                            <a href="/Projet/Gantt"
-                               class="nav-link @(Context.Request.Path == "/Projet/Gantt" ? "active" : "")">
-
-                                <i class="nav-icon fas fa-chart-line"></i>
-
-                                <p>Gantt</p>
-
-                            </a>
-
-                        </li>
-
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Projet/Gantt"
+                                   class="nav-link @(Context.Request.Path == "/Projet/Gantt" ? "active" : "")">
+                                    <i class="nav-icon fas fa-chart-line"></i>
+                                    <p>Gantt</p>
+                                </a>
+                            </li>
+                        }
 
                         <!-- =================================================
                              DASHBOARD EXECUTIF
@@ -594,37 +590,52 @@
                              NOUVEAU PROJET
                              ================================================= -->
 
-                        <li class="nav-item">
-
-                            <a href="/Projet/Create"
-                               class="nav-link @(Context.Request.Path == "/Projet/Create" ? "active" : "")">
-
-                                <i class="nav-icon fas fa-plus"></i>
-
-                                <p>Nouveau projet</p>
-
-                            </a>
-
-                        </li>
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Projet/Create"
+                                   class="nav-link @(Context.Request.Path == "/Projet/Create" ? "active" : "")">
+                                    <i class="nav-icon fas fa-plus"></i>
+                                    <p>Nouveau projet</p>
+                                </a>
+                            </li>
+                        }
 
 
                         <!-- =================================================
                              IMPORT EXCEL
                              ================================================= -->
 
-                        <li class="nav-item">
+                        @if (User.IsInRole("Administrateur"))
+                        {
+                            <li class="nav-item">
+                                <a href="/Projet/ImporterExcel"
+                                   class="nav-link @(Context.Request.Path == "/Projet/ImporterExcel" ? "active" : "")">
+                                    <i class="nav-icon fas fa-file-excel"></i>
+                                    <p>Importer Excel</p>
+                                </a>
+                            </li>
+                        }
 
-                            <a href="/Projet/ImporterExcel"
-                               class="nav-link @(Context.Request.Path == "/Projet/ImporterExcel" ? "active" : "")">
+                        <!-- =================================================
+                             GESTION DES UTILISATEURS
+                             ================================================= -->
 
-                                <i class="nav-icon fas fa-file-excel"></i>
+                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        {
+                            <li class="nav-item">
 
-                                <p>Importer Excel</p>
+                                <a href="/Utilisateur"
+                                   class="nav-link @(Context.Request.Path == "/Utilisateur" ? "active" : "")">
 
-                            </a>
+                                    <i class="nav-icon fas fa-user-shield"></i>
 
-                        </li>
+                                    <p>Utilisateurs</p>
 
+                                </a>
+
+                            </li>
+                        }
 
                     </ul>
 

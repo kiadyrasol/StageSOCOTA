@@ -1431,6 +1431,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             {
                 UtilisateursDisponibles =
                     await _context.Utilisateurs
+                     .Where(u => u.EstActif)
                         .OrderBy(u => u.Nom)
                         .ToListAsync(),
 
@@ -1529,7 +1530,10 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             if (!ModelState.IsValid)
             {
                 model.UtilisateursDisponibles =
-                    await _context.Utilisateurs.ToListAsync();
+                    await _context.Utilisateurs
+                     .Where(u => u.EstActif)
+                    .ToListAsync();
+
 
                 model.UnitesDisponibles =
                     await _context.UnitesProjets
@@ -1637,6 +1641,23 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 _context.Projets.Add(projet);
 
                 await _context.SaveChangesAsync();
+
+                _context.Projets.Add(projet);
+
+                await _context.SaveChangesAsync();
+
+                if (projet.PowerUserId.HasValue)
+                {
+                    await _notificationService.CreerNotificationAsync(
+                        projet.Id,
+                        projet.PowerUserId.Value,
+                        "ValidationRequise",
+                        $"Vous avez été assigné comme Power User sur le projet \"{projet.Nom}\". " +
+                        "Merci de le valider pour permettre le démarrage du développement."
+                    );
+                }
+
+                // Utilisateur ayant créé le projet
 
                 // Utilisateur ayant créé le projet
                 var nomAD = User.Identity?.Name;
@@ -2211,7 +2232,9 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 PowerUserId = projet.PowerUserId,
 
                 UtilisateursDisponibles =
-                    await _context.Utilisateurs.ToListAsync(),
+                    await _context.Utilisateurs
+                     .Where(u => u.EstActif)
+                    .ToListAsync(),
 
                 UnitesDisponibles =
                     await _context.UnitesProjets
@@ -2309,7 +2332,9 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             if (!ModelState.IsValid)
             {
                 model.UtilisateursDisponibles =
-                    await _context.Utilisateurs.ToListAsync();
+                    await _context.Utilisateurs
+                     .Where(u => u.EstActif)
+                    .ToListAsync();
 
                 model.UnitesDisponibles =
                     await _context.UnitesProjets
@@ -2367,6 +2392,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             var ancienPowerUserId = projet.PowerUserId;
 
             var statutChange = ancienStatut != model.Statut;
+            var powerUserChange = ancienPowerUserId != model.PowerUserId;
 
             var nouvelAvancement =
                 ObtenirAvancementAutomatique(model.Statut, ancienPourcentage);
@@ -2617,6 +2643,12 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             projet.PowerUserId =
                 model.PowerUserId;
 
+            if (powerUserChange)
+            {
+                projet.ValidePowerUser = false;
+                projet.DateValidationPowerUser = null;
+            }
+
 
             // Historique
             if (modifications.Any())
@@ -2659,6 +2691,18 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 );
             }
 
+            // Notification nouveau Power User
+            if (powerUserChange &&
+                projet.PowerUserId.HasValue)
+            {
+                await _notificationService.CreerNotificationAsync(
+                    projet.Id,
+                    projet.PowerUserId.Value,
+                    "ValidationRequise",
+                    $"Vous avez été assigné comme Power User sur le projet \"{projet.Nom}\". " +
+                    "Merci de le valider pour permettre le démarrage du développement."
+                );
+            }
 
             TempData["Succes"] =
                 "Les modifications ont été enregistrées.";
@@ -2723,6 +2767,17 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                     new { id });
             }
 
+            if (nouveauStatut == StatutProjet.DevStarted &&
+    !projet.ValidePowerUser)
+            {
+                TempData["Erreur"] =
+                    "Le Power User doit valider le projet avant de démarrer le développement.";
+
+                return RedirectToAction(
+                    "ChangerStatut",
+                    new { id });
+            }
+
             var ancienStatut = projet.Statut;
 
             var nomAD = User.Identity?.Name;
@@ -2764,6 +2819,54 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 $"Statut changé vers {nouveauStatut}.";
 
             return RedirectToAction("Index");
+        }
+
+        // Validation Power User
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ValiderPowerUser(int id)
+        {
+            var projet = await _context.Projets
+                .Include(p => p.PowerUser)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (projet == null)
+            {
+                return NotFound();
+            }
+
+            var nomAD = User.Identity?.Name;
+
+            if (projet.PowerUser == null ||
+                projet.PowerUser.NomADUtilisateur != nomAD)
+            {
+                TempData["Erreur"] =
+                    "Seul le Power User assigné à ce projet peut le valider.";
+
+                return RedirectToAction("Details", new { id });
+            }
+
+            projet.ValidePowerUser = true;
+            projet.DateValidationPowerUser = DateTime.Now;
+
+            var auteur = await _context.Utilisateurs
+                .FirstOrDefaultAsync(u => u.NomADUtilisateur == nomAD);
+
+            _context.HistoriqueProjets.Add(new HistoriqueProjet
+            {
+                ProjetId = projet.Id,
+                UtilisateurId = auteur?.Id ?? 0,
+                TypeAction = "Validation Power User",
+                Detail = $"Le projet a été validé par le Power User {projet.PowerUser.Nom}.",
+                DateAction = DateTime.Now
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["Succes"] =
+                "Le projet a été validé avec succès.";
+
+            return RedirectToAction("Details", new { id });
         }
 
         // Delete

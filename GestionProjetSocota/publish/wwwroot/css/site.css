@@ -1,0 +1,42 @@
+:root {
+    --socota-green: #8BC53F;
+    --socota-green-light: rgba(139, 197, 63, 0.12);
+}
+
+.text-socota {
+    color: var(--socota-green);
+}
+
+.bg-socota {
+    background-color: var(--socota-green);
+    color: #fff;
+}
+
+.border-socota {
+    border-color: var(--socota-green);
+}
+
+/* Boutons */
+.btn-socota {
+    background-color: var(--socota-green);
+    border-color: var(--socota-green);
+    color: #fff;
+}
+
+.btn-socota:hover {
+    background-color: #78ad32;
+    border-color: #78ad32;
+    color: #fff;
+}
+
+.btn-outline-socota {
+    color: var(--socota-green);
+    border-color: var(--socota-green);
+}
+
+.btn-outline-socota:hover {
+    background-color: var(--socota-green);
+    border-color: var(--socota-green);
+    color: #fff;
+}
+

@@ -1,12 +1,12 @@
 namespace GestionProjetSocota.Models
 {
-    public enum RoleUtilisateur
-    {
-        Administrateur,
-        ChefDeProjet,
-        PowerUser,
-        Lecteur
-    }
+   public enum RoleUtilisateur
+{
+    Administrateur, // 0
+    ChefDeProjet,    // 1
+    PowerUser,       // 2
+    Lecteur          // 3
+}
 
     public class Utilisateur
     {
@@ -19,8 +19,7 @@ namespace GestionProjetSocota.Models
         public string Email { get; set; } = string.Empty;
 
         public RoleUtilisateur Role { get; set; } = RoleUtilisateur.Lecteur;
-
-        // Indique si l'utilisateur peut encore être affecté à un projet
+        
         public bool EstActif { get; set; } = true;
     }
 }

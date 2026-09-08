@@ -107,8 +107,13 @@ namespace GestionProjetSocota.Models
 
         public int PourcentageAvancement { get; set; } = 0;
 
+        public bool ValidePowerUser { get; set; } = false;
+
+        public DateTime? DateValidationPowerUser { get; set; }
+
         public string Commentaire { get; set; } = string.Empty;
 
         public DateTime DateCreation { get; set; } = DateTime.Now;
+
     }
 }

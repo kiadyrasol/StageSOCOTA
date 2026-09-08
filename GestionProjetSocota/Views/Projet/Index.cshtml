@@ -13,10 +13,13 @@
         </p>
     </div>
 
-    <a href="/Projet/Create" class="btn btn-socota">
-        <i class="fas fa-plus me-1"></i>
-        Nouveau projet
-    </a>
+    @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+    {
+        <a href="/Projet/Create" class="btn btn-socota">
+            <i class="fas fa-plus me-1"></i>
+            Nouveau projet
+        </a>
+    }
 
 </div>
 
@@ -162,8 +165,8 @@
                                             projet.Statut != StatutProjet.Cancelled;
 
                                         <span class="@(dateEnRetard
-                                            ? "text-danger fw-semibold"
-                                            : "")">
+                                                                                                                                        ? "text-danger fw-semibold"
+                                                                                                                                        : "")">
 
                                             @projet.DateFin.Value.ToString("dd/MM/yyyy")
 
@@ -180,15 +183,10 @@
                                 <!-- Avancement -->
                                 <td>
 
-                                    <div class="progress"
-                                         role="progressbar"
-                                         aria-valuenow="@projet.PourcentageAvancement"
-                                         aria-valuemin="0"
-                                         aria-valuemax="100"
-                                         style="height: 18px;">
+                                    <div class="progress" role="progressbar" aria-valuenow="@projet.PourcentageAvancement"
+                                         aria-valuemin="0" aria-valuemax="100" style="height: 18px;">
 
-                                        <div class="progress-bar bg-socota"
-                                             style="width: @projet.PourcentageAvancement%;">
+                                        <div class="progress-bar bg-socota" style="width: @projet.PourcentageAvancement%;">
 
                                             <span class="small fw-semibold">
                                                 @projet.PourcentageAvancement%
@@ -227,42 +225,43 @@
 
                                     <div class="btn-group" role="group">
 
-                                        <a href="/Projet/Details/@projet.Id"
-                                           class="btn btn-sm btn-outline-secondary"
+                                        <a href="/Projet/Details/@projet.Id" class="btn btn-sm btn-outline-secondary"
                                            title="Voir">
 
                                             <i class="fas fa-eye"></i>
 
                                         </a>
 
-                                        <a href="/Projet/ChangerStatut/@projet.Id"
-                                           class="btn btn-sm btn-outline-socota"
-                                           title="Changer le statut">
+                                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                                        {
+                                            <a href="/Projet/ChangerStatut/@projet.Id" class="btn btn-sm btn-outline-socota"
+                                               title="Changer le statut">
 
-                                            <i class="fas fa-exchange-alt"></i>
+                                                <i class="fas fa-exchange-alt"></i>
 
-                                        </a>
+                                            </a>
 
-                                        <a href="/Projet/Edit/@projet.Id"
-                                           class="btn btn-sm btn-outline-primary"
-                                           title="Modifier">
+                                            <a href="/Projet/Edit/@projet.Id" class="btn btn-sm btn-outline-primary"
+                                               title="Modifier">
 
-                                            <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i>
 
-                                        </a>
+                                            </a>
+                                        }
 
-                                        <a href="/Projet/Delete/@projet.Id"
-                                           class="btn btn-sm btn-outline-danger"
-                                           title="Supprimer">
+                                        @if (User.IsInRole("Administrateur"))
+                                        {
+                                            <a href="/Projet/Delete/@projet.Id" class="btn btn-sm btn-outline-danger"
+                                               title="Supprimer">
 
-                                            <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash"></i>
 
-                                        </a>
+                                            </a>
+                                        }
 
                                     </div>
 
                                 </td>
-
                             </tr>
                         }
 

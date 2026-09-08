@@ -416,6 +416,9 @@ namespace GestionProjetSocota.Migrations
                     b.Property<DateTime?>("DateFin")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DateValidationPowerUser")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DepartementProjetId")
                         .HasColumnType("int");
 
@@ -465,6 +468,9 @@ namespace GestionProjetSocota.Migrations
 
                     b.Property<int>("UniteProjetId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("ValidePowerUser")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

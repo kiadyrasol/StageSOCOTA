@@ -1,0 +1,109 @@
+@model List<GestionProjetSocota.Models.Utilisateur>
+
+<style>
+    .utilisateur-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .utilisateur-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .badge-actif {
+        background-color: #8BC53F;
+    }
+
+    .badge-inactif {
+        background-color: #6c757d;
+    }
+</style>
+
+<div class="mb-4">
+    <h1 class="h3 utilisateur-title">Gestion des utilisateurs</h1>
+    <p class="utilisateur-subtitle mb-0">
+        Un utilisateur inactif ne peut plus être sélectionné comme Owner IT ou Power User sur un projet.
+    </p>
+</div>
+
+<form method="get" class="mb-3" style="max-width: 350px;">
+    <div class="input-group">
+        <input type="text" name="recherche" value="@ViewBag.RechercheActuelle" class="form-control"
+               placeholder="Rechercher un utilisateur par nom..." />
+
+        <button type="submit" class="btn btn-outline-secondary">
+            <i class="fas fa-search"></i>
+        </button>
+
+        @if (!string.IsNullOrWhiteSpace((string)ViewBag.RechercheActuelle))
+        {
+            <a href="/Utilisateur" class="btn btn-outline-secondary">
+                <i class="fas fa-times"></i>
+            </a>
+        }
+    </div>
+</form>
+
+@if (TempData["Succes"] != null)
+{
+    <div class="alert alert-success">@TempData["Succes"]</div>
+}
+
+@if (TempData["Erreur"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erreur"]</div>
+}
+
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Nom AD</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var utilisateur in Model)
+        {
+            <tr>
+                <td>@utilisateur.Nom</td>
+                <td>@utilisateur.NomADUtilisateur</td>
+                <td>@utilisateur.Email</td>
+                <td>@utilisateur.Role</td>
+                <td>
+                    @if (utilisateur.EstActif)
+                    {
+                        <span class="badge badge-actif">Actif</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-inactif">Inactif</span>
+                    }
+                </td>
+                <td>
+                    <form asp-action="ToggleActif" method="post"
+                          onsubmit="return confirm('Voulez-vous vraiment @(utilisateur.EstActif ? "désactiver" : "réactiver") @utilisateur.Nom ?');">
+                        <input type="hidden" name="id" value="@utilisateur.Id" />
+                        @if (utilisateur.EstActif)
+                        {
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-user-slash"></i> Désactiver
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-sm btn-outline-success">
+                                <i class="fas fa-user-check"></i> Réactiver
+                            </button>
+                        }
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
