@@ -41,6 +41,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseMiddleware<GestionProjetSocota.Middlewares.ErrorLoggingMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseRouting();

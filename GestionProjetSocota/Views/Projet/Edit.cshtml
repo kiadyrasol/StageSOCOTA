@@ -1,273 +1,1700 @@
 @model GestionProjetSocota.ViewModels.ProjetEditViewModel
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 mb-1">Modifier le projet</h1>
-        <p class="text-muted mb-0">
+<style>
+    .edit-page {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .edit-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .edit-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .edit-section {
+        padding-bottom: 1.25rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .edit-section:last-of-type {
+        border-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .edit-section-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .edit-section-title i {
+        color: var(--socota-green);
+        margin-right: 0.4rem;
+    }
+
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 6px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.15);
+    }
+
+    .edit-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding-top: 1rem;
+    }
+
+    .btn-socota {
+        background-color: var(--socota-green);
+        border-color: var(--socota-green);
+        color: #ffffff;
+    }
+
+    .btn-socota:hover {
+        background-color: var(--socota-green-dark);
+        border-color: var(--socota-green-dark);
+        color: #ffffff;
+    }
+
+    body[data-bs-theme="dark"] .edit-card {
+        border-color: #3a3f44;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    body[data-bs-theme="dark"] .edit-section {
+        border-color: #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .edit-subtitle {
+        color: #a0a0a0;
+    }
+</style>
+
+
+<div class="edit-page">
+
+    <!-- EN-TÊTE -->
+
+    <div class="mb-4">
+
+        <h1 class="h3 edit-title">
+            Modifier le projet
+        </h1>
+
+        <p class="edit-subtitle mb-0">
             Modifiez les informations du projet.
         </p>
-    </div>
-
-    <a href="/Projet/Details/@Model.Id"
-       class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>
-        Retour
-    </a>
-</div>
-
-<div class="card border-0 shadow-sm">
-    <div class="card-body p-4">
-
-        <form asp-action="Edit" method="post">
-
-            <input type="hidden" asp-for="Id" />
-
-            <div asp-validation-summary="ModelOnly"
-                 class="alert alert-danger"
-                 role="alert">
-            </div>
-
-            <!-- Informations générales -->
-            <h5 class="mb-3">
-                Informations générales
-            </h5>
-
-            <div class="row">
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="TicketId" class="form-label">
-                        Ticket ID
-                    </label>
-
-                    <input asp-for="TicketId"
-                           class="form-control" />
-
-                    <span asp-validation-for="TicketId"
-                          class="text-danger small">
-                    </span>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Reference" class="form-label">
-                        Référence
-                    </label>
-
-                    <input asp-for="Reference"
-                           class="form-control" />
-                </div>
-
-                <div class="col-12 mb-3">
-                    <label asp-for="Nom" class="form-label">
-                        Nom du projet
-                    </label>
-
-                    <input asp-for="Nom"
-                           class="form-control" />
-
-                    <span asp-validation-for="Nom"
-                          class="text-danger small">
-                    </span>
-                </div>
-
-                <div class="col-12 mb-3">
-                    <label asp-for="Description" class="form-label">
-                        Description
-                    </label>
-
-                    <textarea asp-for="Description"
-                              class="form-control"
-                              rows="4">
-                    </textarea>
-                </div>
-
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Classification -->
-            <h5 class="mb-3">
-                Classification
-            </h5>
-
-            <div class="row">
-
-                <div class="col-md-4 mb-3">
-                    <label asp-for="Unite" class="form-label">
-                        Unité
-                    </label>
-
-                    <select asp-for="Unite"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Unite>()"
-                            class="form-select">
-                    </select>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label asp-for="Departement" class="form-label">
-                        Département
-                    </label>
-
-                    <select asp-for="Departement"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Departement>()"
-                            class="form-select">
-                    </select>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label asp-for="Type" class="form-label">
-                        Type
-                    </label>
-
-                    <select asp-for="Type"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.TypeProjet>()"
-                            class="form-select">
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Plateforme" class="form-label">
-                        Plateforme
-                    </label>
-
-                    <select asp-for="Plateforme"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Plateforme>()"
-                            class="form-select">
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Priorite" class="form-label">
-                        Priorité
-                    </label>
-
-                    <select asp-for="Priorite"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()"
-                            class="form-select">
-                    </select>
-                </div>
-
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Pilotage -->
-            <h5 class="mb-3">
-                Pilotage du projet
-            </h5>
-
-            <div class="row">
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Statut"
-                           class="form-label text-socota">
-                        Statut
-                    </label>
-
-                    <select asp-for="Statut"
-                            asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()"
-                            class="form-select border-socota">
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="PourcentageAvancement"
-                           class="form-label">
-                        Avancement (%)
-                    </label>
-
-                    <input asp-for="PourcentageAvancement"
-                           type="number"
-                           min="0"
-                           max="100"
-                           class="form-control" />
-
-                    <span asp-validation-for="PourcentageAvancement"
-                          class="text-danger small">
-                    </span>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="OwnerItId"
-                           class="form-label">
-                        Owner IT
-                    </label>
-
-                    <select asp-for="OwnerItId"
-                            asp-items="@(new SelectList(
-                                Model.UtilisateursDisponibles,
-                                "Id",
-                                "Nom"
-                            ))"
-                            class="form-select">
-
-                        <option value="">
-                            -- Aucun --
-                        </option>
-
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="PowerUserId"
-                           class="form-label">
-                        Power User
-                    </label>
-
-                    <select asp-for="PowerUserId"
-                            asp-items="@(new SelectList(
-                                Model.UtilisateursDisponibles,
-                                "Id",
-                                "Nom"
-                            ))"
-                            class="form-select">
-
-                        <option value="">
-                            -- Aucun --
-                        </option>
-
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Deadline"
-                           class="form-label">
-                        Deadline
-                    </label>
-
-                    <input asp-for="Deadline"
-                           type="date"
-                           class="form-control" />
-
-                    <span asp-validation-for="Deadline"
-                          class="text-danger small">
-                    </span>
-                </div>
-
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Actions -->
-            <div class="d-flex gap-2">
-
-                <button type="submit"
-                        class="btn btn-socota">
-
-                    <i class="fas fa-save me-1"></i>
-                    Enregistrer les modifications
-
-                </button>
-
-                <a href="/Projet/Details/@Model.Id"
-                   class="btn btn-outline-secondary">
-
-                    Annuler
-
-                </a>
-
-            </div>
-
-        </form>
 
     </div>
+
+
+    <div class="card edit-card">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit" method="post">
+
+                <input type="hidden" asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- INFORMATIONS GÉNÉRALES -->
+                <!-- ========================================= -->
+
+                <div class="edit-section">
+
+                    <div class="edit-section-title">
+
+                        <i class="fas fa-folder-open"></i>
+
+                        Informations générales
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <!-- Ticket ID -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="TicketId" class="form-label">
+
+                                Ticket ID
+
+                            </label>
+
+                            <input asp-for="TicketId" class="form-control" />
+
+                            <span asp-validation-for="TicketId" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Référence -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="Reference" class="form-label">
+
+                                Référence
+
+                            </label>
+
+                            <input asp-for="Reference" class="form-control" readonly />
+
+                            <small class="text-muted">
+
+                                La référence est générée automatiquement
+                                et ne peut pas être modifiée.
+
+                            </small>
+
+                        </div>
+
+
+                        <!-- Nom -->
+
+                        <div class="col-12 mb-3">
+
+                            <label asp-for="Nom" class="form-label">
+
+                                Nom du projet
+
+                            </label>
+
+                            <input asp-for="Nom" class="form-control" />
+
+                            <span asp-validation-for="Nom" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- Description -->
+
+                        <div class="col-12">
+
+                            <label asp-for="Description" class="form-label">
+
+                                Description
+
+                            </label>
+
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- CLASSIFICATION -->
+                <!-- ========================================= -->
+
+                <div class="edit-section">
+
+                    <div class="edit-section-title">
+
+                        <i class="fas fa-tags"></i>
+
+                        Classification
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <!-- ================================= -->
+                        <!-- UNITÉ -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="UniteProjetId" class="form-label">
+
+                                Unité
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="UniteProjetId" asp-items="@(new SelectList(
+                                                                                                                            Model.UnitesDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Sélectionner une unité
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutUnite')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationEdit('unite')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutUnite" class="mt-2 d-none">
+
+                                <input id="EditNouvelleUnite" class="form-control mb-2"
+                                       placeholder="Nom de la nouvelle unité" />
+
+                                <input id="EditNouvelleUnitePrefixe" class="form-control mb-2" maxlength="20"
+                                       placeholder="Préfixe de référence (ex. FN)" />
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationEdit('unite')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="UniteProjetId" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- DÉPARTEMENT -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DepartementProjetId" class="form-label">
+
+                                Département
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="DepartementProjetId" asp-items="@(new SelectList(
+                                                                                                                            Model.DepartementsDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Sélectionner un département
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutDepartement')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationEdit('departement')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutDepartement" class="mt-2 d-none">
+
+                                <input id="EditNouveauDepartement" class="form-control mb-2"
+                                       placeholder="Nom du nouveau département" />
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationEdit('departement')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="DepartementProjetId" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- TYPE -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="TypeProjetReferenceId" class="form-label">
+
+                                Type
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="TypeProjetReferenceId" asp-items="@(new SelectList(
+                                                                                                                            Model.TypesDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Sélectionner un type
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutType')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationEdit('type')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutType" class="mt-2 d-none">
+
+                                <input id="EditNouveauTypeProjet" class="form-control mb-2"
+                                       placeholder="Nom du nouveau type" />
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationEdit('type')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="TypeProjetReferenceId" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- PLATEFORME -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="PlateformeProjetId" class="form-label">
+
+                                Plateforme
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="PlateformeProjetId" asp-items="@(new SelectList(
+                                                                                                                            Model.PlateformesDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Sélectionner une plateforme
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutPlateforme')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationEdit('plateforme')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutPlateforme" class="mt-2 d-none">
+
+                                <input id="EditNouvellePlateforme" class="form-control mb-2"
+                                       placeholder="Nom de la nouvelle plateforme (ex. SAP)" />
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationEdit('plateforme')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="PlateformeProjetId" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- PRIORITÉ -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="Priorite" class="form-label">
+
+                                Priorité
+
+                            </label>
+
+
+                            <select asp-for="Priorite"
+                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()"
+                                    class="form-select">
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- PILOTAGE -->
+                <!-- ========================================= -->
+
+                <div class="edit-section">
+
+                    <div class="edit-section-title">
+
+                        <i class="fas fa-users"></i>
+
+                        Pilotage du projet
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <!-- ================================= -->
+                        <!-- STATUT -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="Statut" class="form-label">
+
+                                Statut
+
+                            </label>
+
+
+                            <select asp-for="Statut"
+                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()"
+                                    class="form-select">
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- AVANCEMENT -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="PourcentageAvancement" class="form-label">
+
+                                Avancement (%)
+
+                            </label>
+
+
+                            <input asp-for="PourcentageAvancement" type="number" min="0" max="100" class="form-control"
+                                   readonly />
+
+                            <small class="text-muted">
+                                L'avancement est calculé automatiquement selon le statut du projet.
+                            </small>
+
+                            <span asp-validation-for="PourcentageAvancement" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- OWNER IT -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="OwnerItId" class="form-label">
+
+                                Owner IT
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="OwnerItId" asp-items="@(new SelectList(
+                                                                                                                            Model.UtilisateursDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Aucun
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutOwnerIt')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerUtilisateurEdit('ownerIt')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutOwnerIt" class="mt-2 d-none">
+
+                                <input id="EditNouvelOwnerItNomADUtilisateur" class="form-control mb-2"
+                                       placeholder="Nom AD utilisateur" />
+
+                                <input id="EditNouvelOwnerItNom" class="form-control mb-2" placeholder="Nom complet" />
+
+                                <input id="EditNouvelOwnerItEmail" type="email" class="form-control mb-2"
+                                       placeholder="Adresse e-mail" />
+
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterUtilisateurEdit('ownerIt')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- POWER USER -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="PowerUserId" class="form-label">
+
+                                Power User
+
+                            </label>
+
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="PowerUserId" asp-items="@(new SelectList(
+                                                                                                                            Model.UtilisateursDisponibles,
+                                                                                                                            "Id",
+                                                                                                                            "Nom"
+                                                                                                                        ))" class="form-select">
+
+                                    <option value="">
+                                        Aucun
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button" class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('editAjoutPowerUser')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button" class="btn btn-outline-danger"
+                                        onclick="supprimerUtilisateurEdit('powerUser')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="editAjoutPowerUser" class="mt-2 d-none">
+
+                                <input id="EditNouveauPowerUserNomADUtilisateur" class="form-control mb-2"
+                                       placeholder="Nom AD utilisateur" />
+
+                                <input id="EditNouveauPowerUserNom" class="form-control mb-2"
+                                       placeholder="Nom complet" />
+
+                                <input id="EditNouveauPowerUserEmail" type="email" class="form-control mb-2"
+                                       placeholder="Adresse e-mail" />
+
+
+                                <button type="button" class="btn btn-sm btn-socota"
+                                        onclick="ajouterUtilisateurEdit('powerUser')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- DATE DÉBUT -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DateDebut" class="form-label">
+
+                                Date de début
+
+                            </label>
+
+
+                            <input asp-for="DateDebut" type="date" class="form-control" />
+
+
+                            <span asp-validation-for="DateDebut" class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- DATE FIN -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DateFin" class="form-label">
+
+                                Date de fin
+
+                            </label>
+
+
+                            <input asp-for="DateFin" type="date" class="form-control" />
+
+
+                            <span asp-validation-for="DateFin" class="text-danger small">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- ACTIONS -->
+                <!-- ========================================= -->
+
+                <div class="edit-actions">
+
+                    <a href="/Projet/Details/@Model.Id" class="btn btn-outline-secondary">
+
+                        <i class="fas fa-times"></i>
+
+                        Annuler
+
+                    </a>
+
+
+                    <button type="submit" class="btn btn-socota">
+
+                        <i class="fas fa-save"></i>
+
+                        Enregistrer les modifications
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
+
+
+<script>
+
+    function toggleAjout(sectionId) {
+
+        const section =
+            document.getElementById(sectionId);
+
+        if (!section) {
+            return;
+        }
+
+
+        if (section.classList.contains("d-none")) {
+
+            section.classList.remove("d-none");
+
+
+            const input =
+                section.querySelector("input");
+
+            if (input) {
+                input.focus();
+            }
+
+        }
+        else {
+
+            section.classList.add("d-none");
+
+        }
+    }
+
+
+    async function ajouterClassificationEdit(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+
+        const token =
+            tokenInput.value;
+
+
+        let url = "";
+        let selectId = "";
+        let sectionId = "";
+        let nom = "";
+        let prefixe = "";
+
+
+        switch (type) {
+
+            case "unite":
+
+                url = "/Projet/AjouterUnite";
+
+                selectId = "UniteProjetId";
+
+                sectionId = "editAjoutUnite";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "EditNouvelleUnite"
+                        )
+                        .value
+                        .trim();
+
+
+                prefixe =
+                    document
+                        .getElementById(
+                            "EditNouvelleUnitePrefixe"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom de l'unité."
+                    );
+
+                    return;
+                }
+
+
+                if (!prefixe) {
+
+                    alert(
+                        "Veuillez saisir le préfixe de l'unité."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "departement":
+
+                url =
+                    "/Projet/AjouterDepartement";
+
+                selectId =
+                    "DepartementProjetId";
+
+                sectionId =
+                    "editAjoutDepartement";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "EditNouveauDepartement"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom du département."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "type":
+
+                url =
+                    "/Projet/AjouterTypeProjet";
+
+                selectId =
+                    "TypeProjetReferenceId";
+
+                sectionId =
+                    "editAjoutType";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "EditNouveauTypeProjet"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom du type."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "plateforme":
+
+                url =
+                    "/Projet/AjouterPlateforme";
+
+                selectId =
+                    "PlateformeProjetId";
+
+                sectionId =
+                    "editAjoutPlateforme";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "EditNouvellePlateforme"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom de la plateforme."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            default:
+
+                alert(
+                    "Type de classification inconnu."
+                );
+
+                return;
+        }
+
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+
+            formData.append(
+                "nom",
+                nom
+            );
+
+
+            if (type === "unite") {
+
+                formData.append(
+                    "prefixe",
+                    prefixe
+                );
+            }
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "RequestVerificationToken":
+                                token
+                        },
+
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible d'ajouter cet élément."
+                );
+
+                return;
+            }
+
+
+            const select =
+                document.getElementById(
+                    selectId
+                );
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                data.id;
+
+            option.textContent =
+                data.nom;
+
+
+            select.appendChild(
+                option
+            );
+
+
+            select.value =
+                data.id;
+
+
+            const section =
+                document.getElementById(
+                    sectionId
+                );
+
+
+            if (section) {
+
+                section.classList.add(
+                    "d-none"
+                );
+
+
+                section
+                    .querySelectorAll("input")
+                    .forEach(input => {
+
+                        input.value = "";
+
+                    });
+            }
+
+
+            alert(
+                `"${data.nom}" a été ajouté avec succès.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de l'ajout."
+            );
+        }
+    }
+
+
+    async function supprimerClassificationEdit(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+        const token =
+            tokenInput.value;
+
+
+        let url = "";
+        let selectId = "";
+
+        switch (type) {
+
+            case "unite":
+                url = "/Projet/SupprimerUnite";
+                selectId = "UniteProjetId";
+                break;
+
+            case "departement":
+                url = "/Projet/SupprimerDepartement";
+                selectId = "DepartementProjetId";
+                break;
+
+            case "type":
+                url = "/Projet/SupprimerTypeProjet";
+                selectId = "TypeProjetReferenceId";
+                break;
+
+            case "plateforme":
+                url = "/Projet/SupprimerPlateforme";
+                selectId = "PlateformeProjetId";
+                break;
+
+            default:
+                alert("Type de classification inconnu.");
+                return;
+        }
+
+        const select =
+            document.getElementById(selectId);
+
+        const id =
+            select.value;
+
+        if (!id) {
+
+            alert(
+                "Veuillez sélectionner un élément à supprimer."
+            );
+
+            return;
+        }
+
+        const optionSelectionnee =
+            select.options[select.selectedIndex];
+
+        const nom =
+            optionSelectionnee
+                ? optionSelectionnee.textContent.trim()
+                : "cet élément";
+
+        if (!confirm(
+            `Voulez-vous vraiment supprimer "${nom}" ? Cette action est irréversible.`
+        )) {
+            return;
+        }
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+            formData.append("id", id);
+
+            const response =
+                await fetch(url, {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded",
+
+                        "RequestVerificationToken":
+                            token
+                    },
+
+                    body: formData
+                });
+
+            const data =
+                await response.json();
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible de supprimer cet élément."
+                );
+
+                return;
+            }
+
+            select.remove(select.selectedIndex);
+
+            select.value = "";
+
+            alert(
+                data.message ||
+                `"${nom}" a été supprimé.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de la suppression."
+            );
+        }
+    }
+
+
+    async function ajouterUtilisateurEdit(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+
+        const token =
+            tokenInput.value;
+
+
+        let nomAD = "";
+        let nom = "";
+        let email = "";
+        let selectId = "";
+        let sectionId = "";
+
+
+        if (type === "ownerIt") {
+
+            nomAD =
+                document
+                    .getElementById(
+                        "EditNouvelOwnerItNomADUtilisateur"
+                    )
+                    .value
+                    .trim();
+
+
+            nom =
+                document
+                    .getElementById(
+                        "EditNouvelOwnerItNom"
+                    )
+                    .value
+                    .trim();
+
+
+            email =
+                document
+                    .getElementById(
+                        "EditNouvelOwnerItEmail"
+                    )
+                    .value
+                    .trim();
+
+
+            selectId =
+                "OwnerItId";
+
+            sectionId =
+                "editAjoutOwnerIt";
+        }
+
+
+        else if (type === "powerUser") {
+
+            nomAD =
+                document
+                    .getElementById(
+                        "EditNouveauPowerUserNomADUtilisateur"
+                    )
+                    .value
+                    .trim();
+
+
+            nom =
+                document
+                    .getElementById(
+                        "EditNouveauPowerUserNom"
+                    )
+                    .value
+                    .trim();
+
+
+            email =
+                document
+                    .getElementById(
+                        "EditNouveauPowerUserEmail"
+                    )
+                    .value
+                    .trim();
+
+
+            selectId =
+                "PowerUserId";
+
+            sectionId =
+                "editAjoutPowerUser";
+        }
+
+
+        else {
+
+            alert(
+                "Type d'utilisateur inconnu."
+            );
+
+            return;
+        }
+
+
+        if (!nomAD) {
+
+            alert(
+                "Veuillez saisir le nom AD utilisateur."
+            );
+
+            return;
+        }
+
+
+        if (!nom) {
+
+            alert(
+                "Veuillez saisir le nom complet."
+            );
+
+            return;
+        }
+
+
+        const formData =
+            new URLSearchParams();
+
+
+        formData.append(
+            "nomADUtilisateur",
+            nomAD
+        );
+
+
+        formData.append(
+            "nom",
+            nom
+        );
+
+
+        formData.append(
+            "email",
+            email
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/Projet/AjouterUtilisateur",
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "RequestVerificationToken":
+                                token
+                        },
+
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible d'ajouter l'utilisateur."
+                );
+
+                return;
+            }
+
+
+            const select =
+                document.getElementById(
+                    selectId
+                );
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                data.id;
+
+            option.textContent =
+                data.nom;
+
+
+            select.appendChild(
+                option
+            );
+
+
+            select.value =
+                data.id;
+
+
+            const section =
+                document.getElementById(
+                    sectionId
+                );
+
+
+            if (section) {
+
+                section.classList.add(
+                    "d-none"
+                );
+
+
+                section
+                    .querySelectorAll("input")
+                    .forEach(input => {
+
+                        input.value = "";
+
+                    });
+            }
+
+
+            alert(
+                `"${data.nom}" a été ajouté avec succès.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de l'ajout de l'utilisateur."
+            );
+        }
+    }
+
+
+    async function supprimerUtilisateurEdit(champ) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+        const token =
+            tokenInput.value;
+
+        const selectId =
+            champ === "ownerIt"
+                ? "OwnerItId"
+                : "PowerUserId";
+
+        const select =
+            document.getElementById(selectId);
+
+        const id =
+            select.value;
+
+        if (!id) {
+
+            alert(
+                "Veuillez sélectionner un utilisateur à supprimer."
+            );
+
+            return;
+        }
+
+        const optionSelectionnee =
+            select.options[select.selectedIndex];
+
+        const nom =
+            optionSelectionnee
+                ? optionSelectionnee.textContent.trim()
+                : "cet utilisateur";
+
+        if (!confirm(
+            `Voulez-vous vraiment supprimer l'utilisateur "${nom}" ? Cette action est irréversible.`
+        )) {
+            return;
+        }
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+            formData.append("id", id);
+
+            const response =
+                await fetch("/Projet/SupprimerUtilisateur", {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded",
+
+                        "RequestVerificationToken":
+                            token
+                    },
+
+                    body: formData
+                });
+
+            const data =
+                await response.json();
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible de supprimer cet utilisateur."
+                );
+
+                return;
+            }
+
+            // Retirer l'utilisateur des deux listes (Owner IT et Power User)
+            ["OwnerItId", "PowerUserId"].forEach(sid => {
+
+                const s =
+                    document.getElementById(sid);
+
+                if (!s) {
+                    return;
+                }
+
+                for (let i = s.options.length - 1; i >= 0; i--) {
+
+                    if (s.options[i].value === id) {
+
+                        s.remove(i);
+                    }
+                }
+            });
+
+            alert(
+                data.message ||
+                `"${nom}" a été supprimé.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de la suppression de l'utilisateur."
+            );
+        }
+    }
+
+</script>

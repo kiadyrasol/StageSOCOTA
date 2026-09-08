@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 
 <head>
@@ -8,9 +7,7 @@
 
     <title>@ViewData["Title"] - GestionProjetSocota</title>
 
-    <link rel="icon"
-      type="image/png"
-      href="~/Logo/logosocota.ico" />
+    <link rel="icon" type="image/png" href="~/Logo/logosocota.ico" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
@@ -33,9 +30,15 @@
                 --radius: 8px;
             }
 
+
             body {
                 background-color: var(--light-bg);
             }
+
+
+            /* =========================================================
+                   BRAND
+                   ========================================================= */
 
             .brand-link {
                 background-color: var(--socota-green);
@@ -45,6 +48,11 @@
             .brand-link:hover {
                 background-color: var(--socota-green-dark);
             }
+
+
+            /* =========================================================
+                   HEADER
+                   ========================================================= */
 
             .main-header.navbar {
                 background-color: var(--socota-green);
@@ -60,23 +68,54 @@
                 opacity: 0.85;
             }
 
+
+            /* =========================================================
+                   SIDEBAR
+                   ========================================================= */
+
             .nav-sidebar .nav-link {
-                transition: background-color var(--transition),
-                    color var(--transition);
+                transition:
+                    background-color var(--transition),
+                    color var(--transition),
+                    transform var(--transition);
             }
 
-            .nav-sidebar .nav-link.active {
-                background-color: var(--socota-green);
-                color: #fff;
+
+            /* MENU ACTIF */
+            
+            .nav-sidebar .nav-link.active,
+            .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
+            .sidebar-dark-success .nav-sidebar>.nav-item>.nav-link.active {
+                background-color: #8BC53F !important;
+                color: #fff !important;
+                font-weight: 600;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
             }
 
             .nav-sidebar .nav-link.active .nav-icon {
                 color: #fff;
             }
 
+
+            /* Petit effet au survol */
+
             .nav-sidebar .nav-link:not(.active):hover {
                 background-color: rgba(139, 197, 63, 0.15);
+                color: var(--socota-green);
             }
+
+
+            /* Le menu actif reste vert même avec la souris dessus */
+
+            .nav-sidebar .nav-link.active:hover {
+                background-color: var(--socota-green);
+                color: #fff;
+            }
+
+
+            /* =========================================================
+                   AUTRES STYLES
+                   ========================================================= */
 
             .bg-socota {
                 background-color: var(--socota-green);
@@ -91,11 +130,14 @@
                 border-color: var(--socota-green);
             }
 
+
             .btn-socota {
                 background-color: var(--socota-green);
                 border-color: var(--socota-green);
                 color: #fff;
-                transition: background-color var(--transition),
+
+                transition:
+                    background-color var(--transition),
                     border-color var(--transition),
                     transform var(--transition);
             }
@@ -107,10 +149,12 @@
                 transform: translateY(-1px);
             }
 
+
             .btn-outline-socota {
                 background-color: transparent;
                 border: 1px solid var(--socota-green);
                 color: var(--socota-green);
+
                 transition: all var(--transition);
             }
 
@@ -119,6 +163,7 @@
                 border-color: var(--socota-green);
                 color: #fff;
             }
+
 
             .alert-success {
                 background-color: var(--socota-green);
@@ -130,6 +175,7 @@
             .alert-success .btn-close {
                 filter: brightness(0) invert(1);
             }
+
 
             .risk-low,
             .badge-risk-low,
@@ -146,6 +192,7 @@
                 border-color: var(--socota-green);
             }
 
+
             .content-wrapper {
                 min-height: calc(100vh - 57px);
             }
@@ -154,9 +201,12 @@
                 padding-bottom: 20px;
             }
 
+
             .card {
                 border-radius: var(--radius);
-                transition: box-shadow var(--transition),
+
+                transition:
+                    box-shadow var(--transition),
                     transform var(--transition);
             }
 
@@ -164,23 +214,32 @@
                 box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
             }
 
+
             .card-header {
                 border-top-left-radius: var(--radius);
                 border-top-right-radius: var(--radius);
             }
+
 
             .main-footer {
                 background-color: #fff;
                 border-top: 1px solid #dee2e6;
             }
 
+
             #toggleDarkMode {
                 width: 36px;
                 height: 32px;
+
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
             }
+
+
+            /* =========================================================
+                   DARK MODE
+                   ========================================================= */
 
             body[data-bs-theme="dark"] {
                 background-color: var(--dark-bg);
@@ -258,14 +317,22 @@
                 color: #fff;
             }
 
+
+            /* =========================================================
+                   NOTIFICATIONS
+                   ========================================================= */
+
             #notificationBadge {
                 top: 2px;
                 right: -2px;
+
                 font-size: 0.65rem;
                 min-width: 18px;
                 height: 18px;
+
                 padding: 2px 5px;
                 border-radius: 50%;
+
                 display: none;
             }
 
@@ -273,23 +340,32 @@
                 position: relative;
             }
     </style>
+
 </head>
+
 
 <body class="hold-transition sidebar-mini layout-fixed" data-bs-theme="light">
 
     <div class="wrapper">
+
+
+        <!-- =====================================================
+             HEADER
+             ===================================================== -->
 
         <nav class="main-header navbar navbar-expand">
 
             <ul class="navbar-nav">
 
                 <li class="nav-item">
+
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"
                        aria-label="Ouvrir ou fermer le menu">
 
                         <i class="fas fa-bars"></i>
 
                     </a>
+
                 </li>
 
             </ul>
@@ -308,6 +384,7 @@
 
                 </li>
 
+
                 <li class="nav-item me-2">
 
                     <a href="/Notification" class="nav-link text-white position-relative notification-link"
@@ -325,6 +402,7 @@
 
                 </li>
 
+
                 <li class="nav-item">
 
                     <span class="nav-link text-white">
@@ -341,20 +419,24 @@
 
         </nav>
 
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-            <a href="/" class="brand-link">
 
-                <a href="/" class="brand-link d-flex align-items-center">
+        <!-- =====================================================
+             SIDEBAR
+             ===================================================== -->
 
-                    <img src="~/Logo/logosocota.jfif" alt="SOCOTA" class="brand-image"
-                         style="height: 35px; width: auto; object-fit: contain;" />
+        <aside class="main-sidebar sidebar-dark-success elevation-4">
 
-                    <span class="brand-text font-weight-light ms-2">
-                        Socota PMO
-                    </span>
 
-                </a>
+            <a href="/" class="brand-link d-flex align-items-center">
+
+                <img src="~/Logo/logosocota.jfif" alt="SOCOTA" class="brand-image"
+                     style="height: 35px; width: auto; object-fit: contain;" />
+
+                <span class="brand-text font-weight-light ms-2">
+                    Socota PMO
+                </span>
+
             </a>
 
 
@@ -365,11 +447,13 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
 
-                        <!-- PROJETS -->
+                        <!-- =================================================
+                             PROJETS
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet" class="nav-link">
+                            <a href="/Projet" class="nav-link @(Context.Request.Path == "/Projet" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-list"></i>
 
@@ -380,11 +464,14 @@
                         </li>
 
 
-                        <!-- KANBAN -->
+                        <!-- =================================================
+                             KANBAN
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Kanban" class="nav-link">
+                            <a href="/Projet/Kanban"
+                               class="nav-link @(Context.Request.Path == "/Projet/Kanban" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-columns"></i>
 
@@ -395,11 +482,14 @@
                         </li>
 
 
-                        <!-- ROADMAP -->
+                        <!-- =================================================
+                             ROADMAP
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Roadmap" class="nav-link">
+                            <a href="/Projet/Roadmap"
+                               class="nav-link @(Context.Request.Path == "/Projet/Roadmap" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-map"></i>
 
@@ -410,11 +500,14 @@
                         </li>
 
 
-                        <!-- GANTT -->
+                        <!-- =================================================
+                             GANTT
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Gantt" class="nav-link">
+                            <a href="/Projet/Gantt"
+                               class="nav-link @(Context.Request.Path == "/Projet/Gantt" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-chart-line"></i>
 
@@ -425,11 +518,14 @@
                         </li>
 
 
-                        <!-- DASHBOARD EXECUTIF -->
+                        <!-- =================================================
+                             DASHBOARD EXECUTIF
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Dashboard" class="nav-link">
+                            <a href="/Projet/Dashboard"
+                               class="nav-link @(Context.Request.Path == "/Projet/Dashboard" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-chart-bar"></i>
 
@@ -440,11 +536,14 @@
                         </li>
 
 
-                        <!-- DASHBOARD COMEX -->
+                        <!-- =================================================
+                             DASHBOARD COMEX
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/DashboardComex" class="nav-link">
+                            <a href="/Projet/DashboardComex"
+                               class="nav-link @(Context.Request.Path == "/Projet/DashboardComex" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-chart-pie"></i>
 
@@ -455,11 +554,14 @@
                         </li>
 
 
-                        <!-- DASHBOARD IT MANAGER -->
+                        <!-- =================================================
+                             DASHBOARD IT MANAGER
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/DashboardItManager" class="nav-link">
+                            <a href="/Projet/DashboardItManager"
+                               class="nav-link @(Context.Request.Path == "/Projet/DashboardItManager" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-users-cog"></i>
 
@@ -470,11 +572,14 @@
                         </li>
 
 
-                        <!-- RECHERCHE -->
+                        <!-- =================================================
+                             RECHERCHE
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Recherche" class="nav-link">
+                            <a href="/Projet/Recherche"
+                               class="nav-link @(Context.Request.Path == "/Projet/Recherche" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-search"></i>
 
@@ -485,11 +590,14 @@
                         </li>
 
 
-                        <!-- NOUVEAU PROJET -->
+                        <!-- =================================================
+                             NOUVEAU PROJET
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/Create" class="nav-link">
+                            <a href="/Projet/Create"
+                               class="nav-link @(Context.Request.Path == "/Projet/Create" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-plus"></i>
 
@@ -500,11 +608,14 @@
                         </li>
 
 
-                        <!-- IMPORT EXCEL -->
+                        <!-- =================================================
+                             IMPORT EXCEL
+                             ================================================= -->
 
                         <li class="nav-item">
 
-                            <a href="/Projet/ImporterExcel" class="nav-link">
+                            <a href="/Projet/ImporterExcel"
+                               class="nav-link @(Context.Request.Path == "/Projet/ImporterExcel" ? "active" : "")">
 
                                 <i class="nav-icon fas fa-file-excel"></i>
 
@@ -514,6 +625,7 @@
 
                         </li>
 
+
                     </ul>
 
                 </nav>
@@ -521,6 +633,12 @@
             </div>
 
         </aside>
+
+
+
+        <!-- =====================================================
+             CONTENU
+             ===================================================== -->
 
         <div class="content-wrapper">
 
@@ -571,6 +689,12 @@
 
         </div>
 
+
+
+        <!-- =====================================================
+             FOOTER
+             ===================================================== -->
+
         <footer class="main-footer">
 
             <strong>GestionProjetSocota</strong>
@@ -581,7 +705,14 @@
 
         </footer>
 
+
     </div>
+
+
+
+    <!-- =========================================================
+         SCRIPTS
+         ========================================================= -->
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
@@ -590,7 +721,11 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
-    //Mode sombre
+
+    <!-- =========================================================
+         MODE SOMBRE
+         ========================================================= -->
+
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -656,7 +791,11 @@
     </script>
 
 
-    //Notif
+
+    <!-- =========================================================
+         NOTIFICATIONS
+         ========================================================= -->
+
     <script>
 
         document.addEventListener("DOMContentLoaded", function () {
@@ -668,6 +807,7 @@
         const response =
         await fetch("/Notification/NombreNonLues");
 
+
         if (!response.ok) {
 
         console.error(
@@ -676,11 +816,13 @@
         );
 
         return;
+
         }
 
 
         const nombre =
         await response.json();
+
 
         const badge =
         document.getElementById(
@@ -726,7 +868,9 @@
 
         }
 
+
         chargerNombreNotifications();
+
 
         setInterval(
         chargerNombreNotifications,
@@ -736,6 +880,7 @@
         });
 
     </script>
+
 
 
     @await RenderSectionAsync(

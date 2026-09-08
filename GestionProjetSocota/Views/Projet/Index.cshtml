@@ -70,7 +70,8 @@
                             <th>Power User</th>
                             <th>Type</th>
                             <th>Plateforme</th>
-                            <th>Deadline</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
                             <th style="min-width: 130px;">Avancement</th>
                             <th>Risque</th>
                             <th class="text-end">Actions</th>
@@ -84,61 +85,87 @@
                         {
                             <tr>
 
+                                <!-- Référence -->
                                 <td class="fw-semibold">
                                     @(string.IsNullOrWhiteSpace(projet.Reference)
                                         ? "-"
                                         : projet.Reference)
                                 </td>
 
+                                <!-- Ticket ID -->
                                 <td>
                                     <span class="text-muted">
                                         @projet.TicketId
                                     </span>
                                 </td>
 
+                                <!-- Nom -->
                                 <td>
                                     <div class="fw-semibold">
                                         @projet.Nom
                                     </div>
                                 </td>
 
+                                <!-- Unité -->
                                 <td>
-                                    @projet.Unite
+                                    @(projet.UniteProjet?.Nom ?? "-")
                                 </td>
 
+                                <!-- Statut -->
                                 <td>
                                     <span class="badge bg-socota">
                                         @projet.Statut
                                     </span>
                                 </td>
 
+                                <!-- Owner IT -->
                                 <td>
                                     @(projet.OwnerIt?.Nom ?? "-")
                                 </td>
 
+                                <!-- Power User -->
                                 <td>
                                     @(projet.PowerUser?.Nom ?? "-")
                                 </td>
 
+                                <!-- Type -->
                                 <td>
-                                    @projet.Type
+                                    @(projet.TypeProjetReference?.Nom ?? "-")
                                 </td>
 
+                                <!-- Plateforme -->
                                 <td>
-                                    @projet.Plateforme
+                                    @(projet.PlateformeProjet?.Nom ?? "-")
                                 </td>
 
+                                <!-- Date de début -->
                                 <td>
-                                    @if (projet.Deadline.HasValue)
+                                    @if (projet.DateDebut.HasValue)
+                                    {
+                                        @projet.DateDebut.Value.ToString("dd/MM/yyyy")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">
+                                            -
+                                        </span>
+                                    }
+                                </td>
+
+                                <!-- Date de fin -->
+                                <td>
+                                    @if (projet.DateFin.HasValue)
                                     {
                                         var dateEnRetard =
-                                            projet.Deadline.Value < DateTime.Now;
+                                            projet.DateFin.Value.Date < DateTime.Now.Date &&
+                                            projet.Statut != StatutProjet.Closed &&
+                                            projet.Statut != StatutProjet.Cancelled;
 
                                         <span class="@(dateEnRetard
-                                                                                          ? "text-danger fw-semibold"
-                                                                                          : "")">
+                                            ? "text-danger fw-semibold"
+                                            : "")">
 
-                                            @projet.Deadline.Value.ToString("dd/MM/yyyy")
+                                            @projet.DateFin.Value.ToString("dd/MM/yyyy")
 
                                         </span>
                                     }
@@ -150,12 +177,18 @@
                                     }
                                 </td>
 
+                                <!-- Avancement -->
                                 <td>
 
-                                    <div class="progress" role="progressbar" aria-valuenow="@projet.PourcentageAvancement"
-                                         aria-valuemin="0" aria-valuemax="100" style="height: 18px;">
+                                    <div class="progress"
+                                         role="progressbar"
+                                         aria-valuenow="@projet.PourcentageAvancement"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"
+                                         style="height: 18px;">
 
-                                        <div class="progress-bar bg-socota" style="width: @projet.PourcentageAvancement%;">
+                                        <div class="progress-bar bg-socota"
+                                             style="width: @projet.PourcentageAvancement%;">
 
                                             <span class="small fw-semibold">
                                                 @projet.PourcentageAvancement%
@@ -167,6 +200,7 @@
 
                                 </td>
 
+                                <!-- Risque -->
                                 <td>
 
                                     @{
@@ -188,32 +222,37 @@
 
                                 </td>
 
+                                <!-- Actions -->
                                 <td class="text-end text-nowrap">
 
                                     <div class="btn-group" role="group">
 
-                                        <a href="/Projet/Details/@projet.Id" class="btn btn-sm btn-outline-secondary"
+                                        <a href="/Projet/Details/@projet.Id"
+                                           class="btn btn-sm btn-outline-secondary"
                                            title="Voir">
 
                                             <i class="fas fa-eye"></i>
 
                                         </a>
 
-                                        <a href="/Projet/ChangerStatut/@projet.Id" class="btn btn-sm btn-outline-socota"
+                                        <a href="/Projet/ChangerStatut/@projet.Id"
+                                           class="btn btn-sm btn-outline-socota"
                                            title="Changer le statut">
 
                                             <i class="fas fa-exchange-alt"></i>
 
                                         </a>
 
-                                        <a href="/Projet/Edit/@projet.Id" class="btn btn-sm btn-outline-primary"
+                                        <a href="/Projet/Edit/@projet.Id"
+                                           class="btn btn-sm btn-outline-primary"
                                            title="Modifier">
 
                                             <i class="fas fa-edit"></i>
 
                                         </a>
 
-                                        <a href="/Projet/Delete/@projet.Id" class="btn btn-sm btn-outline-danger"
+                                        <a href="/Projet/Delete/@projet.Id"
+                                           class="btn btn-sm btn-outline-danger"
                                            title="Supprimer">
 
                                             <i class="fas fa-trash"></i>

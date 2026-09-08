@@ -5,11 +5,11 @@
 <div class="card">
     <div class="card-body">
 
-        @if (!Model.Any(p => p.DateDebut.HasValue || p.Deadline.HasValue))
+        @if (!Model.Any(p => p.DateDebut.HasValue && p.DateFin.HasValue))
         {
             <p class="text-muted mb-0">
-                Aucun projet avec des dates définies
-                (début ou deadline) pour afficher le Gantt.
+                Aucun projet avec une date de début et une date de fin définies
+                pour afficher le Gantt.
             </p>
         }
         else
@@ -54,31 +54,34 @@
     const taches = @Html.Raw(
         Json.Serialize(
             Model
-                .Where(p => p.DateDebut.HasValue || p.Deadline.HasValue)
+                .Where(p => p.DateDebut.HasValue && p.DateFin.HasValue)
                 .Select(p => new
                 {
                     id = p.Id.ToString(),
                     name = p.Nom,
-                    start = (
-                        p.DateDebut ??
-                        p.Deadline!.Value.AddDays(-14)
-                    ).ToString("yyyy-MM-dd"),
-                    end = (
-                        p.Deadline ??
-                        p.DateDebut!.Value.AddDays(14)
-                    ).ToString("yyyy-MM-dd"),
+
+                    start = p.DateDebut!.Value
+                        .ToString("yyyy-MM-dd"),
+
+                    end = p.DateFin!.Value
+                        .ToString("yyyy-MM-dd"),
+
                     progress = p.PourcentageAvancement
                 })
         )
     );
 
     if (taches.length > 0) {
+
         new Gantt("#gantt", taches, {
+
             view_mode: "Month",
 
             on_click: function (tache) {
-                window.location.href = "/Projet/Details/" + tache.id;
+                window.location.href =
+                    "/Projet/Details/" + tache.id;
             }
         });
+
     }
 </script>

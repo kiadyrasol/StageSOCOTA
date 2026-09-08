@@ -103,23 +103,23 @@
         position: relative;
     }
 
-    .it-deadline-header {
+    .it-date-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
 
-    .it-deadline-title {
+    .it-date-title {
         font-size: 0.9rem;
         font-weight: 600;
         margin: 0;
     }
 
-    .it-deadline-table {
+    .it-date-table {
         margin-bottom: 0;
     }
 
-    .it-deadline-table th {
+    .it-date-table th {
         font-size: 0.78rem;
         font-weight: 600;
         color: #6c757d;
@@ -128,7 +128,7 @@
         border-bottom-width: 1px;
     }
 
-    .it-deadline-table td {
+    .it-date-table td {
         font-size: 0.88rem;
         vertical-align: middle;
     }
@@ -162,8 +162,8 @@
     }
 
     body[data-bs-theme="dark"] .it-stat-label,
-    body[data-bs-theme="dark"] .it-deadline-table th,
-    body[data-bs-theme="dark"] .it-subtitle {
+    body[data-bs-theme="dark"] .it-date-table th,
+    body[data-bs-theme="dark"] .it-manager-subtitle {
         color: #a0a0a0;
     }
 </style>
@@ -316,44 +316,44 @@
     </div>
 
 
-    <!-- DEADLINES -->
+    <!-- DATES DE FIN À VENIR -->
 
     <div class="card it-card">
 
         <div class="card-body">
 
-            <div class="it-deadline-header mb-3">
+            <div class="it-date-header mb-3">
 
                 <div>
-                    <p class="it-deadline-title">
-                        Deadlines à venir
+                    <p class="it-date-title">
+                        Dates de fin à venir
                     </p>
 
                     <small class="text-muted">
-                        Projets avec échéance dans les 30 prochains jours
+                        Projets dont la date de fin est prévue dans les 30 prochains jours
                     </small>
                 </div>
 
             </div>
 
 
-            @if (Model.DeadlinesDuMois.Any())
+            @if (Model.DatesFinDuMois.Any())
             {
                 <div class="table-responsive">
 
-                    <table class="table table-hover it-deadline-table">
+                    <table class="table table-hover it-date-table">
 
                         <thead>
                             <tr>
                                 <th>Projet</th>
-                                <th>Deadline</th>
+                                <th>Date de fin</th>
                                 <th>Statut</th>
                             </tr>
                         </thead>
 
                         <tbody>
 
-                            @foreach (var projet in Model.DeadlinesDuMois)
+                            @foreach (var projet in Model.DatesFinDuMois)
                             {
                                 <tr>
 
@@ -367,7 +367,7 @@
                                     </td>
 
                                     <td>
-                                        @projet.Deadline?.ToString("dd/MM/yyyy")
+                                        @projet.DateFin?.ToString("dd/MM/yyyy")
                                     </td>
 
                                     <td>
@@ -392,7 +392,7 @@
                     <i class="fas fa-calendar-check mb-2"></i>
 
                     <div>
-                        Aucune deadline dans les 30 prochains jours.
+                        Aucune date de fin prévue dans les 30 prochains jours.
                     </div>
 
                 </div>

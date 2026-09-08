@@ -1,13 +1,15 @@
 @{
-    var trimestres = ViewBag.Trimestres as List<(string Label, List<GestionProjetSocota.Models.Projet> Projets)>;
+    var trimestres =
+        ViewBag.Trimestres as
+        List<(string Label, List<GestionProjetSocota.Models.Projet> Projets)>;
 }
 
 <style>
-   
+
     .roadmap-header {
-        background-color: #8BC53F !important;
-        color: #ffffff !important;
-        border-color: #8BC53F !important;
+        background-color: #8BC53F ;
+        color: #ffffff ;
+        border-color: #8BC53F;
     }
 
     .roadmap-projet {
@@ -37,14 +39,14 @@
     }
 
     .roadmap-statut {
-        background-color: #8BC53F !important;
+        background-color: #8BC53F;
         color: #ffffff !important;
     }
 
     body[data-bs-theme="dark"] .roadmap-projet {
         background-color: #2b2f33;
         border-color: #555b61;
-        color: #e0e0e0 !important;
+        color: #e0e0e;
     }
 
     body[data-bs-theme="dark"] .roadmap-projet:hover {
@@ -53,11 +55,11 @@
     }
 
     body[data-bs-theme="dark"] .roadmap-projet-nom {
-        color: #ffffff !important;
+        color: #ffffff;
     }
 
     body[data-bs-theme="dark"] .roadmap-projet-date {
-        color: #adb5bd !important;
+        color: #adb5bd;
     }
 
     body[data-bs-theme="dark"] .card {
@@ -71,18 +73,20 @@
     }
 
     body[data-bs-theme="dark"] .text-muted {
-        color: #adb5bd !important;
+        color: #adb5bd;
     }
 
-    /* Le titre du trimestre reste toujours vert */
     body[data-bs-theme="dark"] .roadmap-header {
-        background-color: #8BC53F !important;
-        color: #ffffff !important;
+        background-color: #8BC53F;
+        color: #ffffff ;
     }
+
 </style>
 
 
-<h1 class="h3 mb-3">Roadmap trimestrielle</h1>
+<h1 class="h3 mb-3">
+    Roadmap trimestrielle
+</h1>
 
 
 <div class="row">
@@ -95,7 +99,11 @@
 
                 <!-- TITRE DU TRIMESTRE -->
                 <div class="card-header roadmap-header text-center">
-                    <b>@trimestre.Label</b>
+
+                    <b>
+                        @trimestre.Label
+                    </b>
+
                 </div>
 
 
@@ -116,23 +124,36 @@
                                class="roadmap-projet">
 
                                 <div class="roadmap-projet-nom">
+
                                     @projet.Nom
+
                                 </div>
 
+
+                                <!-- DATE DE FIN -->
                                 <div class="roadmap-projet-date">
-                                    @if (projet.Deadline.HasValue)
+
+                                    <i class="fas fa-calendar-alt me-1"></i>
+
+                                    @if (projet.DateFin.HasValue)
                                     {
-                                        @projet.Deadline.Value.ToString("dd/MM/yyyy")
+                                        @projet.DateFin.Value.ToString("dd/MM/yyyy")
                                     }
                                     else
                                     {
-                                        <span>-</span>
+                                        <span>
+                                            Non définie
+                                        </span>
                                     }
+
                                 </div>
+
 
                                 <!-- STATUT -->
                                 <span class="badge roadmap-statut">
+
                                     @projet.Statut
+
                                 </span>
 
                             </a>

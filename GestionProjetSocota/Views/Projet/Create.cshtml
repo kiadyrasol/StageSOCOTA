@@ -1,46 +1,46 @@
 @model GestionProjetSocota.ViewModels.ProjetCreateViewModel
 
 <style>
-    .create-page {
+    .edit-page {
         --socota-green: #8BC53F;
         --socota-green-dark: #70A130;
     }
 
-    .create-title {
+    .edit-title {
         font-weight: 600;
         margin-bottom: 0.25rem;
     }
 
-    .create-subtitle {
+    .edit-subtitle {
         color: #6c757d;
         font-size: 0.9rem;
         margin-bottom: 1.5rem;
     }
 
-    .create-card {
+    .edit-card {
         border: 1px solid #e5e7eb;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
-    .create-section {
+    .edit-section {
         padding-bottom: 1.25rem;
         margin-bottom: 1.25rem;
         border-bottom: 1px solid #e5e7eb;
     }
 
-    .create-section:last-of-type {
+    .edit-section:last-of-type {
         border-bottom: 0;
         margin-bottom: 0;
     }
 
-    .create-section-title {
+    .edit-section-title {
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 1rem;
     }
 
-    .create-section-title i {
+    .edit-section-title i {
         color: var(--socota-green);
         margin-right: 0.4rem;
     }
@@ -62,7 +62,7 @@
         box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.15);
     }
 
-    .create-actions {
+    .edit-actions {
         display: flex;
         justify-content: flex-end;
         gap: 0.5rem;
@@ -81,37 +81,39 @@
         color: #ffffff;
     }
 
-    body[data-bs-theme="dark"] .create-card {
+    body[data-bs-theme="dark"] .edit-card {
         border-color: #3a3f44;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    body[data-bs-theme="dark"] .create-section {
+    body[data-bs-theme="dark"] .edit-section {
         border-color: #3a3f44;
     }
 
-    body[data-bs-theme="dark"] .create-subtitle {
+    body[data-bs-theme="dark"] .edit-subtitle {
         color: #a0a0a0;
     }
 </style>
 
 
-<div class="create-page">
+<div class="edit-page">
+
+    <!-- EN-TÊTE -->
 
     <div class="mb-4">
 
-        <h1 class="h3 create-title">
+        <h1 class="h3 edit-title">
             Créer un projet
         </h1>
 
-        <p class="create-subtitle mb-0">
-            Renseignez les informations nécessaires à la création du projet.
+        <p class="edit-subtitle mb-0">
+            Renseignez les informations du nouveau projet. La référence sera générée automatiquement.
         </p>
 
     </div>
 
 
-    <div class="card create-card">
+    <div class="card edit-card">
 
         <div class="card-body p-4">
 
@@ -123,27 +125,36 @@
                 </div>
 
 
+                <!-- ========================================= -->
                 <!-- INFORMATIONS GÉNÉRALES -->
+                <!-- ========================================= -->
 
-                <div class="create-section">
+                <div class="edit-section">
 
-                    <div class="create-section-title">
+                    <div class="edit-section-title">
+
                         <i class="fas fa-folder-open"></i>
+
                         Informations générales
+
                     </div>
+
 
                     <div class="row">
 
+                        <!-- Ticket ID -->
+
                         <div class="col-md-6 mb-3">
 
-                            <label class="form-label">
+                            <label asp-for="TicketId"
+                                   class="form-label">
+
                                 Ticket ID
+
                             </label>
 
                             <input asp-for="TicketId"
-                                   type="text"
-                                   class="form-control"
-                                   placeholder="Ex. TCK-001" />
+                                   class="form-control" />
 
                             <span asp-validation-for="TicketId"
                                   class="text-danger small">
@@ -152,30 +163,19 @@
                         </div>
 
 
+                        <!-- Nom -->
+
                         <div class="col-md-6 mb-3">
 
-                            <label class="form-label">
-                                Référence
-                            </label>
+                            <label asp-for="Nom"
+                                   class="form-label">
 
-                            <input asp-for="Reference"
-                                   type="text"
-                                   class="form-control"
-                                   placeholder="Référence du projet" />
-
-                        </div>
-
-
-                        <div class="col-12 mb-3">
-
-                            <label class="form-label">
                                 Nom du projet
+
                             </label>
 
                             <input asp-for="Nom"
-                                   type="text"
-                                   class="form-control"
-                                   placeholder="Nom du projet" />
+                                   class="form-control" />
 
                             <span asp-validation-for="Nom"
                                   class="text-danger small">
@@ -184,17 +184,20 @@
                         </div>
 
 
+                        <!-- Description -->
+
                         <div class="col-12">
 
-                            <label class="form-label">
+                            <label asp-for="Description"
+                                   class="form-label">
+
                                 Description
+
                             </label>
 
                             <textarea asp-for="Description"
                                       class="form-control"
-                                      rows="4"
-                                      placeholder="Décrivez brièvement le projet...">
-                            </textarea>
+                                      rows="4"></textarea>
 
                         </div>
 
@@ -203,82 +206,358 @@
                 </div>
 
 
+                <!-- ========================================= -->
                 <!-- CLASSIFICATION -->
+                <!-- ========================================= -->
 
-                <div class="create-section">
+                <div class="edit-section">
 
-                    <div class="create-section-title">
+                    <div class="edit-section-title">
+
                         <i class="fas fa-tags"></i>
+
                         Classification
+
                     </div>
+
 
                     <div class="row">
 
-                        <div class="col-md-4 mb-3">
+                        <!-- ================================= -->
+                        <!-- UNITÉ -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="UniteProjetId"
+                                   class="form-label">
+
                                 Unité
+
                             </label>
 
-                            <select asp-for="Unite"
-                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Unite>()"
-                                    class="form-select">
-                            </select>
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="UniteProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.UnitesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                         Sélectionner une unité 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutUnite')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationCreate('unite')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutUnite"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouvelleUnite"
+                                       class="form-control mb-2"
+                                       placeholder="Nom de la nouvelle unité" />
+
+                                <input id="CreateNouvelleUnitePrefixe"
+                                       class="form-control mb-2"
+                                       maxlength="20"
+                                       placeholder="Préfixe de référence (ex. FN)" />
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationCreate('unite')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="UniteProjetId"
+                                  class="text-danger small">
+                            </span>
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
+                        <!-- ================================= -->
+                        <!-- DÉPARTEMENT -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DepartementProjetId"
+                                   class="form-label">
+
                                 Département
+
                             </label>
 
-                            <select asp-for="Departement"
-                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Departement>()"
-                                    class="form-select">
-                            </select>
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="DepartementProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.DepartementsDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                         Sélectionner un département 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutDepartement')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationCreate('departement')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutDepartement"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouveauDepartement"
+                                       class="form-control mb-2"
+                                       placeholder="Nom du nouveau département" />
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationCreate('departement')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="DepartementProjetId"
+                                  class="text-danger small">
+                            </span>
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
+                        <!-- ================================= -->
+                        <!-- TYPE -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="TypeProjetReferenceId"
+                                   class="form-label">
+
                                 Type
+
                             </label>
 
-                            <select asp-for="Type"
-                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.TypeProjet>()"
-                                    class="form-select">
-                            </select>
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="TypeProjetReferenceId"
+                                        asp-items="@(new SelectList(
+                                            Model.TypesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                        Sélectionner un type 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutType')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationCreate('type')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutType"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouveauTypeProjet"
+                                       class="form-control mb-2"
+                                       placeholder="Nom du nouveau type" />
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationCreate('type')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="TypeProjetReferenceId"
+                                  class="text-danger small">
+                            </span>
 
                         </div>
 
 
-                        <div class="col-md-6">
+                        <!-- ================================= -->
+                        <!-- PLATEFORME -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="PlateformeProjetId"
+                                   class="form-label">
+
                                 Plateforme
+
                             </label>
 
-                            <select asp-for="Plateforme"
-                                    asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.Plateforme>()"
-                                    class="form-select">
-                            </select>
+
+                            <div class="d-flex gap-2">
+
+                                <select asp-for="PlateformeProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.PlateformesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                         Sélectionner une plateforme 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutPlateforme')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerClassificationCreate('plateforme')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutPlateforme"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouvellePlateforme"
+                                       class="form-control mb-2"
+                                       placeholder="Nom de la nouvelle plateforme (ex. SAP)" />
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterClassificationCreate('plateforme')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
+
+
+                            <span asp-validation-for="PlateformeProjetId"
+                                  class="text-danger small">
+                            </span>
 
                         </div>
 
 
-                        <div class="col-md-6">
+                        <!-- ================================= -->
+                        <!-- PRIORITÉ -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="Priorite"
+                                   class="form-label">
+
                                 Priorité
+
                             </label>
+
 
                             <select asp-for="Priorite"
                                     asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()"
                                     class="form-select">
+
                             </select>
 
                         </div>
@@ -288,64 +567,237 @@
                 </div>
 
 
-                <!-- RESPONSABLES ET ÉCHÉANCE -->
+                <!-- ========================================= -->
+                <!-- PILOTAGE -->
+                <!-- ========================================= -->
 
-                <div class="create-section">
+                <div class="edit-section">
 
-                    <div class="create-section-title">
+                    <div class="edit-section-title">
+
                         <i class="fas fa-users"></i>
-                        Responsables et échéance
+
+                        Pilotage du projet
+
                     </div>
+
 
                     <div class="row">
 
-                        <div class="col-md-4 mb-3">
+                        <!-- ================================= -->
+                        <!-- OWNER IT -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="OwnerItId"
+                                   class="form-label">
+
                                 Owner IT
+
                             </label>
 
-                            <select asp-for="OwnerItId"
-                                    asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))"
-                                    class="form-select">
 
-                                <option value="">
-                                    Aucun
-                                </option>
+                            <div class="d-flex gap-2">
 
-                            </select>
+                                <select asp-for="OwnerItId"
+                                        asp-items="@(new SelectList(
+                                            Model.UtilisateursDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                         Aucun 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutOwnerIt')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerUtilisateurCreate('ownerIt')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutOwnerIt"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouvelOwnerItNomADUtilisateur"
+                                       class="form-control mb-2"
+                                       placeholder="Nom AD utilisateur" />
+
+                                <input id="CreateNouvelOwnerItNom"
+                                       class="form-control mb-2"
+                                       placeholder="Nom complet" />
+
+                                <input id="CreateNouvelOwnerItEmail"
+                                       type="email"
+                                       class="form-control mb-2"
+                                       placeholder="Adresse e-mail" />
+
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterUtilisateurCreate('ownerIt')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
 
                         </div>
 
 
-                        <div class="col-md-4 mb-3">
+                        <!-- ================================= -->
+                        <!-- POWER USER -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="PowerUserId"
+                                   class="form-label">
+
                                 Power User
+
                             </label>
 
-                            <select asp-for="PowerUserId"
-                                    asp-items="@(new SelectList(Model.UtilisateursDisponibles, "Id", "Nom"))"
-                                    class="form-select">
 
-                                <option value="">
-                                    Aucun
-                                </option>
+                            <div class="d-flex gap-2">
 
-                            </select>
+                                <select asp-for="PowerUserId"
+                                        asp-items="@(new SelectList(
+                                            Model.UtilisateursDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
+
+                                    <option value="">
+                                         Aucun 
+                                    </option>
+
+                                </select>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        onclick="toggleAjout('createAjoutPowerUser')">
+
+                                    <i class="fas fa-plus"></i>
+
+                                </button>
+
+
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        onclick="supprimerUtilisateurCreate('powerUser')">
+
+                                    <i class="fas fa-trash"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <div id="createAjoutPowerUser"
+                                 class="mt-2 d-none">
+
+                                <input id="CreateNouveauPowerUserNomADUtilisateur"
+                                       class="form-control mb-2"
+                                       placeholder="Nom AD utilisateur" />
+
+                                <input id="CreateNouveauPowerUserNom"
+                                       class="form-control mb-2"
+                                       placeholder="Nom complet" />
+
+                                <input id="CreateNouveauPowerUserEmail"
+                                       type="email"
+                                       class="form-control mb-2"
+                                       placeholder="Adresse e-mail" />
+
+
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
+                                        onclick="ajouterUtilisateurCreate('powerUser')">
+
+                                    <i class="fas fa-check"></i>
+
+                                    Ajouter
+
+                                </button>
+
+                            </div>
 
                         </div>
 
 
-                        <div class="col-md-4">
+                        <!-- ================================= -->
+                        <!-- DATE DÉBUT -->
+                        <!-- ================================= -->
 
-                            <label class="form-label">
-                                Deadline
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DateDebut"
+                                   class="form-label">
+
+                                Date de début
+
                             </label>
 
-                            <input asp-for="Deadline"
+
+                            <input asp-for="DateDebut"
                                    type="date"
                                    class="form-control" />
+
+
+                            <span asp-validation-for="DateDebut"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- DATE FIN -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-6 mb-3">
+
+                            <label asp-for="DateFin"
+                                   class="form-label">
+
+                                Date de fin
+
+                            </label>
+
+
+                            <input asp-for="DateFin"
+                                   type="date"
+                                   class="form-control" />
+
+
+                            <span asp-validation-for="DateFin"
+                                  class="text-danger small">
+                            </span>
 
                         </div>
 
@@ -354,22 +806,27 @@
                 </div>
 
 
+                <!-- ========================================= -->
                 <!-- ACTIONS -->
+                <!-- ========================================= -->
 
-                <div class="create-actions">
+                <div class="edit-actions">
 
-                    <a href="/Projet"
+                    <a href="/Projet/Index"
                        class="btn btn-outline-secondary">
 
                         <i class="fas fa-times"></i>
+
                         Annuler
 
                     </a>
 
+
                     <button type="submit"
                             class="btn btn-socota">
 
-                        <i class="fas fa-plus"></i>
+                        <i class="fas fa-save"></i>
+
                         Créer le projet
 
                     </button>
@@ -383,3 +840,872 @@
     </div>
 
 </div>
+
+
+<script>
+
+    function toggleAjout(sectionId) {
+
+        const section =
+            document.getElementById(sectionId);
+
+        if (!section) {
+            return;
+        }
+
+
+        if (section.classList.contains("d-none")) {
+
+            section.classList.remove("d-none");
+
+
+            const input =
+                section.querySelector("input");
+
+            if (input) {
+                input.focus();
+            }
+
+        }
+        else {
+
+            section.classList.add("d-none");
+
+        }
+    }
+
+
+    async function ajouterClassificationCreate(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+
+        const token =
+            tokenInput.value;
+
+
+        let url = "";
+        let selectId = "";
+        let sectionId = "";
+        let nom = "";
+        let prefixe = "";
+
+
+        switch (type) {
+
+            case "unite":
+
+                url = "/Projet/AjouterUnite";
+
+                selectId = "UniteProjetId";
+
+                sectionId = "createAjoutUnite";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "CreateNouvelleUnite"
+                        )
+                        .value
+                        .trim();
+
+
+                prefixe =
+                    document
+                        .getElementById(
+                            "CreateNouvelleUnitePrefixe"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom de l'unité."
+                    );
+
+                    return;
+                }
+
+
+                if (!prefixe) {
+
+                    alert(
+                        "Veuillez saisir le préfixe de l'unité."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "departement":
+
+                url =
+                    "/Projet/AjouterDepartement";
+
+                selectId =
+                    "DepartementProjetId";
+
+                sectionId =
+                    "createAjoutDepartement";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "CreateNouveauDepartement"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom du département."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "type":
+
+                url =
+                    "/Projet/AjouterTypeProjet";
+
+                selectId =
+                    "TypeProjetReferenceId";
+
+                sectionId =
+                    "createAjoutType";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "CreateNouveauTypeProjet"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom du type."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            case "plateforme":
+
+                url =
+                    "/Projet/AjouterPlateforme";
+
+                selectId =
+                    "PlateformeProjetId";
+
+                sectionId =
+                    "createAjoutPlateforme";
+
+
+                nom =
+                    document
+                        .getElementById(
+                            "CreateNouvellePlateforme"
+                        )
+                        .value
+                        .trim();
+
+
+                if (!nom) {
+
+                    alert(
+                        "Veuillez saisir le nom de la plateforme."
+                    );
+
+                    return;
+                }
+
+                break;
+
+
+            default:
+
+                alert(
+                    "Type de classification inconnu."
+                );
+
+                return;
+        }
+
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+
+            formData.append(
+                "nom",
+                nom
+            );
+
+
+            if (type === "unite") {
+
+                formData.append(
+                    "prefixe",
+                    prefixe
+                );
+            }
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "RequestVerificationToken":
+                                token
+                        },
+
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible d'ajouter cet élément."
+                );
+
+                return;
+            }
+
+
+            const select =
+                document.getElementById(
+                    selectId
+                );
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                data.id;
+
+            option.textContent =
+                data.nom;
+
+
+            select.appendChild(
+                option
+            );
+
+
+            select.value =
+                data.id;
+
+
+            const section =
+                document.getElementById(
+                    sectionId
+                );
+
+
+            if (section) {
+
+                section.classList.add(
+                    "d-none"
+                );
+
+
+                section
+                    .querySelectorAll("input")
+                    .forEach(input => {
+
+                        input.value = "";
+
+                    });
+            }
+
+
+            alert(
+                `"${data.nom}" a été ajouté avec succès.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de l'ajout."
+            );
+        }
+    }
+
+
+    async function supprimerClassificationCreate(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+        const token =
+            tokenInput.value;
+
+
+        let url = "";
+        let selectId = "";
+
+        switch (type) {
+
+            case "unite":
+                url = "/Projet/SupprimerUnite";
+                selectId = "UniteProjetId";
+                break;
+
+            case "departement":
+                url = "/Projet/SupprimerDepartement";
+                selectId = "DepartementProjetId";
+                break;
+
+            case "type":
+                url = "/Projet/SupprimerTypeProjet";
+                selectId = "TypeProjetReferenceId";
+                break;
+
+            case "plateforme":
+                url = "/Projet/SupprimerPlateforme";
+                selectId = "PlateformeProjetId";
+                break;
+
+            default:
+                alert("Type de classification inconnu.");
+                return;
+        }
+
+        const select =
+            document.getElementById(selectId);
+
+        const id =
+            select.value;
+
+        if (!id) {
+
+            alert(
+                "Veuillez sélectionner un élément à supprimer."
+            );
+
+            return;
+        }
+
+        const optionSelectionnee =
+            select.options[select.selectedIndex];
+
+        const nom =
+            optionSelectionnee
+                ? optionSelectionnee.textContent.trim()
+                : "cet élément";
+
+        if (!confirm(
+            `Voulez-vous vraiment supprimer "${nom}" ? Cette action est irréversible.`
+        )) {
+            return;
+        }
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+            formData.append("id", id);
+
+            const response =
+                await fetch(url, {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded",
+
+                        "RequestVerificationToken":
+                            token
+                    },
+
+                    body: formData
+                });
+
+            const data =
+                await response.json();
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible de supprimer cet élément."
+                );
+
+                return;
+            }
+
+            select.remove(select.selectedIndex);
+
+            select.value = "";
+
+            alert(
+                data.message ||
+                `"${nom}" a été supprimé.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de la suppression."
+            );
+        }
+    }
+
+
+    async function ajouterUtilisateurCreate(type) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+
+        const token =
+            tokenInput.value;
+
+
+        let nomAD = "";
+        let nom = "";
+        let email = "";
+        let selectId = "";
+        let sectionId = "";
+
+
+        if (type === "ownerIt") {
+
+            nomAD =
+                document
+                    .getElementById(
+                        "CreateNouvelOwnerItNomADUtilisateur"
+                    )
+                    .value
+                    .trim();
+
+
+            nom =
+                document
+                    .getElementById(
+                        "CreateNouvelOwnerItNom"
+                    )
+                    .value
+                    .trim();
+
+
+            email =
+                document
+                    .getElementById(
+                        "CreateNouvelOwnerItEmail"
+                    )
+                    .value
+                    .trim();
+
+
+            selectId =
+                "OwnerItId";
+
+            sectionId =
+                "createAjoutOwnerIt";
+        }
+
+
+        else if (type === "powerUser") {
+
+            nomAD =
+                document
+                    .getElementById(
+                        "CreateNouveauPowerUserNomADUtilisateur"
+                    )
+                    .value
+                    .trim();
+
+
+            nom =
+                document
+                    .getElementById(
+                        "CreateNouveauPowerUserNom"
+                    )
+                    .value
+                    .trim();
+
+
+            email =
+                document
+                    .getElementById(
+                        "CreateNouveauPowerUserEmail"
+                    )
+                    .value
+                    .trim();
+
+
+            selectId =
+                "PowerUserId";
+
+            sectionId =
+                "createAjoutPowerUser";
+        }
+
+
+        else {
+
+            alert(
+                "Type d'utilisateur inconnu."
+            );
+
+            return;
+        }
+
+
+        if (!nomAD) {
+
+            alert(
+                "Veuillez saisir le nom AD utilisateur."
+            );
+
+            return;
+        }
+
+
+        if (!nom) {
+
+            alert(
+                "Veuillez saisir le nom complet."
+            );
+
+            return;
+        }
+
+
+        const formData =
+            new URLSearchParams();
+
+
+        formData.append(
+            "nomADUtilisateur",
+            nomAD
+        );
+
+
+        formData.append(
+            "nom",
+            nom
+        );
+
+
+        formData.append(
+            "email",
+            email
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "/Projet/AjouterUtilisateur",
+                    {
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
+
+                            "RequestVerificationToken":
+                                token
+                        },
+
+                        body: formData
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible d'ajouter l'utilisateur."
+                );
+
+                return;
+            }
+
+
+            const select =
+                document.getElementById(
+                    selectId
+                );
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                data.id;
+
+            option.textContent =
+                data.nom;
+
+
+            select.appendChild(
+                option
+            );
+
+
+            select.value =
+                data.id;
+
+
+            const section =
+                document.getElementById(
+                    sectionId
+                );
+
+
+            if (section) {
+
+                section.classList.add(
+                    "d-none"
+                );
+
+
+                section
+                    .querySelectorAll("input")
+                    .forEach(input => {
+
+                        input.value = "";
+
+                    });
+            }
+
+
+            alert(
+                `"${data.nom}" a été ajouté avec succès.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de l'ajout de l'utilisateur."
+            );
+        }
+    }
+
+
+    async function supprimerUtilisateurCreate(champ) {
+
+        const tokenInput =
+            document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+        if (!tokenInput) {
+
+            alert(
+                "Erreur : token de sécurité introuvable."
+            );
+
+            return;
+        }
+
+        const token =
+            tokenInput.value;
+
+        const selectId =
+            champ === "ownerIt"
+                ? "OwnerItId"
+                : "PowerUserId";
+
+        const select =
+            document.getElementById(selectId);
+
+        const id =
+            select.value;
+
+        if (!id) {
+
+            alert(
+                "Veuillez sélectionner un utilisateur à supprimer."
+            );
+
+            return;
+        }
+
+        const optionSelectionnee =
+            select.options[select.selectedIndex];
+
+        const nom =
+            optionSelectionnee
+                ? optionSelectionnee.textContent.trim()
+                : "cet utilisateur";
+
+        if (!confirm(
+            `Voulez-vous vraiment supprimer l'utilisateur "${nom}" ? Cette action est irréversible.`
+        )) {
+            return;
+        }
+
+        try {
+
+            const formData =
+                new URLSearchParams();
+
+            formData.append("id", id);
+
+            const response =
+                await fetch("/Projet/SupprimerUtilisateur", {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/x-www-form-urlencoded",
+
+                        "RequestVerificationToken":
+                            token
+                    },
+
+                    body: formData
+                });
+
+            const data =
+                await response.json();
+
+            if (!response.ok || !data.success) {
+
+                alert(
+                    data.message ||
+                    "Impossible de supprimer cet utilisateur."
+                );
+
+                return;
+            }
+
+           
+            ["OwnerItId", "PowerUserId"].forEach(sid => {
+
+                const s =
+                    document.getElementById(sid);
+
+                if (!s) {
+                    return;
+                }
+
+                for (let i = s.options.length - 1; i >= 0; i--) {
+
+                    if (s.options[i].value === id) {
+
+                        s.remove(i);
+                    }
+                }
+            });
+
+            alert(
+                data.message ||
+                `"${nom}" a été supprimé.`
+            );
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Une erreur est survenue lors de la suppression de l'utilisateur."
+            );
+        }
+    }
+
+</script>

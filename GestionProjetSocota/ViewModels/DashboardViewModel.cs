@@ -19,7 +19,7 @@ namespace GestionProjetSocota.ViewModels
         public List<StatDonnee> RepartitionParType { get; set; } = new();
         public List<StatDonnee> RepartitionParPlateforme { get; set; } = new();
         public int ProjetsCritiques { get; set; }
-        public List<Projet> DeadlinesDuMois { get; set; } = new();
+        public List<Projet> DatesFinDuMois { get; set; } = new();
         public List<StatDonnee> AgingProjets { get; set; } = new();
     }
 

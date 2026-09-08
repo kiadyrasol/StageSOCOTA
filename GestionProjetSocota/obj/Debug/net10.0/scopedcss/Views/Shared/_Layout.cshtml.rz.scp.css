@@ -8,19 +8,33 @@ a.navbar-brand[b-rqm5afutgd] {
 }
 
 a[b-rqm5afutgd] {
-  color: #0077cc;
+  color: #8BC53F;
 }
 
+/* Boutons principaux */
 .btn-primary[b-rqm5afutgd] {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #fff !important;
+  background-color: #8BC53F !important;
+  border-color: #7ab800 !important;
 }
 
-.nav-pills .nav-link.active[b-rqm5afutgd], .nav-pills .show > .nav-link[b-rqm5afutgd] {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.btn-primary:hover[b-rqm5afutgd],
+.btn-primary:focus[b-rqm5afutgd],
+.btn-primary:active[b-rqm5afutgd] {
+  color: #fff !important;
+  background-color: #7ab800 !important;
+  border-color: #6a9f00 !important;
+}
+
+/* Éléments de menu actifs (sidebar / nav-pills) */
+.nav-pills .nav-link.active[b-rqm5afutgd],
+.nav-pills .show > .nav-link[b-rqm5afutgd],
+.sidebar .nav-link.active[b-rqm5afutgd],
+.sidebar .active[b-rqm5afutgd],
+.nav-link.active[b-rqm5afutgd] {
+  color: #fff !important;
+  background-color: #8BC53F !important;
+  border-color: #8BC53F !important;
 }
 
 .border-top[b-rqm5afutgd] {
@@ -47,6 +61,7 @@ button.accept-policy[b-rqm5afutgd] {
   line-height: 60px;
 }
 
+/* Mode sombre */
 body[data-bs-theme="dark"][b-rqm5afutgd] {
     background-color: #1a1d21;
     color: #e0e0e0;
@@ -75,4 +90,15 @@ body[data-bs-theme="dark"] .form-select[b-rqm5afutgd] {
 }
 body[data-bs-theme="dark"] .text-muted[b-rqm5afutgd] {
     color: #a0a0a0 !important;
+}
+
+/* Surcharge forcée pour AdminLTE (Menu latéral) */
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active[b-rqm5afutgd],
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active[b-rqm5afutgd],
+.nav-sidebar .nav-link.active[b-rqm5afutgd],
+.main-sidebar .nav-link.active[b-rqm5afutgd],
+.sidebar .nav-link.active[b-rqm5afutgd] {
+  background-color: #8BC53F !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }

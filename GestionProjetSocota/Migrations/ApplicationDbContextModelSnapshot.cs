@@ -85,6 +85,98 @@ namespace GestionProjetSocota.Migrations
                     b.ToTable("Commentaires");
                 });
 
+            modelBuilder.Entity("GestionProjetSocota.Models.DepartementProjet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Actif")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nom")
+                        .IsUnique();
+
+                    b.ToTable("DepartementsProjets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Actif = true,
+                            Nom = "CAL"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Actif = true,
+                            Nom = "IND"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Actif = true,
+                            Nom = "LOG"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Actif = true,
+                            Nom = "IT"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Actif = true,
+                            Nom = "PRO"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Actif = true,
+                            Nom = "MPF"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Actif = true,
+                            Nom = "QUA"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Actif = true,
+                            Nom = "SUST"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Actif = true,
+                            Nom = "CTE"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Actif = true,
+                            Nom = "SALES"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Actif = true,
+                            Nom = "PLN"
+                        });
+                });
+
             modelBuilder.Entity("GestionProjetSocota.Models.HistoriqueProjet", b =>
                 {
                     b.Property<int>("Id")
@@ -117,6 +209,41 @@ namespace GestionProjetSocota.Migrations
                     b.HasIndex("UtilisateurId");
 
                     b.ToTable("HistoriqueProjets");
+                });
+
+            modelBuilder.Entity("GestionProjetSocota.Models.JournalErreur", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CheminRequete")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateErreur")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MethodeHttp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeException")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Utilisateur")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JournauxErreurs");
                 });
 
             modelBuilder.Entity("GestionProjetSocota.Models.Notification", b =>
@@ -188,6 +315,86 @@ namespace GestionProjetSocota.Migrations
                     b.ToTable("PiecesJointes");
                 });
 
+            modelBuilder.Entity("GestionProjetSocota.Models.PlateformeProjet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Actif")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nom")
+                        .IsUnique();
+
+                    b.ToTable("PlateformesProjets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Actif = true,
+                            Nom = "WEB"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Actif = true,
+                            Nom = "GPAO"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Actif = true,
+                            Nom = "PBI"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Actif = true,
+                            Nom = "SUN"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Actif = true,
+                            Nom = "Oracle"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Actif = true,
+                            Nom = "CRP"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Actif = true,
+                            Nom = "Mobile"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Actif = true,
+                            Nom = "SEAM"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Actif = true,
+                            Nom = "FREvolve"
+                        });
+                });
+
             modelBuilder.Entity("GestionProjetSocota.Models.Projet", b =>
                 {
                     b.Property<int>("Id")
@@ -209,10 +416,7 @@ namespace GestionProjetSocota.Migrations
                     b.Property<DateTime?>("DateFin")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("Deadline")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Departement")
+                    b.Property<int>("DepartementProjetId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -230,7 +434,7 @@ namespace GestionProjetSocota.Migrations
                     b.Property<int?>("OwnerItId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Plateforme")
+                    b.Property<int>("PlateformeProjetId")
                         .HasColumnType("int");
 
                     b.Property<int>("PourcentageAvancement")
@@ -256,17 +460,25 @@ namespace GestionProjetSocota.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("TypeProjetReferenceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Unite")
+                    b.Property<int>("UniteProjetId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartementProjetId");
+
                     b.HasIndex("OwnerItId");
 
+                    b.HasIndex("PlateformeProjetId");
+
                     b.HasIndex("PowerUserId");
+
+                    b.HasIndex("TypeProjetReferenceId");
+
+                    b.HasIndex("UniteProjetId");
 
                     b.ToTable("Projets");
                 });
@@ -321,6 +533,122 @@ namespace GestionProjetSocota.Migrations
                     b.ToTable("RFCs");
                 });
 
+            modelBuilder.Entity("GestionProjetSocota.Models.ReferenceCompteur", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("DernierNumero")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Prefixe")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UniteProjetId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UniteProjetId")
+                        .IsUnique();
+
+                    b.ToTable("ReferenceCompteurs");
+                });
+
+            modelBuilder.Entity("GestionProjetSocota.Models.TypeProjetReference", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Actif")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nom")
+                        .IsUnique();
+
+                    b.ToTable("TypesProjets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Actif = true,
+                            Nom = "InHouse"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Actif = true,
+                            Nom = "Outsourced"
+                        });
+                });
+
+            modelBuilder.Entity("GestionProjetSocota.Models.UniteProjet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Actif")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Prefixe")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nom")
+                        .IsUnique();
+
+                    b.ToTable("UnitesProjets");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Actif = true,
+                            Nom = "CTN",
+                            Prefixe = "CF"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Actif = true,
+                            Nom = "SGL",
+                            Prefixe = "SG"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Actif = true,
+                            Nom = "CRE",
+                            Prefixe = "CR"
+                        });
+                });
+
             modelBuilder.Entity("GestionProjetSocota.Models.Utilisateur", b =>
                 {
                     b.Property<int>("Id")
@@ -332,6 +660,9 @@ namespace GestionProjetSocota.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EstActif")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nom")
                         .IsRequired()
@@ -436,17 +767,49 @@ namespace GestionProjetSocota.Migrations
 
             modelBuilder.Entity("GestionProjetSocota.Models.Projet", b =>
                 {
+                    b.HasOne("GestionProjetSocota.Models.DepartementProjet", "DepartementProjet")
+                        .WithMany()
+                        .HasForeignKey("DepartementProjetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("GestionProjetSocota.Models.Utilisateur", "OwnerIt")
                         .WithMany()
                         .HasForeignKey("OwnerItId");
+
+                    b.HasOne("GestionProjetSocota.Models.PlateformeProjet", "PlateformeProjet")
+                        .WithMany()
+                        .HasForeignKey("PlateformeProjetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("GestionProjetSocota.Models.Utilisateur", "PowerUser")
                         .WithMany()
                         .HasForeignKey("PowerUserId");
 
+                    b.HasOne("GestionProjetSocota.Models.TypeProjetReference", "TypeProjetReference")
+                        .WithMany()
+                        .HasForeignKey("TypeProjetReferenceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GestionProjetSocota.Models.UniteProjet", "UniteProjet")
+                        .WithMany()
+                        .HasForeignKey("UniteProjetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DepartementProjet");
+
                     b.Navigation("OwnerIt");
 
+                    b.Navigation("PlateformeProjet");
+
                     b.Navigation("PowerUser");
+
+                    b.Navigation("TypeProjetReference");
+
+                    b.Navigation("UniteProjet");
                 });
 
             modelBuilder.Entity("GestionProjetSocota.Models.RFC", b =>
@@ -474,6 +837,17 @@ namespace GestionProjetSocota.Migrations
                     b.Navigation("Projet");
 
                     b.Navigation("Sponsor");
+                });
+
+            modelBuilder.Entity("GestionProjetSocota.Models.ReferenceCompteur", b =>
+                {
+                    b.HasOne("GestionProjetSocota.Models.UniteProjet", "UniteProjet")
+                        .WithMany()
+                        .HasForeignKey("UniteProjetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("UniteProjet");
                 });
 #pragma warning restore 612, 618
         }

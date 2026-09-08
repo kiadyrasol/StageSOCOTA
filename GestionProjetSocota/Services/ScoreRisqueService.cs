@@ -4,44 +4,58 @@ namespace GestionProjetSocota.Services
 {
     public class ScoreRisqueService
     {
-        public int CalculerScore(Projet projet, DateTime? dernierCommentaire)
+        public int CalculerScore(
+            Projet projet,
+            DateTime? dernierCommentaire)
         {
             int score = 0;
 
-            if (projet.Statut == StatutProjet.Closed || projet.Statut == StatutProjet.Cancelled)
+            // Projet terminé ou annulé = aucun risque
+            if (projet.Statut == StatutProjet.Closed ||
+                projet.Statut == StatutProjet.Cancelled)
             {
                 return 0;
             }
 
-            if (projet.Deadline.HasValue)
+            // Risque lié à la date de fin
+            if (projet.DateFin.HasValue)
             {
-                var joursRestants = (projet.Deadline.Value.Date - DateTime.Now.Date).Days;
+                var joursRestants =
+                    (projet.DateFin.Value.Date - DateTime.Now.Date).Days;
+
+                // Projet en retard
                 if (joursRestants < 0)
                 {
                     score += 40;
                 }
+                // Fin dans les 7 prochains jours
                 else if (joursRestants <= 7)
                 {
                     score += 20;
                 }
             }
 
+            // Priorité élevée
             if (projet.Priorite == PrioriteProjet.High)
             {
                 score += 20;
             }
 
+            // Projet suspendu
             if (projet.Statut == StatutProjet.Suspendu)
             {
                 score += 15;
             }
 
+            // Aucun Owner IT
             if (projet.OwnerItId == null)
             {
                 score += 10;
             }
 
-            if (!dernierCommentaire.HasValue || (DateTime.Now - dernierCommentaire.Value).Days > 30)
+            // Aucun commentaire récent
+            if (!dernierCommentaire.HasValue ||
+                (DateTime.Now - dernierCommentaire.Value).Days > 30)
             {
                 score += 15;
             }
@@ -51,15 +65,31 @@ namespace GestionProjetSocota.Services
 
         public string ObtenirNiveau(int score)
         {
-            if (score >= 61) return "Élevé";
-            if (score >= 31) return "Moyen";
+            if (score >= 61)
+            {
+                return "Élevé";
+            }
+
+            if (score >= 31)
+            {
+                return "Moyen";
+            }
+
             return "Faible";
         }
 
         public string ObtenirCouleur(int score)
         {
-            if (score >= 61) return "danger";
-            if (score >= 31) return "warning";
+            if (score >= 61)
+            {
+                return "danger";
+            }
+
+            if (score >= 31)
+            {
+                return "warning";
+            }
+
             return "success";
         }
     }

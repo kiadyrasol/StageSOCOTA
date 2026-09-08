@@ -8,19 +8,33 @@ a.navbar-brand {
 }
 
 a {
-  color: #0077cc;
+  color: #8BC53F;
 }
 
+/* Boutons principaux */
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #fff !important;
+  background-color: #8BC53F !important;
+  border-color: #7ab800 !important;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  color: #fff !important;
+  background-color: #7ab800 !important;
+  border-color: #6a9f00 !important;
+}
+
+/* Éléments de menu actifs (sidebar / nav-pills) */
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link,
+.sidebar .nav-link.active,
+.sidebar .active,
+.nav-link.active {
+  color: #fff !important;
+  background-color: #8BC53F !important;
+  border-color: #8BC53F !important;
 }
 
 .border-top {
@@ -47,6 +61,7 @@ button.accept-policy {
   line-height: 60px;
 }
 
+/* Mode sombre */
 body[data-bs-theme="dark"] {
     background-color: #1a1d21;
     color: #e0e0e0;
@@ -75,4 +90,15 @@ body[data-bs-theme="dark"] .form-select {
 }
 body[data-bs-theme="dark"] .text-muted {
     color: #a0a0a0 !important;
+}
+
+/* Surcharge forcée pour AdminLTE (Menu latéral) */
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active,
+.nav-sidebar .nav-link.active,
+.main-sidebar .nav-link.active,
+.sidebar .nav-link.active {
+  background-color: #8BC53F !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }

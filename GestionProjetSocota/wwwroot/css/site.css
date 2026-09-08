@@ -16,7 +16,6 @@
     border-color: var(--socota-green);
 }
 
-/* Boutons */
 .btn-socota {
     background-color: var(--socota-green);
     border-color: var(--socota-green);
@@ -40,3 +39,15 @@
     color: #fff;
 }
 
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active:hover,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active:focus {
+    background-color: #8BC53F;
+    color: #fff;
+    border-color: #8BC53F;
+}
+
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active .nav-icon,
+.main-sidebar .nav-sidebar > .nav-item > .nav-link.active p {
+    color: #fff;
+}

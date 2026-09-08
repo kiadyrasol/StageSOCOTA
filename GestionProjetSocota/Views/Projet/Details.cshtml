@@ -57,15 +57,102 @@
     </div>
 
     <div class="card-body">
+
+        <!-- UNITÉ EN PREMIER -->
+
+        <div class="mb-4 p-3 border rounded">
+            <span class="detail-label">
+                Unité
+            </span>
+
+            <span class="detail-value fs-5 fw-semibold">
+                @(Model.UniteProjet?.Nom ?? "-")
+            </span>
+        </div>
+
+
+        <!-- CLASSIFICATION -->
+
+        <div class="mb-4">
+
+            <h3 class="h6 fw-bold mb-3">
+                Classification
+            </h3>
+
+            <div class="table-responsive">
+
+                <table class="table table-sm table-bordered align-middle mb-0">
+
+                    <tbody>
+
+                        <tr>
+                            <th style="width: 25%;">
+                                Département
+                            </th>
+
+                            <td>
+                                @(Model.DepartementProjet?.Nom ?? "-")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Type
+                            </th>
+
+                            <td>
+                                @(Model.TypeProjetReference?.Nom ?? "-")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Plateforme
+                            </th>
+
+                            <td>
+                                @(Model.PlateformeProjet?.Nom ?? "-")
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>
+                                Priorité
+                            </th>
+
+                            <td>
+                                @Model.Priorite
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- AUTRES INFORMATIONS -->
+
         <div class="row g-4">
 
             <div class="col-md-4">
-                <span class="detail-label">Ticket ID</span>
-                <span class="detail-value">@Model.TicketId</span>
+                <span class="detail-label">
+                    Ticket ID
+                </span>
+
+                <span class="detail-value">
+                    @Model.TicketId
+                </span>
             </div>
 
             <div class="col-md-4">
-                <span class="detail-label">Référence</span>
+                <span class="detail-label">
+                    Référence
+                </span>
+
                 <span class="detail-value">
                     @(string.IsNullOrWhiteSpace(Model.Reference)
                         ? "-"
@@ -74,27 +161,9 @@
             </div>
 
             <div class="col-md-4">
-                <span class="detail-label">Unité</span>
-                <span class="detail-value">@Model.Unite</span>
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Département</span>
-                <span class="detail-value">@Model.Departement</span>
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Type</span>
-                <span class="detail-value">@Model.Type</span>
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Plateforme</span>
-                <span class="detail-value">@Model.Plateforme</span>
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Statut</span>
+                <span class="detail-label">
+                    Statut
+                </span>
 
                 <span class="badge badge-socota">
                     @Model.Statut
@@ -102,71 +171,119 @@
             </div>
 
             <div class="col-md-4">
-                <span class="detail-label">Owner IT</span>
+                <span class="detail-label">
+                    Owner IT
+                </span>
+
                 <span class="detail-value">
                     @(Model.OwnerIt?.Nom ?? "-")
                 </span>
             </div>
 
             <div class="col-md-4">
-                <span class="detail-label">Power User</span>
+                <span class="detail-label">
+                    Power User
+                </span>
+
                 <span class="detail-value">
                     @(Model.PowerUser?.Nom ?? "-")
                 </span>
             </div>
 
             <div class="col-md-4">
-                <span class="detail-label">Priorité</span>
-                <span class="detail-value">@Model.Priorite</span>
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Deadline</span>
-
-                @if (Model.Deadline.HasValue)
-                {
-                    <span class="detail-value">
-                        @Model.Deadline.Value.ToString("dd/MM/yyyy")
-                    </span>
-                }
-                else
-                {
-                    <span class="text-muted">Non définie</span>
-                }
-            </div>
-
-            <div class="col-md-4">
-                <span class="detail-label">Avancement</span>
+                <span class="detail-label">
+                    Avancement
+                </span>
 
                 <div class="project-progress">
                     <div class="progress">
-                        <div class="progress-bar progress-bar-socota" role="progressbar"
+
+                        <div class="progress-bar progress-bar-socota"
+                             role="progressbar"
                              style="width: @Model.PourcentageAvancement%">
+
                             @Model.PourcentageAvancement%
+
                         </div>
+
                     </div>
                 </div>
             </div>
 
+            <div class="col-md-4">
+                <span class="detail-label">
+                    Date de début
+                </span>
+
+                @if (Model.DateDebut.HasValue)
+                {
+                    <span class="detail-value">
+                        @Model.DateDebut.Value.ToString("dd/MM/yyyy")
+                    </span>
+                }
+                else
+                {
+                    <span class="text-muted">
+                        Non définie
+                    </span>
+                }
+            </div>
+
+            <div class="col-md-4">
+                <span class="detail-label">
+                    Date de fin
+                </span>
+
+                @if (Model.DateFin.HasValue)
+                {
+                    var dateFinDepassee =
+                        Model.DateFin.Value.Date < DateTime.Now.Date &&
+                        Model.Statut != StatutProjet.Closed &&
+                        Model.Statut != StatutProjet.Cancelled;
+
+                    <span class="detail-value @(dateFinDepassee ? "text-danger fw-semibold" : "")">
+                        @Model.DateFin.Value.ToString("dd/MM/yyyy")
+                    </span>
+                }
+                else
+                {
+                    <span class="text-muted">
+                        Non définie
+                    </span>
+                }
+            </div>
+
         </div>
+
 
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
             <div class="project-description mt-4">
-                <span class="detail-label">Description</span>
+
+                <span class="detail-label">
+                    Description
+                </span>
 
                 <p class="mb-0">
                     @Model.Description
                 </p>
+
             </div>
         }
 
+
         <div class="mt-4">
-            <a href="/Projet/GenererCompteRendu/@Model.Id" class="btn btn-outline-socota btn-sm">
+
+            <a href="/Projet/GenererCompteRendu/@Model.Id"
+               class="btn btn-outline-socota btn-sm">
+
                 <i class="fas fa-magic me-1"></i>
                 Générer un compte-rendu IA
+
             </a>
+
         </div>
+
     </div>
 </div>
 
@@ -174,16 +291,21 @@
 <!-- SCORE DE RISQUE -->
 
 <div class="card mb-4">
+
     <div class="card-header">
+
         <h2 class="h6 mb-0 fw-bold">
             Score de risque
         </h2>
+
     </div>
 
     <div class="card-body">
+
         <div class="risk-summary">
 
             <div>
+
                 <span class="detail-label">
                     Niveau de risque
                 </span>
@@ -191,27 +313,39 @@
                 <span class="badge @risqueClasse fs-6">
                     @scoreRisque/100 — @niveauRisque
                 </span>
+
             </div>
 
             <div class="risk-progress">
+
                 <div class="progress">
-                    <div class="progress-bar @progressRisqueClasse" role="progressbar" style="width: @scoreRisque%">
+
+                    <div class="progress-bar @progressRisqueClasse"
+                         role="progressbar"
+                         style="width: @scoreRisque%">
                     </div>
+
                 </div>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 
 <!-- RFC -->
 
 <div class="card mb-4">
+
     <div class="card-header d-flex justify-content-between align-items-center">
+
         <h2 class="h6 mb-0 fw-bold">
             RFC
         </h2>
+
     </div>
 
     <div class="card-body">
@@ -219,16 +353,21 @@
         @if (rfc == null)
         {
             <div class="empty-state">
+
                 <i class="fas fa-file-circle-question"></i>
 
                 <p class="mb-3">
                     Aucun RFC pour ce projet.
                 </p>
 
-                <a href="/RFC/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">
+                <a href="/RFC/Create?projetId=@Model.Id"
+                   class="btn btn-socota btn-sm">
+
                     <i class="fas fa-plus me-1"></i>
                     Créer un RFC
+
                 </a>
+
             </div>
         }
         else
@@ -236,21 +375,34 @@
             <div class="row g-4">
 
                 <div class="col-md-6">
-                    <span class="detail-label">Business Case</span>
+
+                    <span class="detail-label">
+                        Business Case
+                    </span>
+
                     <p class="mb-0">
                         @rfc.BusinessCase
                     </p>
+
                 </div>
 
                 <div class="col-md-3">
-                    <span class="detail-label">ROI estimé</span>
+
+                    <span class="detail-label">
+                        ROI estimé
+                    </span>
+
                     <p class="mb-0 fw-semibold">
                         @(rfc.RoiEstime?.ToString("N0") ?? "-")
                     </p>
+
                 </div>
 
                 <div class="col-md-3">
-                    <span class="detail-label">Validation</span>
+
+                    <span class="detail-label">
+                        Validation
+                    </span>
 
                     @if (rfc.EstValide)
                     {
@@ -264,20 +416,31 @@
                             En attente
                         </span>
                     }
+
                 </div>
 
                 <div class="col-md-6">
-                    <span class="detail-label">Champion</span>
+
+                    <span class="detail-label">
+                        Champion
+                    </span>
+
                     <p class="mb-0">
                         @(rfc.Champion?.Nom ?? "-")
                     </p>
+
                 </div>
 
                 <div class="col-md-6">
-                    <span class="detail-label">Sponsor</span>
+
+                    <span class="detail-label">
+                        Sponsor
+                    </span>
+
                     <p class="mb-0">
                         @(rfc.Sponsor?.Nom ?? "-")
                     </p>
+
                 </div>
 
             </div>
@@ -293,47 +456,71 @@
 
                 @if (!rfc.EstValide)
                 {
-                    <form asp-controller="RFC" asp-action="Valider" method="post">
+                    <form asp-controller="RFC"
+                          asp-action="Valider"
+                          method="post">
 
-                        <input type="hidden" name="id" value="@rfc.Id" />
+                        <input type="hidden"
+                               name="id"
+                               value="@rfc.Id" />
 
-                        <button type="submit" class="btn btn-socota btn-sm">
+                        <button type="submit"
+                                class="btn btn-socota btn-sm">
+
                             <i class="fas fa-check me-1"></i>
                             Valider ce RFC
+
                         </button>
+
                     </form>
                 }
                 else
                 {
-                    <form asp-controller="RFC" asp-action="AnnulerValidation" method="post">
+                    <form asp-controller="RFC"
+                          asp-action="AnnulerValidation"
+                          method="post">
 
-                        <input type="hidden" name="id" value="@rfc.Id" />
+                        <input type="hidden"
+                               name="id"
+                               value="@rfc.Id" />
 
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <button type="submit"
+                                class="btn btn-outline-danger btn-sm">
+
                             <i class="fas fa-rotate-left me-1"></i>
                             Annuler la validation
+
                         </button>
+
                     </form>
                 }
 
             </div>
         }
+
     </div>
+
 </div>
 
 
 <!-- ACTIONS -->
 
 <div class="card mb-4">
+
     <div class="card-header d-flex justify-content-between align-items-center">
+
         <h2 class="h6 mb-0 fw-bold">
             Actions
         </h2>
 
-        <a href="/ActionProjet/Create?projetId=@Model.Id" class="btn btn-socota btn-sm">
+        <a href="/ActionProjet/Create?projetId=@Model.Id"
+           class="btn btn-socota btn-sm">
+
             <i class="fas fa-plus me-1"></i>
             Nouvelle action
+
         </a>
+
     </div>
 
     <div class="card-body">
@@ -345,122 +532,178 @@
                 <div class="project-action">
 
                     <div class="project-action-content">
+
                         <p class="mb-1 fw-semibold">
                             @action.Description
                         </p>
 
                         <p class="text-muted small mb-0">
+
                             <i class="fas fa-user me-1"></i>
                             @(action.Responsable?.Nom ?? "-")
 
-                            <span class="mx-1">·</span>
+                            <span class="mx-1">
+                                ·
+                            </span>
 
                             <i class="fas fa-calendar me-1"></i>
                             @action.DateEcheance.ToString("dd/MM/yyyy")
+
                         </p>
+
                     </div>
 
                     <div class="project-action-status">
+
                         <span class="badge @(action.Statut == GestionProjetSocota.Models.StatutAction.Closed
-                                                                                        ? "badge-socota"
-                                                                                        : "bg-warning text-dark")">
+                            ? "badge-socota"
+                            : "bg-warning text-dark")">
+
                             @action.Statut
+
                         </span>
+
                     </div>
 
                     <div class="project-action-buttons">
 
                         @if (action.Statut != GestionProjetSocota.Models.StatutAction.Ongoing)
                         {
-                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                            <form asp-controller="ActionProjet"
+                                  asp-action="ChangerStatut"
+                                  method="post">
 
-                                <input type="hidden" name="id" value="@action.Id" />
+                                <input type="hidden"
+                                       name="id"
+                                       value="@action.Id" />
 
-                                <input type="hidden" name="nouveauStatut" value="Ongoing" />
+                                <input type="hidden"
+                                       name="nouveauStatut"
+                                       value="Ongoing" />
 
-                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                <button type="submit"
+                                        class="btn btn-outline-secondary btn-sm">
+
                                     En cours
+
                                 </button>
+
                             </form>
                         }
 
                         @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
                         {
-                            <form asp-controller="ActionProjet" asp-action="ChangerStatut" method="post">
+                            <form asp-controller="ActionProjet"
+                                  asp-action="ChangerStatut"
+                                  method="post">
 
-                                <input type="hidden" name="id" value="@action.Id" />
+                                <input type="hidden"
+                                       name="id"
+                                       value="@action.Id" />
 
-                                <input type="hidden" name="nouveauStatut" value="Closed" />
+                                <input type="hidden"
+                                       name="nouveauStatut"
+                                       value="Closed" />
 
-                                <button type="submit" class="btn btn-socota btn-sm">
+                                <button type="submit"
+                                        class="btn btn-socota btn-sm">
+
                                     Clôturer
+
                                 </button>
+
                             </form>
                         }
 
-                        <form asp-controller="ActionProjet" asp-action="Delete" method="post">
+                        <form asp-controller="ActionProjet"
+                              asp-action="Delete"
+                              method="post">
 
-                            <input type="hidden" name="id" value="@action.Id" />
+                            <input type="hidden"
+                                   name="id"
+                                   value="@action.Id" />
 
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-sm">
+
                                 Supprimer
+
                             </button>
+
                         </form>
 
                     </div>
+
                 </div>
             }
         }
         else
         {
             <div class="empty-state">
+
                 <i class="fas fa-list-check"></i>
 
                 <p class="mb-0">
                     Aucune action pour ce projet.
                 </p>
+
             </div>
         }
 
     </div>
+
 </div>
 
 
-```html
 <!-- PIÈCES JOINTES -->
 
 <div class="card mb-4">
+
     <div class="card-header">
+
         <h2 class="h6 mb-0 fw-bold">
             <i class="fas fa-paperclip me-2"></i>
             Pièces jointes
         </h2>
+
     </div>
 
     <div class="card-body">
 
-        <!-- FORMULAIRE D'IMPORT -->
-        <form asp-controller="PieceJointe" asp-action="Create" method="post" enctype="multipart/form-data"
+        <form asp-controller="PieceJointe"
+              asp-action="Create"
+              method="post"
+              enctype="multipart/form-data"
               class="attachment-form mb-4">
 
-            <input type="hidden" name="ProjetId" value="@Model.Id" />
+            <input type="hidden"
+                   name="ProjetId"
+                   value="@Model.Id" />
 
             <div>
+
                 <label class="form-label small fw-semibold">
                     Fichier
                 </label>
 
-                <input type="file" name="Fichier" class="form-control form-control-sm" />
+                <input type="file"
+                       name="Fichier"
+                       class="form-control form-control-sm" />
+
             </div>
 
             <div>
+
                 <label class="form-label small fw-semibold">
                     Type
                 </label>
 
-                <select name="Type" class="form-select form-select-sm">
+                <select name="Type"
+                        class="form-select form-select-sm">
 
-                    <option value="RFC">RFC</option>
+                    <option value="RFC">
+                        RFC
+                    </option>
 
                     <option value="MOM">
                         Compte-rendu (MOM)
@@ -483,27 +726,30 @@
                     </option>
 
                 </select>
+
             </div>
 
             <div class="attachment-submit">
-                <button type="submit" class="btn btn-socota btn-sm">
+
+                <button type="submit"
+                        class="btn btn-socota btn-sm">
 
                     <i class="fas fa-upload me-1"></i>
                     Importer
 
                 </button>
+
             </div>
 
         </form>
 
-
-        <!-- LISTE DES PIÈCES JOINTES -->
 
         @if (piecesJointes != null && piecesJointes.Any())
         {
             foreach (var pj in piecesJointes)
             {
                 <div class="attachment-item d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+
                     <div>
 
                         <div class="fw-semibold">
@@ -526,7 +772,9 @@
 
                     <div class="d-flex gap-2">
 
-                        <a asp-controller="PieceJointe" asp-action="Download" asp-route-id="@pj.Id"
+                        <a asp-controller="PieceJointe"
+                           asp-action="Download"
+                           asp-route-id="@pj.Id"
                            class="btn btn-sm btn-outline-primary">
 
                             <i class="fas fa-download me-1"></i>
@@ -534,11 +782,17 @@
 
                         </a>
 
-                        <form asp-controller="PieceJointe" asp-action="Delete" method="post" class="d-inline">
+                        <form asp-controller="PieceJointe"
+                              asp-action="Delete"
+                              method="post"
+                              class="d-inline">
 
-                            <input type="hidden" name="id" value="@pj.Id" />
+                            <input type="hidden"
+                                   name="id"
+                                   value="@pj.Id" />
 
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger">
 
                                 <i class="fas fa-trash me-1"></i>
                                 Supprimer
@@ -566,30 +820,44 @@
         }
 
     </div>
+
 </div>
 
 
 <!-- COMMENTAIRES -->
 
 <div class="card mb-4">
+
     <div class="card-header">
+
         <h2 class="h6 mb-0 fw-bold">
             Commentaires
         </h2>
+
     </div>
 
     <div class="card-body">
 
-        <form asp-controller="Commentaire" asp-action="Create" method="post" class="mb-4">
+        <form asp-controller="Commentaire"
+              asp-action="Create"
+              method="post"
+              class="mb-4">
 
-            <input type="hidden" name="ProjetId" value="@Model.Id" />
+            <input type="hidden"
+                   name="ProjetId"
+                   value="@Model.Id" />
 
-            <textarea name="Contenu" placeholder="Ajouter un commentaire..." class="form-control mb-2"
+            <textarea name="Contenu"
+                      placeholder="Ajouter un commentaire..."
+                      class="form-control mb-2"
                       rows="3"></textarea>
 
-            <button type="submit" class="btn btn-socota btn-sm">
+            <button type="submit"
+                    class="btn btn-socota btn-sm">
+
                 <i class="fas fa-paper-plane me-1"></i>
                 Publier
+
             </button>
 
         </form>
@@ -617,12 +885,19 @@
                         @commentaire.Contenu
                     </p>
 
-                    <form asp-controller="Commentaire" asp-action="Delete" method="post">
+                    <form asp-controller="Commentaire"
+                          asp-action="Delete"
+                          method="post">
 
-                        <input type="hidden" name="id" value="@commentaire.Id" />
+                        <input type="hidden"
+                               name="id"
+                               value="@commentaire.Id" />
 
-                        <button type="submit" class="btn btn-link text-danger btn-sm p-0">
+                        <button type="submit"
+                                class="btn btn-link text-danger btn-sm p-0">
+
                             Supprimer
+
                         </button>
 
                     </form>
@@ -633,25 +908,31 @@
         else
         {
             <div class="empty-state">
+
                 <i class="fas fa-comments"></i>
 
                 <p class="mb-0">
                     Aucun commentaire pour ce projet.
                 </p>
+
             </div>
         }
 
     </div>
+
 </div>
 
 
 <!-- HISTORIQUE -->
 
 <div class="card mb-4">
+
     <div class="card-header">
+
         <h2 class="h6 mb-0 fw-bold">
             Historique des modifications
         </h2>
+
     </div>
 
     <div class="card-body">
@@ -665,6 +946,7 @@
                     <div class="history-item">
 
                         <div>
+
                             <div class="fw-semibold">
                                 @item.TypeAction
                             </div>
@@ -674,13 +956,18 @@
                             </div>
 
                             <small class="text-muted">
+
                                 Par :
                                 @(item.Utilisateur?.Nom ?? "Système")
+
                             </small>
+
                         </div>
 
                         <span class="badge bg-secondary">
+
                             @item.DateAction.ToString("dd/MM/yyyy HH:mm")
+
                         </span>
 
                     </div>
@@ -691,13 +978,16 @@
         else
         {
             <div class="empty-state">
+
                 <i class="fas fa-clock-rotate-left"></i>
 
                 <p class="mb-0">
                     Aucun historique disponible.
                 </p>
+
             </div>
         }
 
     </div>
+
 </div>
