@@ -12,8 +12,7 @@ namespace GestionProjetSocota.ViewModels
         [Required]
         public string Nom { get; set; } = string.Empty;
 
-        public string Description { get; set; } = string.Empty;
-
+        public string? Description { get; set; }
         // =========================
         // CLASSIFICATION
         // =========================

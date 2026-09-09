@@ -38,7 +38,8 @@ namespace GestionProjetSocota.Services
         public List<StatutProjet> GetTransitionsPossibles(
             StatutProjet statutActuel,
             StatutProjet statutPrecedent,
-            TypeProjetReference type)
+            TypeProjetReference? type)
+
         {
             if (statutActuel == StatutProjet.Suspendu ||
                 statutActuel == StatutProjet.Cancelled)
@@ -47,6 +48,11 @@ namespace GestionProjetSocota.Services
                 {
                     statutPrecedent
                 };
+            }
+
+            if (type == null)
+            {
+                return new List<StatutProjet>();
             }
 
             var estInHouse =

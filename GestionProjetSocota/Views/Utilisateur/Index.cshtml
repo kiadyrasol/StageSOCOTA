@@ -85,24 +85,38 @@
                         <span class="badge badge-inactif">Inactif</span>
                     }
                 </td>
+
                 <td>
-                    <form asp-action="ToggleActif" method="post"
-                          onsubmit="return confirm('Voulez-vous vraiment @(utilisateur.EstActif ? "désactiver" : "réactiver") @utilisateur.Nom ?');">
-                        <input type="hidden" name="id" value="@utilisateur.Id" />
-                        @if (utilisateur.EstActif)
-                        {
-                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                <i class="fas fa-user-slash"></i> Désactiver
+                    <div class="d-flex gap-2">
+
+                        <form asp-action="ToggleActif" method="post"
+                              onsubmit="return confirm('Voulez-vous vraiment @(utilisateur.EstActif ? "désactiver" : "réactiver") @utilisateur.Nom ?');">
+                            <input type="hidden" name="id" value="@utilisateur.Id" />
+                            @if (utilisateur.EstActif)
+                            {
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-user-slash"></i> Désactiver
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-user-check"></i> Réactiver
+                                </button>
+                            }
+                        </form>
+
+                        <form asp-controller="Projet" asp-action="SupprimerUtilisateur" method="post"
+                              onsubmit="return confirm('Voulez-vous vraiment supprimer définitivement @utilisateur.Nom ? Cette action est irréversible.');">
+                            <input type="hidden" name="id" value="@utilisateur.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-trash"></i> Supprimer
                             </button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-sm btn-outline-success">
-                                <i class="fas fa-user-check"></i> Réactiver
-                            </button>
-                        }
-                    </form>
+                        </form>
+
+                    </div>
                 </td>
+
             </tr>
         }
     </tbody>

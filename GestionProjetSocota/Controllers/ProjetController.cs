@@ -428,7 +428,6 @@ namespace GestionProjetSocota.Controllers
                 "application/pdf",
                 "projets.pdf");
         }
-
         // Importer le fichier Excel
         [Authorize(Roles = "Administrateur")]
         [HttpGet]
@@ -461,6 +460,7 @@ namespace GestionProjetSocota.Controllers
 
             int nbImportes = 0;
             int nbIgnores = 0;
+            var raisonsIgnorees = new List<string>();
 
             await using var transaction =
                 await _context.Database.BeginTransactionAsync(
@@ -494,7 +494,7 @@ namespace GestionProjetSocota.Controllers
                         ligne.Cell(5).GetString().Trim();
 
                     var typeTexte =
-                        ligne.Cell(6).GetString().Trim();
+                        ligne.Cell(6).GetString().Trim().Replace(" ", "");
 
                     var plateformeTexte =
                         ligne.Cell(7).GetString().Trim();
@@ -533,6 +533,7 @@ namespace GestionProjetSocota.Controllers
 
                     if (string.IsNullOrWhiteSpace(nom))
                     {
+                        raisonsIgnorees.Add($"Ligne {ligne.RowNumber()} : nom du projet vide");
                         nbIgnores++;
                         continue;
                     }
@@ -583,9 +584,10 @@ namespace GestionProjetSocota.Controllers
 
 
                     if (dateDebut.HasValue &&
-                        dateFin.HasValue &&
-                        dateFin.Value < dateDebut.Value)
+                         dateFin.HasValue &&
+                            dateFin.Value < dateDebut.Value)
                     {
+                        raisonsIgnorees.Add($"Ligne {ligne.RowNumber()} : date de fin avant date de début");
                         nbIgnores++;
                         continue;
                     }
@@ -624,43 +626,24 @@ namespace GestionProjetSocota.Controllers
                     // CLASSIFICATIONS DYNAMIQUES
                     // ==============================
 
-                    var unite = await _context.UnitesProjets
+                    var unite = string.IsNullOrWhiteSpace(uniteTexte)
+                        ? null
+                        : await _context.UnitesProjets
                         .FirstOrDefaultAsync(u =>
-                            u.Actif &&
-                            u.Nom.ToLower() ==
-                            uniteTexte.ToLower());
+                        u.Actif &&
+                        u.Nom.ToLower() == uniteTexte.ToLower());
 
-                    var departement =
-                        await _context.DepartementsProjets
-                            .FirstOrDefaultAsync(d =>
-                                d.Actif &&
-                                d.Nom.ToLower() ==
-                                departementTexte.ToLower());
+                    var departement = string.IsNullOrWhiteSpace(departementTexte)
+                        ? null
+                        : await ObtenirOuCreerDepartement(departementTexte);
 
-                    var typeProjet =
-                        await _context.TypesProjets
-                            .FirstOrDefaultAsync(t =>
-                                t.Actif &&
-                                t.Nom.ToLower() ==
-                                typeTexte.ToLower());
+                    var typeProjet = string.IsNullOrWhiteSpace(typeTexte)
+                        ? null
+                        : await ObtenirOuCreerTypeProjet(typeTexte);
 
-                    var plateforme =
-                        await _context.PlateformesProjets
-                            .FirstOrDefaultAsync(p =>
-                                p.Actif &&
-                                p.Nom.ToLower() ==
-                                plateformeTexte.ToLower());
-
-
-                    if (unite == null ||
-                        departement == null ||
-                        typeProjet == null ||
-                        plateforme == null)
-                    {
-                        nbIgnores++;
-                        continue;
-                    }
-
+                    var plateforme = string.IsNullOrWhiteSpace(plateformeTexte)
+                        ? null
+                        : await ObtenirOuCreerPlateforme(plateformeTexte);
 
                     // ==============================
                     // STATUT
@@ -714,31 +697,35 @@ namespace GestionProjetSocota.Controllers
                     // COMPTEUR
                     // ==============================
 
-                    var compteur =
-                        await _context.ReferenceCompteurs
-                            .FirstOrDefaultAsync(
-                                r => r.UniteProjetId == unite.Id);
+                    string? referenceGeneree = null;
 
-                    if (compteur == null)
+                    if (unite != null)
                     {
-                        compteur = new ReferenceCompteur
+                        var compteur =
+                            await _context.ReferenceCompteurs
+                                .FirstOrDefaultAsync(
+                                    r => r.UniteProjetId == unite.Id);
+
+                        if (compteur == null)
                         {
-                            UniteProjetId = unite.Id,
-                            Prefixe = unite.Prefixe,
-                            DernierNumero = 0
-                        };
+                            compteur = new ReferenceCompteur
+                            {
+                                UniteProjetId = unite.Id,
+                                Prefixe = unite.Prefixe,
+                                DernierNumero = 0
+                            };
 
-                        _context.ReferenceCompteurs.Add(
-                            compteur);
+                            _context.ReferenceCompteurs.Add(
+                                compteur);
 
-                        await _context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
+                        }
+
+                        compteur.DernierNumero++;
+
+                        referenceGeneree =
+                            $"{compteur.Prefixe}-{compteur.DernierNumero}";
                     }
-
-                    compteur.DernierNumero++;
-
-                    var referenceGeneree =
-                        $"{compteur.Prefixe}-{compteur.DernierNumero}";
-
 
                     // ==============================
                     // PROJET
@@ -752,7 +739,7 @@ namespace GestionProjetSocota.Controllers
                                 : ticketId,
 
                         Reference =
-                            referenceGeneree,
+                            referenceGeneree ?? string.Empty,
 
                         Nom =
                             nom,
@@ -761,16 +748,16 @@ namespace GestionProjetSocota.Controllers
                             string.Empty,
 
                         UniteProjetId =
-                            unite.Id,
+                            unite?.Id,
 
                         DepartementProjetId =
-                            departement.Id,
+                            departement?.Id,
 
                         TypeProjetReferenceId =
-                            typeProjet.Id,
+                            typeProjet?.Id,
 
                         PlateformeProjetId =
-                            plateforme.Id,
+                            plateforme?.Id,
 
                         Priorite =
                             priorite,
@@ -833,9 +820,12 @@ namespace GestionProjetSocota.Controllers
 
 
                 TempData["Succes"] =
-                    $"{nbImportes} projet(s) importé(s) avec succès. " +
-                    $"{nbIgnores} ligne(s) ignorée(s) " +
-                    "(données incomplètes, classifications inexistantes ou dates invalides).";
+                $"{nbImportes} projet(s) importé(s) avec succès. " +
+                $"{nbIgnores} ligne(s) ignorée(s).";
+
+                TempData["Erreur"] = string.Join(
+                    " | ",
+                    raisonsIgnorees.Take(10));
 
                 return RedirectToAction("Index");
             }
@@ -850,6 +840,7 @@ namespace GestionProjetSocota.Controllers
                 return RedirectToAction("ImporterExcel");
             }
         }
+
         private async Task<Utilisateur?> ObtenirOuCreerUtilisateur(
       string nom)
         {
@@ -887,6 +878,103 @@ namespace GestionProjetSocota.Controllers
             }
 
             return utilisateur;
+        }
+
+        private async Task<UniteProjet> ObtenirOuCreerUnite(string nom)
+        {
+            var unite = await _context.UnitesProjets
+                .FirstOrDefaultAsync(u =>
+                    u.Actif &&
+                    u.Nom.ToLower() == nom.ToLower());
+
+            if (unite == null)
+            {
+                var prefixe = nom.Length >= 2
+                    ? nom.Substring(0, 2).ToUpper()
+                    : nom.ToUpper();
+
+                unite = new UniteProjet
+                {
+                    Nom = nom,
+                    Prefixe = prefixe,
+                    Actif = true
+                };
+
+                _context.UnitesProjets.Add(unite);
+
+                await _context.SaveChangesAsync();
+            }
+
+            return unite;
+        }
+
+        private async Task<DepartementProjet> ObtenirOuCreerDepartement(string nom)
+        {
+            var departement = await _context.DepartementsProjets
+                .FirstOrDefaultAsync(d =>
+                    d.Actif &&
+                    d.Nom.ToLower() == nom.ToLower());
+
+            if (departement == null)
+            {
+                departement = new DepartementProjet
+                {
+                    Nom = nom,
+                    Actif = true
+                };
+
+                _context.DepartementsProjets.Add(departement);
+
+                await _context.SaveChangesAsync();
+            }
+
+            return departement;
+        }
+
+        private async Task<TypeProjetReference> ObtenirOuCreerTypeProjet(string nom)
+        {
+            var typeProjet = await _context.TypesProjets
+                .FirstOrDefaultAsync(t =>
+                    t.Actif &&
+                    t.Nom.ToLower() == nom.ToLower());
+
+            if (typeProjet == null)
+            {
+                typeProjet = new TypeProjetReference
+                {
+                    Nom = nom,
+                    Actif = true
+                };
+
+                _context.TypesProjets.Add(typeProjet);
+
+                await _context.SaveChangesAsync();
+            }
+
+            return typeProjet;
+        }
+
+        private async Task<PlateformeProjet> ObtenirOuCreerPlateforme(string nom)
+        {
+            var plateforme = await _context.PlateformesProjets
+                .FirstOrDefaultAsync(p =>
+                    p.Actif &&
+                    p.Nom.ToLower() == nom.ToLower());
+
+            if (plateforme == null)
+            {
+                plateforme = new PlateformeProjet
+                {
+                    Nom = nom,
+                    Actif = true
+                };
+
+                _context.PlateformesProjets.Add(plateforme);
+
+                await _context.SaveChangesAsync();
+            }
+
+            return plateforme;
         }
 
         // Kanban
@@ -1422,6 +1510,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             return View();
         }
 
+
         // Create
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpGet]
@@ -1642,10 +1731,6 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
                 await _context.SaveChangesAsync();
 
-                _context.Projets.Add(projet);
-
-                await _context.SaveChangesAsync();
-
                 if (projet.PowerUserId.HasValue)
                 {
                     await _notificationService.CreerNotificationAsync(
@@ -1656,8 +1741,6 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                         "Merci de le valider pour permettre le démarrage du développement."
                     );
                 }
-
-                // Utilisateur ayant créé le projet
 
                 // Utilisateur ayant créé le projet
                 var nomAD = User.Identity?.Name;
@@ -1690,12 +1773,13 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
                 return RedirectToAction("Index");
             }
-            catch
+                        catch (Exception ex)
             {
                 await transaction.RollbackAsync();
 
                 TempData["Erreur"] =
-                    "Une erreur est survenue lors de la création du projet.";
+                    "ERREUR DEBUG : " + ex.Message +
+                    " | INNER: " + (ex.InnerException?.Message ?? "aucune");
 
                 return RedirectToAction("Create");
             }
@@ -2216,10 +2300,10 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
                 Nom = projet.Nom,
                 Description = projet.Description,
 
-                UniteProjetId = projet.UniteProjetId,
-                DepartementProjetId = projet.DepartementProjetId,
-                TypeProjetReferenceId = projet.TypeProjetReferenceId,
-                PlateformeProjetId = projet.PlateformeProjetId,
+                UniteProjetId = projet.UniteProjetId ?? 0,
+                DepartementProjetId = projet.DepartementProjetId ?? 0,
+                TypeProjetReferenceId = projet.TypeProjetReferenceId ?? 0,
+                PlateformeProjetId = projet.PlateformeProjetId ?? 0,
 
                 Statut = projet.Statut,
                 Priorite = projet.Priorite,
@@ -2719,10 +2803,15 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             var projet = await _context.Projets
                 .Include(p => p.TypeProjetReference)
                 .FirstOrDefaultAsync(p => p.Id == id);
-
             if (projet == null)
             {
                 return NotFound();
+            }
+
+            if (projet.TypeProjetReference == null)
+            {
+                TempData["Erreur"] =
+                    "Ce projet n'a pas de Type défini. Modifiez-le pour en assigner un avant de changer son statut.";
             }
 
             ViewBag.TransitionsPossibles =
@@ -2733,7 +2822,6 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
             return View(projet);
         }
-
 
         [Authorize(Roles = "Administrateur,ChefDeProjet")]
         [HttpPost]
@@ -2749,6 +2837,16 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
             if (projet == null)
             {
                 return NotFound();
+            }
+
+            if (projet.TypeProjetReference == null)
+            {
+                TempData["Erreur"] =
+                    "Ce projet n'a pas de Type défini. Modifiez-le pour en assigner un avant de changer son statut.";
+
+                return RedirectToAction(
+                    "ChangerStatut",
+                    new { id });
             }
 
             var transitionsAutorisees =
@@ -2892,7 +2990,7 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
         }
 
 
-        [Authorize(Roles = "Administrateur")]
+               [Authorize(Roles = "Administrateur")]
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -2901,6 +2999,12 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
             if (projet != null)
             {
+                var notifications = await _context.Notifications
+                    .Where(n => n.ProjetId == id)
+                    .ToListAsync();
+
+                _context.Notifications.RemoveRange(notifications);
+
                 _context.Projets.Remove(projet);
 
                 await _context.SaveChangesAsync();
@@ -2911,5 +3015,6 @@ Structure attendue : un paragraphe de résumé de la situation, suivi des points
 
             return RedirectToAction("Index");
         }
+        
     }
 }

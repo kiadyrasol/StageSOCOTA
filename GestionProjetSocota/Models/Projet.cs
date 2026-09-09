@@ -47,24 +47,24 @@ namespace GestionProjetSocota.Models
         // CLASSIFICATION 
         // =========================================================
 
-        public int UniteProjetId { get; set; }
+        public int? UniteProjetId { get; set; }
 
-        public UniteProjet UniteProjet { get; set; } = null!;
-
-
-        public int DepartementProjetId { get; set; }
-
-        public DepartementProjet DepartementProjet { get; set; } = null!;
+        public UniteProjet? UniteProjet { get; set; }
 
 
-        public int TypeProjetReferenceId { get; set; }
+        public int? DepartementProjetId { get; set; }
 
-        public TypeProjetReference TypeProjetReference { get; set; } = null!;
+        public DepartementProjet? DepartementProjet { get; set; }
 
 
-        public int PlateformeProjetId { get; set; }
+        public int? TypeProjetReferenceId { get; set; }
 
-        public PlateformeProjet PlateformeProjet { get; set; } = null!;
+        public TypeProjetReference? TypeProjetReference { get; set; }
+
+
+        public int? PlateformeProjetId { get; set; }
+        
+        public PlateformeProjet? PlateformeProjet { get; set; }
 
 
         // =========================================================
