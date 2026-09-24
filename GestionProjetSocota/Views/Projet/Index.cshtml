@@ -1645,14 +1645,15 @@
                                             : (score: 0, couleur: "success");
 
                                     var pourcentage =
-                                        Math.Clamp(projet.PourcentageAvancement, 0, 100);
+    Math.Clamp(projet.PourcentageAvancement, 0, 100);
 
                                     var deadlineDepassee =
+                                        pourcentage < 100 &&
                                         projet.Deadline.HasValue &&
                                         projet.Deadline.Value.Date < DateTime.Today &&
                                         projet.Statut != GestionProjetSocota.Models.StatutProjet.Closed &&
                                         projet.Statut != GestionProjetSocota.Models.StatutProjet.Cancelled;
-
+                                        
                                     var ownerInitiales =
                                         string.IsNullOrWhiteSpace(projet.OwnerIt?.Nom)
                                             ? "-"
