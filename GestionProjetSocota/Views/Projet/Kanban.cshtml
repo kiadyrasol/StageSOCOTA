@@ -16,14 +16,25 @@
     }
 
     .kanban-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 4px;
+        color: var(--socota-green-dark);
     }
 
     .kanban-subtitle {
         color: var(--kanban-muted);
         font-size: 0.9rem;
-        margin-bottom: 20px;
+        margin-bottom: 0;
+    }
+
+    .kanban-total {
+        background-color: rgba(139, 197, 63, 0.15);
+        color: var(--socota-green-dark);
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 5px 14px;
+        border-radius: 999px;
+        white-space: nowrap;
     }
 
     .kanban-container {
@@ -39,9 +50,15 @@
         min-width: 285px;
         background-color: var(--kanban-bg);
         border: 1px solid var(--kanban-border);
-        border-radius: 10px;
+        border-radius: 1rem;
         overflow: hidden;
         flex-shrink: 0;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+        transition: box-shadow 0.2s ease;
+    }
+
+    .kanban-column:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
     }
 
     .kanban-header {
@@ -51,7 +68,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.9rem;
     }
 
@@ -96,7 +113,7 @@
     }
 
     .status-default {
-        background-color: var(--socota-green);
+        background-color: var(--socota-green-dark);
     }
 
     .kanban-body {
@@ -111,11 +128,11 @@
         text-decoration: none;
         border: 1px solid var(--kanban-border);
         border-left: 4px solid var(--socota-green);
-        border-radius: 8px;
+        border-radius: 0.8rem;
         padding: 13px;
         margin-bottom: 10px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .kanban-card:last-child {
@@ -125,13 +142,18 @@
     .kanban-card:hover {
         color: var(--kanban-text);
         text-decoration: none;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
         border-color: var(--socota-green);
-        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.10);
+        box-shadow: 0 8px 18px rgba(139, 197, 63, 0.18);
+    }
+
+    .kanban-card:focus-visible {
+        outline: 2px solid var(--socota-green);
+        outline-offset: 2px;
     }
 
     .kanban-card-title {
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.9rem;
         line-height: 1.35;
         margin-bottom: 10px;
@@ -149,12 +171,26 @@
     .kanban-card-info i {
         width: 15px;
         text-align: center;
-        color: var(--socota-green);
+        color: var(--socota-green-dark);
+    }
+
+    .kanban-progress-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--kanban-muted);
+        font-size: 0.72rem;
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+
+    .kanban-progress-label strong {
+        color: var(--socota-green-dark);
+        font-weight: 700;
     }
 
     .kanban-progress {
         height: 5px;
-        margin-top: 10px;
         background-color: #e9ecef;
         border-radius: 10px;
         overflow: hidden;
@@ -164,6 +200,7 @@
         height: 100%;
         background-color: var(--socota-green);
         border-radius: 10px;
+        transition: width 0.3s ease;
     }
 
     .kanban-empty {
@@ -204,6 +241,7 @@
     body[data-bs-theme="dark"] .kanban-column {
         background-color: var(--kanban-bg);
         border-color: var(--kanban-border);
+        box-shadow: none;
     }
 
     body[data-bs-theme="dark"] .kanban-card {
@@ -220,7 +258,7 @@
 </style>
 
 
-<div class="d-flex justify-content-between align-items-start mb-3">
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
 
     <div>
         <h1 class="h3 kanban-title">
@@ -231,6 +269,11 @@
             Suivi des projets par étape
         </p>
     </div>
+
+    <span class="kanban-total">
+        <i class="fas fa-diagram-project me-1"></i>
+        @Model.Count projet(s)
+    </span>
 
 </div>
 
@@ -314,7 +357,8 @@
                     @foreach (var projet in projetsDuStatut)
                     {
                         <a href="/Projet/Details/@projet.Id"
-                           class="kanban-card">
+                           class="kanban-card"
+                           title="@projet.Nom">
 
                             <div class="kanban-card-title">
                                 @projet.Nom
@@ -333,10 +377,17 @@
                             </div>
 
                             <div class="kanban-card-info">
-                                <i class="fas fa-chart-line"></i>
+                                <i class="fas fa-calendar-alt"></i>
                                 <span>
-                                    @projet.PourcentageAvancement%
+                                    @(projet.DateFin.HasValue
+                                        ? projet.DateFin.Value.ToString("dd/MM/yyyy")
+                                        : "Non définie")
                                 </span>
+                            </div>
+
+                            <div class="kanban-progress-label">
+                                <span>Avancement</span>
+                                <strong>@projet.PourcentageAvancement%</strong>
                             </div>
 
                             <div class="kanban-progress">

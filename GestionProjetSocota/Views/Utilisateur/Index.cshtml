@@ -1,41 +1,133 @@
 @model List<GestionProjetSocota.Models.Utilisateur>
 
 <style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
     .utilisateur-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.25rem;
+        color: var(--socota-green-dark);
     }
 
     .utilisateur-subtitle {
         color: #6c757d;
         font-size: 0.9rem;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
     }
 
     .badge-actif {
-        background-color: #8BC53F;
+        background-color: var(--socota-green);
+        border-radius: 30px;
+        padding: 0.35rem 0.75rem;
+        font-weight: 600;
     }
 
     .badge-inactif {
         background-color: #6c757d;
+        border-radius: 30px;
+        padding: 0.35rem 0.75rem;
+        font-weight: 600;
+    }
+
+    /* Pastille compteur d'utilisateurs */
+    .utilisateur-count {
+        background-color: rgba(139, 197, 63, 0.15);
+        color: var(--socota-green-dark);
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 4px 13px;
+        border-radius: 999px;
+    }
+
+    /* Avatar initiales */
+    .utilisateur-avatar {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #eef8de, #d7edb2);
+        color: var(--socota-green-dark);
+        font-weight: 700;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    /* Badge de rôle neutre */
+    .badge-role {
+        background-color: #6c757d;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .table thead th {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6c757d;
+        border-bottom-width: 1px;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f9ee;
+    }
+
+    .utilisateur-empty {
+        border: 1px dashed #dee2e6;
+        border-radius: 1rem;
+        padding: 40px 16px;
+        text-align: center;
+    }
+
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-group .form-control:focus {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
+    }
+
+    .btn-outline-danger,
+    .btn-outline-success,
+    .btn-outline-secondary {
+        border-radius: 0.6rem;
+    }
+
+    body[data-bs-theme="dark"] .table tbody tr:hover {
+        background-color: #333d31;
+    }
+
+    body[data-bs-theme="dark"] .card {
+        box-shadow: none;
+        border: 1px solid #3a3f44;
     }
 </style>
 
-<div class="mb-4">
-    <h1 class="h3 utilisateur-title">Gestion des utilisateurs</h1>
-    <p class="utilisateur-subtitle mb-0">
-        Un utilisateur inactif ne peut plus être sélectionné comme Owner IT ou Power User sur un projet.
-    </p>
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-1">
+    <h1 class="h3 utilisateur-title mb-0">Gestion des utilisateurs</h1>
+    <span class="utilisateur-count">
+        <i class="fas fa-users me-1"></i>
+        @Model.Count utilisateur(s)
+    </span>
 </div>
+<p class="utilisateur-subtitle mb-4">
+    Un utilisateur inactif ne peut plus être sélectionné comme Owner IT ou Power User sur un projet.
+</p>
 
 <form method="get" class="mb-3" style="max-width: 350px;">
     <div class="input-group">
-        <input type="text" name="recherche" value="@ViewBag.RechercheActuelle" class="form-control"
+        <span class="input-group-text bg-white border-end-0">
+            <i class="fas fa-search text-muted"></i>
+        </span>
+        <input type="text" name="recherche" value="@ViewBag.RechercheActuelle" class="form-control border-start-0 ps-0"
                placeholder="Rechercher un utilisateur par nom..." />
-
-        <button type="submit" class="btn btn-outline-secondary">
-            <i class="fas fa-search"></i>
-        </button>
 
         @if (!string.IsNullOrWhiteSpace((string)ViewBag.RechercheActuelle))
         {
@@ -48,76 +140,105 @@
 
 @if (TempData["Succes"] != null)
 {
-    <div class="alert alert-success">@TempData["Succes"]</div>
+    <div class="alert alert-success d-flex align-items-center gap-2">
+        <i class="fas fa-check-circle"></i>
+        <span>@TempData["Succes"]</span>
+    </div>
 }
 
 @if (TempData["Erreur"] != null)
 {
-    <div class="alert alert-danger">@TempData["Erreur"]</div>
+    <div class="alert alert-danger d-flex align-items-center gap-2">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>@TempData["Erreur"]</span>
+    </div>
 }
 
-<table class="table table-hover align-middle">
-    <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Nom AD</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var utilisateur in Model)
-        {
-            <tr>
-                <td>@utilisateur.Nom</td>
-                <td>@utilisateur.NomADUtilisateur</td>
-                <td>@utilisateur.Email</td>
-                <td>@utilisateur.Role</td>
-                <td>
-                    @if (utilisateur.EstActif)
+@if (!Model.Any())
+{
+    <div class="utilisateur-empty">
+        <i class="fas fa-user-slash text-muted fs-3 mb-2 d-block"></i>
+        <p class="text-muted mb-0">Aucun utilisateur trouvé</p>
+    </div>
+}
+else
+{
+    <div class="card border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Nom AD</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var utilisateur in Model)
                     {
-                        <span class="badge badge-actif">Actif</span>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="utilisateur-avatar">
+                                        @(string.IsNullOrEmpty(utilisateur.Nom) ? "?" : utilisateur.Nom.Trim().Substring(0, 1).ToUpper())
+                                    </span>
+                                    <span class="fw-semibold">@utilisateur.Nom</span>
+                                </div>
+                            </td>
+                            <td class="text-muted">@utilisateur.NomADUtilisateur</td>
+                            <td class="text-muted">@utilisateur.Email</td>
+                            <td>
+                                <span class="badge badge-role">@utilisateur.Role</span>
+                            </td>
+                            <td>
+                                @if (utilisateur.EstActif)
+                                {
+                                    <span class="badge badge-actif">Actif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-inactif">Inactif</span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2 justify-content-end">
+
+                                    <form asp-action="ToggleActif" method="post"
+                                          onsubmit="return confirm('Voulez-vous vraiment @(utilisateur.EstActif ? "désactiver" : "réactiver") @utilisateur.Nom ?');">
+                                        <input type="hidden" name="id" value="@utilisateur.Id" />
+                                        @if (utilisateur.EstActif)
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-user-slash"></i> Désactiver
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-user-check"></i> Réactiver
+                                            </button>
+                                        }
+                                    </form>
+
+                                    <form asp-controller="Projet" asp-action="SupprimerUtilisateur" method="post"
+                                          onsubmit="return confirm('Voulez-vous vraiment supprimer définitivement @utilisateur.Nom ? Cette action est irréversible.');">
+                                        <input type="hidden" name="id" value="@utilisateur.Id" />
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-trash"></i> Supprimer
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
                     }
-                    else
-                    {
-                        <span class="badge badge-inactif">Inactif</span>
-                    }
-                </td>
-
-                <td>
-                    <div class="d-flex gap-2">
-
-                        <form asp-action="ToggleActif" method="post"
-                              onsubmit="return confirm('Voulez-vous vraiment @(utilisateur.EstActif ? "désactiver" : "réactiver") @utilisateur.Nom ?');">
-                            <input type="hidden" name="id" value="@utilisateur.Id" />
-                            @if (utilisateur.EstActif)
-                            {
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    <i class="fas fa-user-slash"></i> Désactiver
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="submit" class="btn btn-sm btn-outline-success">
-                                    <i class="fas fa-user-check"></i> Réactiver
-                                </button>
-                            }
-                        </form>
-
-                        <form asp-controller="Projet" asp-action="SupprimerUtilisateur" method="post"
-                              onsubmit="return confirm('Voulez-vous vraiment supprimer définitivement @utilisateur.Nom ? Cette action est irréversible.');">
-                            <input type="hidden" name="id" value="@utilisateur.Id" />
-                            <button type="submit" class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                        </form>
-
-                    </div>
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

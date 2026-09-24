@@ -2,342 +2,1414 @@
 <html lang="fr">
 
 <head>
+
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - GestionProjetSocota</title>
+    <title>
+        @ViewData["Title"] - GestionProjetSocota
+    </title>
 
     <link rel="icon" type="image/png" href="~/Logo/logosocota.ico" />
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap"
+    rel="stylesheet">
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
 
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@fortawesome/fontawesome-free@6.5.1/css/all.min.css" />
 
+    <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
 
+
     <style>
+            /* =========================================================
+                   VARIABLES
+                   ========================================================= */
+
             :root {
+
                 --socota-green: #8BC53F;
                 --socota-green-dark: #70A130;
+                --socota-green-light: #a7d866;
+                --socota-green-glow: rgba(139, 197, 63, 0.35);
+
+                --socota-black: #101417;
+                --socota-dark: #151a1e;
+                --socota-dark-2: #1b2126;
+                --socota-dark-3: #22292f;
 
                 --light-bg: #f4f6f9;
-                --dark-bg: #1a1d21;
-                --dark-card: #2b2f33;
-                --dark-border: #3a3f44;
-                --dark-header: #33383d;
 
-                --transition: 0.2s ease;
-                --radius: 8px;
+                --dark-bg: #111518;
+                --dark-card: #1c2227;
+                --dark-border: #30373d;
+                --dark-header: #20272d;
+
+                --text-dark: #1d2429;
+                --text-muted: #7b858d;
+
+                --sidebar-width: 258px;
+                --sidebar-collapsed-width: 4.6rem;
+
+                --header-height: 60px;
+                --footer-height: 32px;
+
+                --radius: 12px;
+                --radius-sm: 8px;
+
+                --transition-fast: 0.18s cubic-bezier(.4, 0, .2, 1);
+                --transition: 0.28s cubic-bezier(.4, 0, .2, 1);
             }
 
+
+            /* =========================================================
+                   BASE
+                   ========================================================= */
+
+            * {
+                font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            }
 
             body {
                 background-color: var(--light-bg);
-            }
 
-
-            /* =========================================================
-                                               BRAND
-                                               ========================================================= */
-
-            .brand-link {
-                background-color: var(--socota-green);
-                border-bottom: 0;
-            }
-
-            .brand-link:hover {
-                background-color: var(--socota-green-dark);
-            }
-
-
-            /* =========================================================
-                                               HEADER
-                                               ========================================================= */
-
-            .main-header.navbar {
-                background-color: var(--socota-green);
-                border-bottom: 0;
-            }
-
-            .main-header .nav-link {
-                color: #fff;
-            }
-
-            .main-header .nav-link:hover {
-                color: #fff;
-                opacity: 0.85;
-            }
-
-
-            /* =========================================================
-                                               SIDEBAR
-                                               ========================================================= */
-
-            .nav-sidebar .nav-link {
                 transition:
                     background-color var(--transition),
-                    color var(--transition),
+                    color var(--transition);
+            }
+
+            ::selection {
+                background: var(--socota-green);
+                color: #fff;
+            }
+
+
+            /* =========================================================
+                   SIDEBAR
+                   ========================================================= */
+
+            .main-sidebar {
+
+                width:
+                    var(--sidebar-width) !important;
+
+                z-index: 1040 !important;
+
+                background:
+                    linear-gradient(180deg,
+                        #14191d 0%,
+                        #0d1114 100%) !important;
+
+                box-shadow:
+                    4px 0 24px rgba(0, 0, 0, 0.18);
+
+                border-right: 1px solid rgba(139, 197, 63, 0.08);
+            }
+
+
+            /* =========================================================
+                   LOGO + SOCOTA PMO
+                   ========================================================= */
+
+            .brand-link {
+
+                height: 76px !important;
+
+                padding: 8px 14px !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                background:
+                    linear-gradient(135deg,
+                        #0e1215 0%,
+                        #191f24 100%) !important;
+
+                border-bottom:
+                    1px solid rgba(139, 197, 63, 0.14) !important;
+
+                position: relative;
+
+                overflow: hidden;
+
+                transition:
+                    background var(--transition),
+                    padding var(--transition);
+            }
+
+            .brand-link::after {
+                content: "";
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 40%;
+                height: 2px;
+                background: linear-gradient(90deg, var(--socota-green), transparent);
+            }
+
+
+            .brand-link:hover {
+
+                background:
+                    linear-gradient(135deg,
+                        #12171b 0%,
+                        #1f262c 100%) !important;
+            }
+
+
+            /* =========================================================
+           BOITE LOGO — mise en valeur, sans contour
+           ========================================================= */
+
+            .brand-logo-box {
+
+                width: 60px;
+
+                height: 60px;
+
+                min-width: 60px;
+
+                min-height: 60px;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                background: transparent;
+
+                border: none;
+
+                border-radius: 0;
+
+                padding: 0;
+
+                box-shadow: none;
+
+                filter: drop-shadow(0 4px 14px rgba(139, 197, 63, 0.45));
+
+                transition: filter var(--transition), transform var(--transition);
+            }
+
+            .brand-link:hover .brand-logo-box {
+                filter: drop-shadow(0 6px 20px rgba(139, 197, 63, 0.65));
+                transform: scale(1.04);
+            }
+
+
+            /* =========================================================
+           IMAGE ICO
+           ========================================================= */
+
+            .brand-logo-box img {
+
+                width: 100% !important;
+
+                height: 100% !important;
+
+                max-width: none !important;
+
+                max-height: none !important;
+
+                object-fit: contain;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                float: none !important;
+
+                opacity: 1 !important;
+
+                filter: none !important;
+
+                background: transparent !important;
+
+                border-radius: 0;
+            }
+
+            /* =========================================================
+                   TITRE SOCOTA PMO
+                   ========================================================= */
+
+            .brand-title {
+
+                margin-left: 13px;
+
+                color: #ffffff !important;
+
+                font-size: 1.08rem;
+
+                font-weight: 800 !important;
+
+                letter-spacing: 0.2px;
+
+                line-height: 1.15;
+
+                white-space: nowrap;
+
+                transition:
+                    opacity var(--transition),
                     transform var(--transition);
             }
 
 
-            /* MENU ACTIF */
+            /* =========================================================
+                   SOUS-TITRE
+                   ========================================================= */
+
+            .brand-subtitle {
+
+                display: flex;
+                align-items: center;
+                gap: 5px;
+
+                margin-top: 4px;
+
+                color: #7f8c92;
+
+                font-size: 0.62rem;
+
+                font-weight: 600;
+
+                letter-spacing: 1.4px;
+
+                text-transform: uppercase;
+            }
+
+            .brand-subtitle::before {
+                content: "";
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--socota-green);
+                box-shadow: 0 0 6px var(--socota-green);
+                flex-shrink: 0;
+            }
+
+
+            /* =========================================================
+                   MENU SIDEBAR
+                   ========================================================= */
+
+            .nav-sidebar {
+
+                padding-top: 14px;
+            }
+
+            .nav-sidebar-label {
+                padding: 4px 20px;
+                margin: 10px 0 4px;
+                font-size: 0.64rem;
+                font-weight: 700;
+                letter-spacing: 1.4px;
+                text-transform: uppercase;
+                color: #4d565c;
+            }
+
+
+            .nav-sidebar .nav-item {
+
+                margin-bottom: 3px;
+
+                padding: 0 10px;
+            }
+
+
+            .nav-sidebar .nav-link {
+
+                margin:
+                    1px 0;
+
+                padding:
+                    10px 12px !important;
+
+                border-radius:
+                    var(--radius-sm);
+
+                color:
+                    #c4cbcf;
+
+                font-weight: 500;
+
+                font-size: 0.87rem;
+
+                position: relative;
+
+                transition:
+                    background-color var(--transition-fast),
+                    color var(--transition-fast),
+                    transform var(--transition-fast);
+            }
+
+
+            .nav-sidebar .nav-link .nav-icon {
+
+                color:
+                    #8b959b;
+
+                font-size:
+                    0.92rem;
+
+                margin-right:
+                    10px;
+
+                width: 18px;
+
+                text-align: center;
+
+                transition: color var(--transition-fast);
+            }
+
+
+            /* =========================================================
+                   MENU ACTIF
+                   ========================================================= */
 
             .nav-sidebar .nav-link.active,
             .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
             .sidebar-dark-success .nav-sidebar>.nav-item>.nav-link.active {
-                background-color: #8BC53F !important;
-                color: #fff !important;
-                font-weight: 600;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+                background:
+                    linear-gradient(90deg,
+                        var(--socota-green),
+                        var(--socota-green-dark)) !important;
+
+                color:
+                    #ffffff !important;
+
+                font-weight:
+                    700;
+
+                box-shadow:
+                    0 4px 14px var(--socota-green-glow);
             }
+
 
             .nav-sidebar .nav-link.active .nav-icon {
-                color: #fff;
+
+                color:
+                    #ffffff !important;
             }
 
-
-            /* Petit effet au survol */
-
-            .nav-sidebar .nav-link:not(.active):hover {
-                background-color: rgba(139, 197, 63, 0.15);
-                color: var(--socota-green);
-            }
-
-
-            /* Le menu actif reste vert même avec la souris dessus */
-
-            .nav-sidebar .nav-link.active:hover {
-                background-color: var(--socota-green);
-                color: #fff;
+            .nav-sidebar .nav-link.active::before {
+                content: "";
+                position: absolute;
+                left: -10px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 3px;
+                height: 60%;
+                background: #fff;
+                border-radius: 0 3px 3px 0;
             }
 
 
             /* =========================================================
-                                               AUTRES STYLES
-                                               ========================================================= */
+                   SURVOL
+                   ========================================================= */
 
-            .bg-socota {
-                background-color: var(--socota-green);
-                color: #fff;
+            .nav-sidebar .nav-link:not(.active):hover {
+
+                background:
+                    rgba(139, 197, 63, 0.10);
+
+                color:
+                    var(--socota-green);
+
+                transform:
+                    translateX(3px);
             }
 
-            .text-socota {
-                color: var(--socota-green);
+
+            .nav-sidebar .nav-link:not(.active):hover .nav-icon {
+
+                color:
+                    var(--socota-green);
             }
 
-            .border-socota {
-                border-color: var(--socota-green);
+
+            /* =========================================================
+                   MENU ACTIF AU SURVOL
+                   ========================================================= */
+
+            .nav-sidebar .nav-link.active:hover {
+
+                background:
+                    linear-gradient(90deg,
+                        var(--socota-green),
+                        var(--socota-green-dark)) !important;
+
+                color:
+                    #ffffff !important;
+
+                transform:
+                    none;
             }
 
 
-            .btn-socota {
-                background-color: var(--socota-green);
-                border-color: var(--socota-green);
-                color: #fff;
+            /* =========================================================
+                   HEADER
+                   ========================================================= */
+
+            .main-header.navbar {
+
+                position:
+                    fixed !important;
+
+                top:
+                    0 !important;
+
+                left:
+                    var(--sidebar-width) !important;
+
+                right:
+                    0 !important;
+
+                width:
+                    auto !important;
+
+                height:
+                    var(--header-height);
+
+                margin-left:
+                    0 !important;
+
+                z-index:
+                    1030 !important;
+
+                background:
+                    linear-gradient(90deg,
+                        var(--socota-green),
+                        var(--socota-green-dark)) !important;
+
+                border-bottom:
+                    0 !important;
+
+                box-shadow:
+                    0 4px 18px rgba(0, 0, 0, 0.10);
+
+                padding: 0 8px 0 4px;
+            }
+
+
+            .main-header .navbar-nav {
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+            }
+
+
+            .main-header .nav-link {
+
+                color:
+                    #ffffff !important;
+            }
+
+
+            .main-header .nav-link:hover {
+
+                color:
+                    #ffffff !important;
+
+                opacity:
+                    0.85;
+            }
+
+
+            /* =========================================================
+                   HAMBURGER
+                   ========================================================= */
+
+            .main-header .navbar-nav:first-child {
+
+                display:
+                    flex !important;
+
+                align-items:
+                    center !important;
+            }
+
+
+            .main-header .navbar-nav:first-child .nav-item {
+
+                display:
+                    block !important;
+            }
+
+
+            .main-header .navbar-nav:first-child .nav-link {
+
+                display:
+                    flex !important;
+
+                align-items:
+                    center !important;
+
+                justify-content:
+                    center !important;
+
+                width:
+                    46px;
+
+                height:
+                    var(--header-height);
+
+                padding:
+                    0 !important;
+
+                margin:
+                    0 !important;
+
+                color:
+                    #ffffff !important;
+
+                cursor:
+                    pointer;
+
+                border-radius: var(--radius-sm);
+
+                transition: background-color var(--transition-fast);
+            }
+
+            .main-header .navbar-nav:first-child .nav-link:hover {
+                background: rgba(255, 255, 255, 0.14);
+            }
+
+
+            .main-header .navbar-nav:first-child .nav-link i {
+
+                display:
+                    inline-block !important;
+
+                visibility:
+                    visible !important;
+
+                opacity:
+                    1 !important;
+
+                color:
+                    #ffffff !important;
+
+                font-size:
+                    1.15rem;
+            }
+
+
+            /* =========================================================
+                   BOUTON DARK MODE
+                   ========================================================= */
+
+            #toggleDarkMode {
+
+                width:
+                    38px;
+
+                height:
+                    34px;
+
+                display:
+                    inline-flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    center;
+
+                border:
+                    1px solid rgba(255, 255, 255, 0.4);
+
+                background: rgba(255, 255, 255, 0.06);
+
+                border-radius:
+                    var(--radius-sm);
 
                 transition:
-                    background-color var(--transition),
-                    border-color var(--transition),
-                    transform var(--transition);
-            }
-
-            .btn-socota:hover {
-                background-color: var(--socota-green-dark);
-                border-color: var(--socota-green-dark);
-                color: #fff;
-                transform: translateY(-1px);
+                    all var(--transition-fast);
             }
 
 
-            .btn-outline-socota {
-                background-color: transparent;
-                border: 1px solid var(--socota-green);
-                color: var(--socota-green);
+            #toggleDarkMode:hover {
 
-                transition: all var(--transition);
-            }
+                background:
+                    rgba(255, 255, 255, 0.18);
 
-            .btn-outline-socota:hover {
-                background-color: var(--socota-green);
-                border-color: var(--socota-green);
-                color: #fff;
+                transform:
+                    translateY(-1px);
+
+                border-color: rgba(255, 255, 255, 0.6);
             }
 
 
-            .alert-success {
-                background-color: var(--socota-green);
-                border-color: var(--socota-green);
-                color: #fff;
-                border-radius: var(--radius);
+            /* =========================================================
+                   NOTIFICATIONS
+                   ========================================================= */
+
+            .notification-link {
+
+                position:
+                    relative;
+
+                width: 40px;
+                height: 40px;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                border-radius: var(--radius-sm);
+                transition: background-color var(--transition-fast);
             }
 
-            .alert-success .btn-close {
-                filter: brightness(0) invert(1);
+            .notification-link:hover {
+                background: rgba(255, 255, 255, 0.12);
+            }
+
+            .notification-link i {
+                font-size: 1.05rem;
             }
 
 
-            .risk-low,
-            .badge-risk-low,
-            .bg-risk-low {
-                background-color: var(--socota-green);
-                color: #fff;
+            #notificationBadge {
+
+                top:
+                    4px;
+
+                right:
+                    2px;
+
+                font-size:
+                    0.62rem;
+
+                min-width:
+                    17px;
+
+                height:
+                    17px;
+
+                padding:
+                    2px 4px;
+
+                border-radius:
+                    50%;
+
+                display:
+                    none;
+
+                border: 2px solid var(--socota-green);
+
+                animation: notifPulse 1.8s infinite;
             }
 
-            .text-risk-low {
-                color: var(--socota-green);
+            @@keyframes notifPulse {
+
+                0%,
+                100% {
+                    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
+                }
+
+                50% {
+                    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0);
+                }
             }
 
-            .border-risk-low {
-                border-color: var(--socota-green);
+
+            /* =========================================================
+                   UTILISATEUR
+                   ========================================================= */
+
+            .user-chip {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                padding: 5px 12px 5px 6px !important;
+                border-radius: 30px !important;
+                background: rgba(255, 255, 255, 0.12);
+                transition: background-color var(--transition-fast);
             }
 
+            .user-chip:hover {
+                background: rgba(255, 255, 255, 0.20);
+            }
+
+            .user-avatar {
+                width: 27px;
+                height: 27px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.9);
+                color: var(--socota-green-dark);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                font-size: 0.72rem;
+                flex-shrink: 0;
+            }
+
+            .user-chip-name {
+                font-size: 0.82rem;
+                font-weight: 700;
+            }
+
+
+            /* =========================================================
+                   CONTENU
+                   ========================================================= */
 
             .content-wrapper {
-                min-height: calc(100vh - 57px);
+
+                min-height:
+                    100vh;
+
+                padding-top:
+                    var(--header-height);
+
+                padding-bottom:
+                    var(--footer-height);
+
+                margin-left:
+                    var(--sidebar-width);
+
+                transition:
+                    margin-left var(--transition);
             }
+
 
             .content {
-                padding-bottom: 20px;
+
+                padding-bottom:
+                    20px;
             }
 
 
+            /* =========================================================
+                   CARTES
+                   ========================================================= */
+
             .card {
-                border-radius: var(--radius);
+
+                border-radius:
+                    var(--radius);
+
+                border:
+                    1px solid rgba(0, 0, 0, 0.06);
 
                 transition:
                     box-shadow var(--transition),
                     transform var(--transition);
             }
 
+
             .card:hover {
-                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+                box-shadow:
+                    0 10px 28px rgba(0, 0, 0, 0.09);
             }
 
 
             .card-header {
-                border-top-left-radius: var(--radius);
-                border-top-right-radius: var(--radius);
-            }
 
+                border-top-left-radius:
+                    var(--radius);
 
-            .main-footer {
-                background-color: #fff;
-                border-top: 1px solid #dee2e6;
-            }
-
-
-            #toggleDarkMode {
-                width: 36px;
-                height: 32px;
-
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
+                border-top-right-radius:
+                    var(--radius);
             }
 
 
             /* =========================================================
-                                               DARK MODE
-                                               ========================================================= */
+                   COULEURS SOCOTA
+                   ========================================================= */
 
-            body[data-bs-theme="dark"] {
-                background-color: var(--dark-bg);
-                color: #e0e0e0;
+            .bg-socota {
+
+                background-color:
+                    var(--socota-green) !important;
+
+                color:
+                    #ffffff !important;
             }
 
-            body[data-bs-theme="dark"] .content-wrapper {
-                background-color: var(--dark-bg);
+
+            .text-socota {
+
+                color:
+                    var(--socota-green) !important;
+            }
+
+
+            .border-socota {
+
+                border-color:
+                    var(--socota-green) !important;
+            }
+
+
+            /* =========================================================
+                   BOUTON SOCOTA
+                   ========================================================= */
+
+            .btn-socota {
+
+                background:
+                    linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+
+                border-color:
+                    var(--socota-green-dark);
+
+                color:
+                    #ffffff;
+
+                font-weight: 700;
+
+                box-shadow: 0 3px 10px var(--socota-green-glow);
+
+                transition:
+                    box-shadow var(--transition-fast),
+                    transform var(--transition-fast);
+            }
+
+
+            .btn-socota:hover {
+
+                transform:
+                    translateY(-2px);
+
+                box-shadow: 0 8px 20px var(--socota-green-glow);
+
+                color:
+                    #ffffff;
+            }
+
+
+            /* =========================================================
+                   BOUTON OUTLINE SOCOTA
+                   ========================================================= */
+
+            .btn-outline-socota {
+
+                background:
+                    transparent;
+
+                border:
+                    1.5px solid var(--socota-green);
+
+                color:
+                    var(--socota-green-dark);
+
+                font-weight: 600;
+
+                transition:
+                    all var(--transition-fast);
+            }
+
+
+            .btn-outline-socota:hover {
+
+                background:
+                    var(--socota-green);
+
+                border-color:
+                    var(--socota-green);
+
+                color:
+                    #ffffff;
+            }
+
+
+            /* =========================================================
+                   ALERT SUCCESS
+                   ========================================================= */
+
+            .alert-success {
+
+                background:
+                    linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+
+                border-color:
+                    var(--socota-green);
+
+                color:
+                    #ffffff;
+
+                border-radius:
+                    var(--radius);
+
+                box-shadow: 0 6px 18px var(--socota-green-glow);
+            }
+
+
+            .alert-success .btn-close {
+
+                filter:
+                    brightness(0) invert(1);
+            }
+
+            .alert-danger {
+                border-radius: var(--radius);
+            }
+
+
+            /* =========================================================
+                   RISQUE
+                   ========================================================= */
+
+            .risk-low,
+            .badge-risk-low,
+            .bg-risk-low {
+
+                background-color:
+                    var(--socota-green);
+
+                color:
+                    #ffffff;
+            }
+
+
+            .text-risk-low {
+
+                color:
+                    var(--socota-green);
+            }
+
+
+            .border-risk-low {
+
+                border-color:
+                    var(--socota-green);
+            }
+
+
+            /* =========================================================
+       FOOTER
+       ========================================================= */
+
+            .main-footer {
+                position: fixed !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                left: var(--sidebar-width) !important;
+                width: auto !important;
+                height: var(--footer-height) !important;
+
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+
+                padding: 0 12px !important;
+                margin: 0 !important;
+
+                background: transparent !important;
+                background-color: transparent !important;
+
+                border: none !important;
+                box-shadow: none !important;
+
+                font-size: 0.72rem;
+                line-height: 1;
+                color: #222222;
+
+                z-index: 1030 !important;
+                transition: left var(--transition);
+            }
+
+            .main-footer strong {
+                color: var(--socota-green-dark);
+            }
+
+            body.sidebar-collapse .main-footer {
+                left: var(--sidebar-collapsed-width) !important;
             }
 
             body[data-bs-theme="dark"] .main-footer {
-                background-color: var(--dark-card);
-                border-top-color: var(--dark-border);
+                background: transparent !important;
+                background-color: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
                 color: #e0e0e0;
             }
 
-            body[data-bs-theme="dark"] .card {
-                background-color: var(--dark-card);
-                color: #e0e0e0;
-                border-color: var(--dark-border);
-            }
+            /* =========================================================
+                   SIDEBAR REPLIEE
+                   ========================================================= */
 
-            body[data-bs-theme="dark"] .card-header {
-                background-color: var(--dark-header);
-                color: #e0e0e0;
-                border-bottom-color: var(--dark-border);
-            }
+            body.sidebar-collapse .main-sidebar {
 
-            body[data-bs-theme="dark"] .table {
-                color: #e0e0e0;
-            }
-
-            body[data-bs-theme="dark"] .table-light {
-                background-color: var(--dark-header);
-                color: #e0e0e0;
-            }
-
-            body[data-bs-theme="dark"] .form-control,
-            body[data-bs-theme="dark"] .form-select {
-                background-color: var(--dark-card);
-                color: #e0e0e0;
-                border-color: var(--dark-border);
-            }
-
-            body[data-bs-theme="dark"] .form-control:focus,
-            body[data-bs-theme="dark"] .form-select:focus {
-                border-color: var(--socota-green);
-                box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
-            }
-
-            body[data-bs-theme="dark"] .text-muted {
-                color: #a0a0a0;
-            }
-
-            body[data-bs-theme="dark"] .border {
-                border-color: var(--dark-border);
-            }
-
-            body[data-bs-theme="dark"] .list-group-item {
-                border-color: var(--dark-border);
-                color: #e0e0e0;
-            }
-
-            body[data-bs-theme="dark"] .text-dark {
-                color: #e0e0e0;
-            }
-
-            body[data-bs-theme="dark"] .btn-outline-secondary {
-                color: #d0d0d0;
-                border-color: #666;
-            }
-
-            body[data-bs-theme="dark"] .btn-outline-secondary:hover {
-                background-color: #555;
-                color: #fff;
+                width:
+                    var(--sidebar-collapsed-width) !important;
             }
 
 
             /* =========================================================
-                                               NOTIFICATIONS
-                                               ========================================================= */
+                   HEADER — REMPLIT L'ESPACE
+                   ========================================================= */
 
-            #notificationBadge {
-                top: 2px;
-                right: -2px;
+            body.sidebar-collapse .main-header.navbar {
 
-                font-size: 0.65rem;
-                min-width: 18px;
-                height: 18px;
+                left:
+                    var(--sidebar-collapsed-width) !important;
 
-                padding: 2px 5px;
-                border-radius: 50%;
+                right:
+                    0 !important;
 
+                width:
+                    auto !important;
+
+                margin-left:
+                    0 !important;
+            }
+
+
+            /* =========================================================
+                   CONTENU — REMPLIT L'ESPACE
+                   ========================================================= */
+
+            body.sidebar-collapse .content-wrapper {
+
+                margin-left:
+                    var(--sidebar-collapsed-width) !important;
+            }
+
+            body.sidebar-collapse .main-footer {
+                left: var(--sidebar-collapsed-width) !important;
+            }
+
+
+            /* =========================================================
+                   LOGO SIDEBAR REPLIEE
+                   ========================================================= */
+
+            body.sidebar-collapse .brand-link {
+
+                width:
+                    var(--sidebar-collapsed-width) !important;
+
+                height:
+                    76px !important;
+
+                padding:
+                    8px 5px !important;
+
+                justify-content:
+                    center !important;
+            }
+
+
+            body.sidebar-collapse .brand-logo-box {
+
+                width:
+                    52px;
+
+                height:
+                    52px;
+
+                min-width:
+                    52px;
+
+                min-height:
+                    52px;
+
+                padding:
+                    4px;
+            }
+
+
+            /* =========================================================
+                   TEXTE CACHE EN MODE PLIÉ
+                   ========================================================= */
+
+            body.sidebar-collapse .brand-title {
+
+                width:
+                    0 !important;
+
+                margin-left:
+                    0 !important;
+
+                opacity:
+                    0 !important;
+
+                transform:
+                    translateX(-10px);
+
+                overflow:
+                    hidden;
+            }
+
+            body.sidebar-collapse .nav-sidebar-label {
                 display: none;
             }
 
-            .notification-link {
-                position: relative;
+
+            /* =========================================================
+                   MENU PLIÉ
+                   ========================================================= */
+
+            body.sidebar-collapse .nav-sidebar {
+
+                padding-left:
+                    0;
+
+                padding-right:
+                    0;
+            }
+
+            body.sidebar-collapse .nav-sidebar .nav-item {
+                padding: 0 8px;
+            }
+
+
+            body.sidebar-collapse .nav-sidebar .nav-link {
+
+                width:
+                    100%;
+
+                justify-content:
+                    center;
+
+                padding:
+                    10px 0 !important;
+
+                margin:
+                    2px 0;
+            }
+
+
+            body.sidebar-collapse .nav-sidebar .nav-icon {
+
+                width:
+                    32px;
+
+                min-width:
+                    32px;
+
+                margin:
+                    0 !important;
+
+                text-align:
+                    center;
+            }
+
+
+            body.sidebar-collapse .nav-sidebar .nav-link p {
+
+                display:
+                    none !important;
+            }
+
+
+            body.sidebar-collapse .nav-sidebar .nav-link:hover {
+
+                transform:
+                    none;
+            }
+
+            body.sidebar-collapse .nav-sidebar .nav-link.active::before {
+                display: none;
+            }
+
+
+            /* =========================================================
+                   DARK MODE
+                   ========================================================= */
+
+            body[data-bs-theme="dark"] {
+
+                background-color:
+                    var(--dark-bg);
+
+                color:
+                    #e0e0e0;
+            }
+
+
+            body[data-bs-theme="dark"] .content-wrapper {
+
+                background-color:
+                    var(--dark-bg);
+            }
+
+
+            body[data-bs-theme="dark"] .main-footer {
+
+                background-color:
+                    var(--dark-card);
+
+                border-top-color:
+                    var(--dark-border);
+
+                color:
+                    #e0e0e0;
+            }
+
+
+            body[data-bs-theme="dark"] .card {
+
+                background-color:
+                    var(--dark-card);
+
+                color:
+                    #e0e0e0;
+
+                border-color:
+                    var(--dark-border);
+            }
+
+
+            body[data-bs-theme="dark"] .card-header {
+
+                background-color:
+                    var(--dark-header);
+
+                color:
+                    #e0e0e0;
+
+                border-bottom-color:
+                    var(--dark-border);
+            }
+
+
+            body[data-bs-theme="dark"] .table {
+
+                color:
+                    #e0e0e0;
+            }
+
+
+            body[data-bs-theme="dark"] .table-light {
+
+                background-color:
+                    var(--dark-header);
+
+                color:
+                    #e0e0e0;
+            }
+
+
+            body[data-bs-theme="dark"] .form-control,
+            body[data-bs-theme="dark"] .form-select {
+
+                background-color:
+                    var(--dark-card);
+
+                color:
+                    #e0e0e0;
+
+                border-color:
+                    var(--dark-border);
+            }
+
+
+            body[data-bs-theme="dark"] .form-control:focus,
+            body[data-bs-theme="dark"] .form-select:focus {
+
+                border-color:
+                    var(--socota-green);
+
+                box-shadow:
+                    0 0 0 0.2rem rgba(139, 197, 63, 0.2);
+            }
+
+
+            body[data-bs-theme="dark"] .text-muted {
+
+                color:
+                    #a0a0a0 !important;
+            }
+
+
+            body[data-bs-theme="dark"] .border {
+
+                border-color:
+                    var(--dark-border) !important;
+            }
+
+
+            body[data-bs-theme="dark"] .list-group-item {
+
+                border-color:
+                    var(--dark-border);
+
+                color:
+                    #e0e0e0;
+
+                background-color:
+                    var(--dark-card);
+            }
+
+
+            body[data-bs-theme="dark"] .text-dark {
+
+                color:
+                    #e0e0e0 !important;
+            }
+
+
+            body[data-bs-theme="dark"] .btn-outline-secondary {
+
+                color:
+                    #d0d0d0;
+
+                border-color:
+                    #666;
+            }
+
+
+            body[data-bs-theme="dark"] .btn-outline-secondary:hover {
+
+                background-color:
+                    #555;
+
+                color:
+                    #ffffff;
+            }
+
+
+            /* =========================================================
+                   RESPONSIVE
+                   ========================================================= */
+
+            @@media (max-width: 991.98px) {
+
+                .main-header.navbar {
+
+                    left:
+                        0 !important;
+
+                    right:
+                        0 !important;
+
+                    width:
+                        auto !important;
+                }
+
+
+                .content-wrapper {
+
+                    margin-left:
+                        0 !important;
+                }
+
+                .main-footer {
+                    left: 0 !important;
+                }
+
+                .user-chip-name {
+                    display: none;
+                }
             }
     </style>
 
@@ -355,6 +1427,8 @@
 
         <nav class="main-header navbar navbar-expand">
 
+            <!-- HAMBURGER -->
+
             <ul class="navbar-nav">
 
                 <li class="nav-item">
@@ -371,12 +1445,15 @@
             </ul>
 
 
-            <ul class="navbar-nav ml-auto align-items-center">
+            <!-- DROITE -->
 
-                <li class="nav-item me-2">
+            <ul class="navbar-nav ml-auto align-items-center gap-2">
 
-                    <button id="toggleDarkMode" class="btn btn-sm btn-outline-light" type="button"
-                            aria-label="Changer de thème">
+                <!-- DARK MODE -->
+
+                <li class="nav-item">
+
+                    <button id="toggleDarkMode" class="btn btn-sm" type="button" aria-label="Changer de thème">
 
                         <i class="fas fa-moon"></i>
 
@@ -385,10 +1462,12 @@
                 </li>
 
 
-                <li class="nav-item me-2">
+                <!-- NOTIFICATIONS -->
 
-                    <a href="/Notification" class="nav-link text-white position-relative notification-link"
-                       title="Notifications" aria-label="Notifications">
+                <li class="nav-item">
+
+                    <a href="/Notification" class="nav-link notification-link" title="Notifications"
+                       aria-label="Notifications">
 
                         <i class="fas fa-bell"></i>
 
@@ -403,13 +1482,25 @@
                 </li>
 
 
+                <!-- UTILISATEUR -->
+
                 <li class="nav-item">
 
-                    <span class="nav-link text-white">
+                    <span class="nav-link user-chip">
 
-                        <i class="fas fa-user me-1"></i>
+                        <span class="user-avatar">
+                            @{
+                                var initiale =
+                                    string.IsNullOrWhiteSpace(User.Identity?.Name)
+                                        ? "?"
+                                        : User.Identity.Name.Trim().Substring(0, 1).ToUpper();
+                            }
+                            @initiale
+                        </span>
 
-                        @User.Identity?.Name
+                        <span class="user-chip-name">
+                            @User.Identity?.Name
+                        </span>
 
                     </span>
 
@@ -420,7 +1511,6 @@
         </nav>
 
 
-
         <!-- =====================================================
              SIDEBAR
              ===================================================== -->
@@ -428,13 +1518,25 @@
         <aside class="main-sidebar sidebar-dark-success elevation-4">
 
 
-            <a href="/" class="brand-link d-flex align-items-center">
+            <!-- LOGO -->
 
-                <img src="~/Logo/logosocota.jfif" alt="SOCOTA" class="brand-image"
-                     style="height: 35px; width: auto; object-fit: contain;" />
+            <a href="/" class="brand-link">
 
-                <span class="brand-text font-weight-light ms-2">
+                <span class="brand-logo-box">
+
+                    <img src="~/Logo/logosocota.ico" alt="SOCOTA" />
+
+                </span>
+
+
+                <span class="brand-title">
+
                     Socota PMO
+
+                    <span class="brand-subtitle">
+                        Digital Platform
+                    </span>
+
                 </span>
 
             </a>
@@ -446,10 +1548,10 @@
 
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
+                        <div class="nav-sidebar-label">Vue d'ensemble</div>
 
-                        <!-- =================================================
-                             PROJETS
-                             ================================================= -->
+
+                        <!-- PROJETS -->
 
                         <li class="nav-item">
 
@@ -457,19 +1559,21 @@
 
                                 <i class="nav-icon fas fa-list"></i>
 
-                                <p>Projets</p>
+                                <p>
+                                    Projets
+                                </p>
 
                             </a>
 
                         </li>
 
 
-                        <!-- =================================================
-                             KANBAN
-                             ================================================= -->
+                        <!-- KANBAN -->
 
-                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        @if (User.IsInRole("Administrateur") ||
+                             User.IsInRole("ChefDeProjet"))
                         {
+
                             <li class="nav-item">
 
                                 <a href="/Projet/Kanban"
@@ -477,46 +1581,68 @@
 
                                     <i class="nav-icon fas fa-columns"></i>
 
-                                    <p>Kanban</p>
+                                    <p>
+                                        Kanban
+                                    </p>
 
                                 </a>
 
                             </li>
 
                         }
-                        <!-- =================================================
-                             ROADMAP
-                             ================================================= -->
 
-                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+
+                        <!-- ROADMAP -->
+
+                        @if (User.IsInRole("Administrateur") ||
+                             User.IsInRole("ChefDeProjet"))
                         {
+
                             <li class="nav-item">
+
                                 <a href="/Projet/Roadmap"
                                    class="nav-link @(Context.Request.Path == "/Projet/Roadmap" ? "active" : "")">
+
                                     <i class="nav-icon fas fa-map"></i>
-                                    <p>Roadmap</p>
+
+                                    <p>
+                                        Roadmap
+                                    </p>
+
                                 </a>
+
                             </li>
+
                         }
 
-                        <!-- =================================================
-                             GANTT
-                             ================================================= -->
 
-                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        <!-- GANTT -->
+
+                        @if (User.IsInRole("Administrateur") ||
+                             User.IsInRole("ChefDeProjet"))
                         {
+
                             <li class="nav-item">
+
                                 <a href="/Projet/Gantt"
                                    class="nav-link @(Context.Request.Path == "/Projet/Gantt" ? "active" : "")">
+
                                     <i class="nav-icon fas fa-chart-line"></i>
-                                    <p>Gantt</p>
+
+                                    <p>
+                                        Gantt
+                                    </p>
+
                                 </a>
+
                             </li>
+
                         }
 
-                        <!-- =================================================
-                             DASHBOARD EXECUTIF
-                             ================================================= -->
+                        <div class="nav-sidebar-label">Pilotage</div>
+
+
+                        <!-- DASHBOARD EXECUTIF -->
 
                         <li class="nav-item">
 
@@ -525,16 +1651,16 @@
 
                                 <i class="nav-icon fas fa-chart-bar"></i>
 
-                                <p>Dashboard Exécutif</p>
+                                <p>
+                                    Dashboard Exécutif
+                                </p>
 
                             </a>
 
                         </li>
 
 
-                        <!-- =================================================
-                             DASHBOARD COMEX
-                             ================================================= -->
+                        <!-- DASHBOARD COMEX -->
 
                         <li class="nav-item">
 
@@ -543,16 +1669,16 @@
 
                                 <i class="nav-icon fas fa-chart-pie"></i>
 
-                                <p>Dashboard COMEX</p>
+                                <p>
+                                    Dashboard COMEX
+                                </p>
 
                             </a>
 
                         </li>
 
 
-                        <!-- =================================================
-                             DASHBOARD IT MANAGER
-                             ================================================= -->
+                        <!-- DASHBOARD IT MANAGER -->
 
                         <li class="nav-item">
 
@@ -561,68 +1687,74 @@
 
                                 <i class="nav-icon fas fa-users-cog"></i>
 
-                                <p>Dashboard IT Manager</p>
+                                <p>
+                                    Dashboard IT Manager
+                                </p>
 
                             </a>
 
                         </li>
 
-
-                        <!-- =================================================
-                             RECHERCHE
-                             ================================================= -->
-
-                        <li class="nav-item">
-
-                            <a href="/Projet/Recherche"
-                               class="nav-link @(Context.Request.Path == "/Projet/Recherche" ? "active" : "")">
-
-                                <i class="nav-icon fas fa-search"></i>
-
-                                <p>Recherche</p>
-
-                            </a>
-
-                        </li>
-
-
-                        <!-- =================================================
-                             NOUVEAU PROJET
-                             ================================================= -->
-
-                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        @if ((User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet")) ||
+                             User.IsInRole("Administrateur"))
                         {
-                            <li class="nav-item">
-                                <a href="/Projet/Create"
-                                   class="nav-link @(Context.Request.Path == "/Projet/Create" ? "active" : "")">
-                                    <i class="nav-icon fas fa-plus"></i>
-                                    <p>Nouveau projet</p>
-                                </a>
-                            </li>
+                            <div class="nav-sidebar-label">Gestion</div>
                         }
 
 
-                        <!-- =================================================
-                             IMPORT EXCEL
-                             ================================================= -->
+                        <!-- NOUVEAU PROJET -->
+
+                        @if (User.IsInRole("Administrateur") ||
+                             User.IsInRole("ChefDeProjet"))
+                        {
+
+                            <li class="nav-item">
+
+                                <a href="/Projet/Create"
+                                   class="nav-link @(Context.Request.Path == "/Projet/Create" ? "active" : "")">
+
+                                    <i class="nav-icon fas fa-plus"></i>
+
+                                    <p>
+                                        Nouveau projet
+                                    </p>
+
+                                </a>
+
+                            </li>
+
+                        }
+
+
+                        <!-- IMPORT EXCEL -->
 
                         @if (User.IsInRole("Administrateur"))
                         {
+
                             <li class="nav-item">
+
                                 <a href="/Projet/ImporterExcel"
                                    class="nav-link @(Context.Request.Path == "/Projet/ImporterExcel" ? "active" : "")">
+
                                     <i class="nav-icon fas fa-file-excel"></i>
-                                    <p>Importer Excel</p>
+
+                                    <p>
+                                        Importer Excel
+                                    </p>
+
                                 </a>
+
                             </li>
+
                         }
 
-                        <!-- =================================================
-                             GESTION DES UTILISATEURS
-                             ================================================= -->
 
-                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+                        <!-- UTILISATEURS -->
+
+                        @if (User.IsInRole("Administrateur") ||
+                             User.IsInRole("ChefDeProjet"))
                         {
+
                             <li class="nav-item">
 
                                 <a href="/Utilisateur"
@@ -630,11 +1762,14 @@
 
                                     <i class="nav-icon fas fa-user-shield"></i>
 
-                                    <p>Utilisateurs</p>
+                                    <p>
+                                        Utilisateurs
+                                    </p>
 
                                 </a>
 
                             </li>
+
                         }
 
                     </ul>
@@ -644,7 +1779,6 @@
             </div>
 
         </aside>
-
 
 
         <!-- =====================================================
@@ -658,10 +1792,11 @@
                 <div class="container-fluid pt-3">
 
 
-                    <!-- MESSAGE DE SUCCÈS -->
+                    <!-- MESSAGE SUCCÈS -->
 
                     @if (TempData["Succes"] != null)
                     {
+
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
 
                             <i class="fas fa-check-circle me-1"></i>
@@ -672,13 +1807,15 @@
                             </button>
 
                         </div>
+
                     }
 
 
-                    <!-- MESSAGE D'ERREUR -->
+                    <!-- MESSAGE ERREUR -->
 
                     @if (TempData["Erreur"] != null)
                     {
+
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
                             <i class="fas fa-exclamation-circle me-1"></i>
@@ -689,6 +1826,7 @@
                             </button>
 
                         </div>
+
                     }
 
 
@@ -701,14 +1839,15 @@
         </div>
 
 
-
         <!-- =====================================================
              FOOTER
              ===================================================== -->
 
         <footer class="main-footer">
 
-            <strong>GestionProjetSocota</strong>
+            <strong>
+                 &copy; @DateTime.Now.Year SOCOTA . GestionProjetSocota
+            </strong>
 
             <span class="ms-1">
                 — PMO Digital Platform
@@ -716,9 +1855,7 @@
 
         </footer>
 
-
     </div>
-
 
 
     <!-- =========================================================
@@ -732,75 +1869,92 @@
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
-
     <!-- =========================================================
          MODE SOMBRE
          ========================================================= -->
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
 
-        const themeButton =
-        document.getElementById("toggleDarkMode");
+                const themeButton =
+                    document.getElementById("toggleDarkMode");
 
-        const themeIcon =
-        themeButton.querySelector("i");
-
-        const savedTheme =
-        localStorage.getItem("theme") || "light";
-
-        applyTheme(savedTheme);
+                if (!themeButton) {
+                    return;
+                }
 
 
-        themeButton.addEventListener("click", function () {
-
-        const currentTheme =
-        document.body.getAttribute("data-bs-theme");
-
-        const newTheme =
-        currentTheme === "dark"
-        ? "light"
-        : "dark";
-
-        applyTheme(newTheme);
-
-        localStorage.setItem(
-        "theme",
-        newTheme
-        );
-
-        });
+                const themeIcon =
+                    themeButton.querySelector("i");
 
 
-        function applyTheme(theme) {
+                const savedTheme =
+                    localStorage.getItem("theme") || "light";
 
-        document.body.setAttribute(
-        "data-bs-theme",
-        theme
-        );
 
-        if (theme === "dark") {
+                applyTheme(savedTheme);
 
-        themeIcon.classList.remove("fa-moon");
 
-        themeIcon.classList.add("fa-sun");
+                themeButton.addEventListener("click", function () {
 
-        }
-        else {
+                    const currentTheme =
+                        document.body.getAttribute("data-bs-theme");
 
-        themeIcon.classList.remove("fa-sun");
 
-        themeIcon.classList.add("fa-moon");
+                    const newTheme =
+                        currentTheme === "dark"
+                            ? "light"
+                            : "dark";
 
-        }
 
-        }
+                    applyTheme(newTheme);
 
-        });
+
+                    localStorage.setItem(
+                        "theme",
+                        newTheme
+                    );
+
+                });
+
+
+                function applyTheme(theme) {
+
+                    document.body.setAttribute(
+                        "data-bs-theme",
+                        theme
+                    );
+
+
+                    if (theme === "dark") {
+
+                        themeIcon.classList.remove(
+                            "fa-moon"
+                        );
+
+                        themeIcon.classList.add(
+                            "fa-sun"
+                        );
+
+                    }
+                    else {
+
+                        themeIcon.classList.remove(
+                            "fa-sun"
+                        );
+
+                        themeIcon.classList.add(
+                            "fa-moon"
+                        );
+
+                    }
+
+                }
+
+            });
 
     </script>
-
 
 
     <!-- =========================================================
@@ -809,89 +1963,91 @@
 
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
-
-        async function chargerNombreNotifications() {
-
-        try {
-
-        const response =
-        await fetch("/Notification/NombreNonLues");
+            document.addEventListener("DOMContentLoaded", function () {
 
 
-        if (!response.ok) {
+                async function chargerNombreNotifications() {
 
-        console.error(
-        "Erreur HTTP notifications :",
-        response.status
-        );
+                    try {
 
-        return;
-
-        }
+                        const response =
+                            await fetch(
+                                "/Notification/NombreNonLues"
+                            );
 
 
-        const nombre =
-        await response.json();
+                        if (!response.ok) {
+
+                            console.error(
+                                "Erreur HTTP notifications :",
+                                response.status
+                            );
+
+                            return;
+
+                        }
 
 
-        const badge =
-        document.getElementById(
-        "notificationBadge"
-        );
+                        const nombre =
+                            await response.json();
 
 
-        if (!badge) {
-
-        return;
-
-        }
-
-
-        if (nombre > 0) {
-
-        badge.textContent =
-        nombre;
-
-        badge.style.display =
-        "block";
-
-        }
-        else {
-
-        badge.textContent =
-        "0";
-
-        badge.style.display =
-        "none";
-
-        }
-
-        }
-        catch (error) {
-
-        console.error(
-        "Erreur lors du chargement des notifications :",
-        error
-        );
-
-        }
-
-        }
+                        const badge =
+                            document.getElementById(
+                                "notificationBadge"
+                            );
 
 
-        chargerNombreNotifications();
+                        if (!badge) {
+
+                            return;
+
+                        }
 
 
-        setInterval(
-        chargerNombreNotifications,
-        30000
-        );
+                        if (nombre > 0) {
 
-        });
+                            badge.textContent =
+                                nombre;
+
+                            badge.style.display =
+                                "block";
+
+                        }
+                        else {
+
+                            badge.textContent =
+                                "0";
+
+                            badge.style.display =
+                                "none";
+
+                        }
+
+                    }
+                    catch (error) {
+
+                        console.error(
+                            "Erreur lors du chargement des notifications :",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                chargerNombreNotifications();
+
+
+                setInterval(
+                    chargerNombreNotifications,
+                    30000
+                );
+
+            });
 
     </script>
-
 
 
     @await RenderSectionAsync(

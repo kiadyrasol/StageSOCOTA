@@ -1,277 +1,1984 @@
 @model List<GestionProjetSocota.Models.Projet>
 
 @{
-    var scores = ViewBag.Scores as Dictionary<int, (int score, string couleur)>;
-}
+    // ============================================================
+    // SCORES DE RISQUE
+    // ============================================================
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    var scores =
+        ViewBag.Scores as Dictionary<int, (int score, string couleur)>
+        ?? new Dictionary<int, (int score, string couleur)>();
 
-    <div>
-        <h1 class="h3 fw-bold mb-1">Projets</h1>
-        <p class="text-muted mb-0">
-            Gestion et suivi des projets de digitalisation
-        </p>
-    </div>
 
-    @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
+    // ============================================================
+    // LISTES DES FILTRES
+    // ============================================================
+
+    var utilisateurs =
+        ViewBag.Utilisateurs as IEnumerable<GestionProjetSocota.Models.Utilisateur>
+        ?? Enumerable.Empty<GestionProjetSocota.Models.Utilisateur>();
+
+    var unites =
+        ViewBag.Unites as IEnumerable<GestionProjetSocota.Models.UniteProjet>
+        ?? Enumerable.Empty<GestionProjetSocota.Models.UniteProjet>();
+
+    var departements =
+        ViewBag.Departements as IEnumerable<GestionProjetSocota.Models.DepartementProjet>
+        ?? Enumerable.Empty<GestionProjetSocota.Models.DepartementProjet>();
+
+    var types =
+        ViewBag.Types as IEnumerable<GestionProjetSocota.Models.TypeProjetReference>
+        ?? Enumerable.Empty<GestionProjetSocota.Models.TypeProjetReference>();
+
+
+    // ============================================================
+    // RECHERCHE
+    // ============================================================
+
+    var recherche =
+        Context.Request.Query["recherche"].ToString();
+
+
+    // ============================================================
+    // FILTRE SOCIÉTÉ
+    // ============================================================
+
+    var uniteSelectionnees =
+        Context.Request.Query["unite"]
+            .Select(x => int.TryParse(x, out var value) ? value : 0)
+            .Where(x => x > 0)
+            .ToHashSet();
+
+    if (!Context.Request.Query.ContainsKey("unite"))
     {
-        <a href="/Projet/Create" class="btn btn-socota">
-            <i class="fas fa-plus me-1"></i>
-            Nouveau projet
-        </a>
+        uniteSelectionnees =
+            unites.Select(u => u.Id).ToHashSet();
     }
 
-</div>
 
-<div class="card shadow-sm">
+    // ============================================================
+    // FILTRE DÉPARTEMENT
+    // ============================================================
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+    var departementSelectionnes =
+        Context.Request.Query["departement"]
+            .Select(x => int.TryParse(x, out var value) ? value : 0)
+            .Where(x => x > 0)
+            .ToHashSet();
 
-        <div>
-            <h5 class="mb-0 fw-semibold">
+    if (!Context.Request.Query.ContainsKey("departement"))
+    {
+        departementSelectionnes =
+            departements.Select(d => d.Id).ToHashSet();
+    }
+
+
+    // ============================================================
+    // FILTRE TYPE
+    // ============================================================
+
+    var typeSelectionnes =
+        Context.Request.Query["type"]
+            .Select(x => int.TryParse(x, out var value) ? value : 0)
+            .Where(x => x > 0)
+            .ToHashSet();
+
+    if (!Context.Request.Query.ContainsKey("type"))
+    {
+        typeSelectionnes =
+            types.Select(t => t.Id).ToHashSet();
+    }
+
+
+    // ============================================================
+    // FILTRE OWNER IT
+    // ============================================================
+
+    var ownerSelectionnes =
+        Context.Request.Query["ownerItId"]
+            .Select(x => int.TryParse(x, out var value) ? value : 0)
+            .Where(x => x > 0)
+            .ToHashSet();
+
+    if (!Context.Request.Query.ContainsKey("ownerItId"))
+    {
+        ownerSelectionnes =
+            utilisateurs.Select(u => u.Id).ToHashSet();
+    }
+
+
+    // ============================================================
+    // TOUS LES STATUTS
+    // ============================================================
+
+    var tousLesStatuts =
+        Enum.GetValues<GestionProjetSocota.Models.StatutProjet>();
+
+
+    // ============================================================
+    // STATUT FILTRE ACTIF
+    // ============================================================
+
+    var statutFiltreActif =
+        Context.Request.Query.ContainsKey("statutFiltreActif") ||
+        Context.Request.Query.ContainsKey("statut");
+
+
+    HashSet<GestionProjetSocota.Models.StatutProjet> statutSelectionnes;
+
+
+    if (statutFiltreActif)
+    {
+        statutSelectionnes =
+            Context.Request.Query["statut"]
+                .Select(x =>
+                    Enum.TryParse<GestionProjetSocota.Models.StatutProjet>(
+                        x,
+                        out var value)
+                        ? value
+                        : (GestionProjetSocota.Models.StatutProjet?)null)
+                .Where(x => x.HasValue)
+                .Select(x => x!.Value)
+                .ToHashSet();
+    }
+    else
+    {
+        // Tous les statuts sauf GoLive et Cancelled
+
+        statutSelectionnes =
+            tousLesStatuts
+                .Where(s =>
+                    s != GestionProjetSocota.Models.StatutProjet.GoLive &&
+                    s != GestionProjetSocota.Models.StatutProjet.Cancelled)
+                .ToHashSet();
+    }
+
+
+    // ============================================================
+    // PERMISSIONS
+    // ============================================================
+
+    var peutCreerProjet =
+        User.IsInRole("Administrateur") ||
+        User.IsInRole("ChefDeProjet");
+
+    var peutModifierProjet =
+        User.IsInRole("Administrateur") ||
+        User.IsInRole("ChefDeProjet");
+
+    var peutSupprimerProjet =
+        User.IsInRole("Administrateur");
+
+
+    var nbEnRetard = Model.Count(p =>
+        p.Deadline.HasValue &&
+        p.Deadline.Value.Date < DateTime.Today &&
+        p.Statut != GestionProjetSocota.Models.StatutProjet.Closed &&
+        p.Statut != GestionProjetSocota.Models.StatutProjet.Cancelled);
+
+    var nbDelaiRespecte = Model.Count - nbEnRetard;
+}
+
+
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --pj-ink: #1c261f;
+        --pj-muted: #6b7a63;
+        --pj-line: #e7ede0;
+        --pj-line-soft: #f1f5ec;
+        --pj-radius: 1rem;
+        --pj-radius-sm: 0.7rem;
+    }
+
+
+    /* ============================================================
+       ÉCRAN PRINCIPAL
+       ============================================================ */
+
+    html,
+    body {
+        height: 100%;
+        overflow: hidden !important;
+    }
+
+    .projet-page {
+        height: calc(100vh - 92px);
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden !important;
+        font-size: 0.9rem;
+    }
+
+
+    /* ============================================================
+       HEADER DE PAGE
+       ============================================================ */
+
+    .pj-topbar {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+
+    .pj-title-block {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .pj-title-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: var(--pj-radius-sm);
+        background: linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(139, 197, 63, .35);
+        flex-shrink: 0;
+    }
+
+    .pj-title-block h1 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--pj-ink);
+        line-height: 1.1;
+    }
+
+    .pj-title-block small {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--pj-muted);
+        margin-top: 1px;
+    }
+
+    /* mini stats pill */
+    .pj-stats {
+        display: flex;
+        gap: 6px;
+        margin-left: 8px;
+    }
+
+    .pj-stat-pill {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 30px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        background: var(--pj-line-soft);
+        color: var(--pj-muted);
+        white-space: nowrap;
+    }
+
+    .pj-stat-pill.warn {
+        background: #fdecea;
+        color: #c0392b;
+    }
+
+    .pj-stat-pill.ok {
+        background: rgba(139, 197, 63, .14);
+        color: var(--socota-green-dark);
+    }
+
+    .pj-search {
+        flex: 0 0 250px;
+        width: 250px;
+        max-width: 250px;
+        margin-left: auto;
+    }
+
+    .pj-search .input-group {
+        height: 36px;
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: none !important;
+    }
+
+    .pj-search .form-control {
+        height: 36px !important;
+        min-height: 36px !important;
+        border: 1.5px solid var(--pj-line);
+        border-right: none;
+        font-size: 0.8rem;
+        padding-left: 14px;
+        box-shadow: none !important;
+    }
+
+    .pj-search .btn {
+        height: 36px !important;
+        min-height: 36px !important;
+        width: 42px;
+        padding: 0;
+        border: 1.5px solid var(--pj-line);
+        border-left: none;
+        background: #fff;
+        color: var(--socota-green-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: none !important;
+    }
+
+    .pj-search .btn i {
+        font-size: 0.8rem;
+        line-height: 1;
+    }
+
+    .pj-btn-new {
+        height: 36px;
+        padding: 0 18px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        border-radius: 30px;
+        background: linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+        border: none;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(139, 197, 63, .35);
+        transition: transform .2s ease, box-shadow .2s ease;
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    .pj-btn-new:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 197, 63, .45);
+        color: #fff;
+    }
+
+
+    /* ============================================================
+       FILTRES
+       ============================================================ */
+
+    .pj-filters {
+        flex: 0 0 auto;
+        margin-bottom: 8px;
+        border: 1px solid var(--pj-line);
+        border-radius: var(--pj-radius);
+        background: #fff;
+        box-shadow: 0 3px 14px rgba(0, 0, 0, .04);
+    }
+
+    .pj-filters .card-body {
+        padding: 10px 14px;
+    }
+
+    .filtres-recherche {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+        gap: 8px;
+    }
+
+    .filtre-item {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .filtre-item .form-label {
+        margin-bottom: 3px;
+        line-height: 1;
+        font-size: 0.66rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--pj-muted);
+    }
+
+
+    /* multiselect */
+
+    .filtre-multiselect {
+        position: relative;
+    }
+
+    .multiselect-box {
+        position: relative;
+        width: 100%;
+    }
+
+    .multiselect-box summary {
+        height: 33px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 4px 11px;
+        border: 1.5px solid var(--pj-line);
+        border-radius: var(--pj-radius-sm);
+        background-color: #fff;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--pj-ink);
+        list-style: none;
+        user-select: none;
+        overflow: hidden;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .multiselect-box summary:hover {
+        border-color: var(--socota-green);
+    }
+
+    .multiselect-box[open] summary {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 3px rgba(139, 197, 63, .14);
+    }
+
+    .multiselect-box summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .multiselect-box summary i {
+        flex-shrink: 0;
+        font-size: 0.62rem;
+        color: var(--socota-green-dark);
+        transition: transform .2s ease;
+    }
+
+    .multiselect-box[open] summary i {
+        transform: rotate(180deg);
+    }
+
+    .multiselect-label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .multiselect-options {
+        position: absolute;
+        top: calc(100% + 5px);
+        left: 0;
+        right: 0;
+        max-height: 270px;
+        overflow-y: auto;
+        z-index: 1000;
+        padding: 7px;
+        background: #fff;
+        border: 1px solid #e3f0cf;
+        border-radius: var(--pj-radius-sm);
+        box-shadow: 0 14px 30px rgba(0, 0, 0, .16);
+    }
+
+    .multiselect-select-all {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 9px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 800;
+        border-radius: 7px;
+        background: rgba(139, 197, 63, .08);
+        border-bottom: 1px solid var(--pj-line-soft);
+    }
+
+    .multiselect-select-all:hover {
+        background: rgba(139, 197, 63, .18);
+    }
+
+    .multiselect-select-all span {
+        color: var(--socota-green-dark);
+    }
+
+    .multiselect-select-all input {
+        accent-color: var(--socota-green);
+        width: 15px;
+        height: 15px;
+        margin: 0;
+    }
+
+    .multiselect-divider {
+        height: 1px;
+        margin: 5px 2px;
+        background: var(--pj-line-soft);
+    }
+
+    .multiselect-options label.multiselect-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 9px;
+        cursor: pointer;
+        font-size: 0.78rem;
+        border-radius: 7px;
+        transition: background-color .15s ease;
+    }
+
+    .multiselect-options label.multiselect-option:hover {
+        background: rgba(139, 197, 63, .14);
+    }
+
+    .multiselect-options input[type="checkbox"] {
+        margin: 0;
+        accent-color: var(--socota-green);
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+    }
+
+    .filtre-action {
+        flex: 0 0 96px;
+    }
+
+    .filtre-action .btn {
+        width: 100%;
+        height: 33px;
+        font-size: 0.76rem;
+        font-weight: 800;
+        border-radius: var(--pj-radius-sm);
+        background: linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+        border: none;
+        box-shadow: 0 4px 12px rgba(139, 197, 63, .3);
+        transition: transform .2s ease;
+    }
+
+    .filtre-action .btn:hover {
+        transform: translateY(-1px);
+    }
+
+
+    /* exports */
+
+    .pj-actions-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 9px;
+        padding-top: 9px;
+        border-top: 1px dashed var(--pj-line);
+    }
+
+    .pj-actions-row .btn {
+        height: 29px;
+        padding: 2px 13px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        border-radius: 30px;
+    }
+
+    .btn-outline-success {
+        color: var(--socota-green-dark) !important;
+        border-color: var(--socota-green) !important;
+    }
+
+    .btn-outline-success:hover {
+        background: var(--socota-green) !important;
+        border-color: var(--socota-green) !important;
+        color: #fff !important;
+    }
+
+    .btn-export-pdf {
+        color: #97292c !important;
+        border-color: #e3b3b4 !important;
+        background: transparent;
+    }
+
+    .btn-export-pdf:hover {
+        color: #fff !important;
+        background: #c0392b !important;
+        border-color: #c0392b !important;
+    }
+
+
+    /* ============================================================
+       CARTE PRINCIPALE
+       ============================================================ */
+
+    .pj-card {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: none;
+        border-radius: var(--pj-radius);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    }
+
+    .pj-card .card-header {
+        flex: 0 0 auto;
+        min-height: 46px;
+        padding: 9px 18px;
+        background: linear-gradient(100deg, var(--socota-green) 0%, var(--socota-green-dark) 100%);
+        color: #fff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .pj-card .card-header h5 {
+        font-size: 0.94rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0;
+    }
+
+    .pj-card .card-header .badge {
+        background: rgba(255, 255, 255, .24);
+        color: #fff;
+        font-weight: 800;
+        padding: 6px 13px;
+        border-radius: 30px;
+        font-size: 0.76rem;
+    }
+
+
+    /* body/table wrapper */
+
+    .pj-card .card-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 0 !important;
+        overflow: hidden !important;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pj-table-wrapper {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .pj-table-header {
+        flex: 0 0 auto;
+        width: 100%;
+        overflow: hidden;
+        background: #26301f;
+    }
+
+    .pj-table-header table {
+        width: 2255px;
+        min-width: 2255px;
+        table-layout: fixed;
+        margin: 0 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .pj-table-header th {
+        height: 40px;
+        padding: 6px 10px;
+        background: #26301f !important;
+        color: #e5efdb !important;
+        font-size: 0.67rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        border: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    body[data-bs-theme="dark"] .pj-table-header {
+        background: #f8f9fa;
+    }
+
+    body[data-bs-theme="dark"] .pj-table-header th {
+        background: #f8f9fa !important;
+        color: #212529 !important;
+        border-color: #dee2e6;
+    }
+
+    .pj-table-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: auto;
+        position: relative;
+        scrollbar-width: thin;
+        scrollbar-color: var(--socota-green) transparent;
+    }
+
+    .pj-table-body::-webkit-scrollbar {
+        width: 6px;
+        height: 9px;
+    }
+
+    .pj-table-body::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .pj-table-body::-webkit-scrollbar-thumb {
+        background: var(--socota-green);
+        border-radius: 10px;
+    }
+
+    .pj-table-body::-webkit-scrollbar-thumb:hover {
+        background: var(--socota-green-dark);
+    }
+
+    .pj-table-body table {
+        width: 2255px;
+        min-width: 2255px;
+        table-layout: fixed;
+        margin: 0 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .pj-table-body tr {
+        transition: background-color .15s ease;
+    }
+
+    .pj-table-body tbody tr:hover td {
+        background-color: var(--pj-line-soft);
+    }
+
+    .pj-table-body td {
+        padding: 8px 10px;
+        vertical-align: middle;
+        font-size: 0.77rem;
+        border: 1px solid var(--pj-line-soft);
+        background: #fff;
+    }
+
+
+    /* largeurs colonnes */
+
+    .colonne-actions {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    .colonne-reference {
+        width: 108px;
+        min-width: 108px;
+    }
+
+    .colonne-ticket {
+        width: 108px;
+        min-width: 108px;
+    }
+
+    .colonne-nom {
+        width: 220px;
+        min-width: 220px;
+        max-width: 220px;
+        white-space: normal;
+    }
+
+    .colonne-societe {
+        width: 175px;
+        min-width: 175px;
+        max-width: 175px;
+    }
+
+    .colonne-statut {
+        width: 140px;
+        min-width: 140px;
+    }
+
+    .colonne-owner {
+        width: 170px;
+        min-width: 170px;
+    }
+
+    .colonne-poweruser {
+        width: 170px;
+        min-width: 170px;
+    }
+
+    .colonne-type {
+        width: 125px;
+        min-width: 125px;
+    }
+
+    .colonne-plateforme {
+        width: 125px;
+        min-width: 125px;
+    }
+
+    .colonne-date {
+        width: 100px;
+        min-width: 100px;
+    }
+
+    .colonne-deadline {
+        width: 118px;
+        min-width: 118px;
+    }
+
+    .colonne-avancement {
+        width: 210px;
+        min-width: 210px;
+        max-width: 210px;
+        white-space: normal;
+    }
+
+    .colonne-avancement-pourcentage {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    .colonne-risque {
+        width: 85px;
+        min-width: 85px;
+    }
+
+    .pj-cell-2-lines {
+        white-space: normal;
+        overflow: visible;
+        display: block;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+    }
+
+
+    /* actions */
+
+    .colonne-actions .btn {
+        width: 29px;
+        height: 29px;
+        padding: 4px 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .colonne-actions .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, .12);
+    }
+
+    .colonne-actions .fa,
+    .colonne-actions .fas {
+        font-size: 0.8rem;
+    }
+
+
+    /* avatar */
+
+    .nom-avatar-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .nom-avatar {
+        flex-shrink: 0;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--socota-green), var(--socota-green-dark));
+        color: #fff;
+        font-size: 0.66rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(139, 197, 63, .35);
+    }
+
+
+    /* avancement */
+
+    .pj-table-body .progress {
+        min-width: 118px;
+        height: 15px;
+        margin: 0;
+        border-radius: 20px;
+        background: var(--pj-line-soft);
+        overflow: hidden;
+    }
+
+    .pj-table-body .progress-bar {
+        background: linear-gradient(90deg, var(--socota-green), var(--socota-green-dark)) !important;
+        border-radius: 20px;
+    }
+
+
+    /* deadline */
+
+    .deadline-depassee {
+        color: #c0392b;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .deadline-depassee i {
+        margin-left: 3px;
+    }
+
+
+    /* badge statut avec point */
+
+    .badge-statut {
+        white-space: nowrap;
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 5px 11px 5px 8px;
+        border-radius: 20px;
+        letter-spacing: .02em;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .badge-statut .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: .85;
+    }
+
+
+    /* risque */
+
+    .risque-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 0.74rem;
+        font-weight: 800;
+        color: #fff;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, .16);
+    }
+
+
+    /* ============================================================
+       DARK MODE
+       ============================================================ */
+
+    body[data-bs-theme="dark"] .pj-filters,
+    body[data-bs-theme="dark"] .pj-card {
+        box-shadow: none;
+        border: 1px solid #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .pj-title-block h1 {
+        color: #e9efe4;
+    }
+
+    body[data-bs-theme="dark"] .pj-table-body td {
+        background: #212529;
+        color: #e9ecef;
+        border-color: #383e42;
+    }
+
+    body[data-bs-theme="dark"] .pj-table-body tr:hover td {
+        background: #2c3327;
+    }
+
+    body[data-bs-theme="dark"] .multiselect-box summary {
+        background: var(--dark-card);
+        color: #e0e0e0;
+        border-color: var(--dark-border);
+    }
+
+    body[data-bs-theme="dark"] .multiselect-options {
+        background: var(--dark-card);
+        color: #e0e0e0;
+        border-color: var(--dark-border);
+    }
+
+    body[data-bs-theme="dark"] .multiselect-select-all {
+        background: rgba(139, 197, 63, .1);
+        border-bottom-color: #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .multiselect-select-all:hover {
+        background: rgba(139, 197, 63, .18);
+    }
+
+    body[data-bs-theme="dark"] .multiselect-select-all span {
+        color: #a8d66b;
+    }
+
+    body[data-bs-theme="dark"] .multiselect-options label.multiselect-option:hover {
+        background: rgba(139, 197, 63, .18);
+    }
+
+    body[data-bs-theme="dark"] .multiselect-divider {
+        background: #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .pj-search .form-control,
+    body[data-bs-theme="dark"] .pj-search .btn {
+        background: var(--dark-card);
+        color: #e0e0e0;
+        border-color: var(--dark-border);
+    }
+
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+
+    @@media (max-width: 900px) {
+        .pj-topbar {
+            gap: 6px;
+        }
+
+        .pj-title-block h1 {
+            font-size: 1rem;
+        }
+
+        .pj-stats {
+            display: none;
+        }
+
+        .pj-search {
+            min-width: 140px;
+            flex: 1 1 auto;
+        }
+    }
+</style>
+
+
+<div class="projet-page">
+
+
+    <!-- ============================================================
+         TOPBAR
+         ============================================================ -->
+
+    <div class="pj-topbar">
+
+        <div class="pj-title-block">
+
+            <span class="pj-title-icon">
+                <i class="fas fa-diagram-project"></i>
+            </span>
+
+            <div>
+                <h1>Projets</h1>
+                <small>Portefeuille de digitalisation Socota</small>
+            </div>
+
+        </div>
+
+        <div class="pj-stats">
+
+            <span class="pj-stat-pill">
+                <i class="fas fa-layer-group"></i> @Model.Count
+            </span>
+
+            <span class="pj-stat-pill ok">
+                <i class="fas fa-clock"></i> @nbDelaiRespecte Délai respecté
+            </span>
+            
+            @if (nbEnRetard > 0)
+            {
+                <span class="pj-stat-pill warn">
+                    <i class="fas fa-triangle-exclamation"></i> @nbEnRetard en retard
+                </span>
+            }
+
+        </div>
+
+
+        <!-- RECHERCHE -->
+
+        <div class="pj-search">
+
+            <form method="get" asp-controller="Projet" asp-action="Index">
+
+                <div class="input-group input-group-sm">
+
+                    <input type="text" name="recherche" value="@recherche" class="form-control"
+                           placeholder="Ticket ID, nom, référence..." />
+
+                    <button type="submit" class="btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- NOUVEAU PROJET -->
+
+        @if (peutCreerProjet)
+        {
+            <a asp-controller="Projet" asp-action="Create" class="pj-btn-new">
+                <i class="fas fa-plus me-2"></i>
+                Nouveau projet
+            </a>
+        }
+
+    </div>
+
+
+    <!-- ============================================================
+         FILTRES
+         ============================================================ -->
+
+    <div class="card pj-filters">
+
+        <div class="card-body">
+
+            <form method="get" asp-controller="Projet" asp-action="Index">
+
+                <input type="hidden" name="statutFiltreActif" value="true" />
+
+                @if (!string.IsNullOrWhiteSpace(recherche))
+                {
+                    <input type="hidden" name="recherche" value="@recherche" />
+                }
+
+
+                <div class="filtres-recherche">
+
+
+                    <!-- SOCIÉTÉ -->
+
+                    <div class="filtre-item">
+
+                        <label class="form-label">Société</label>
+
+                        <div class="filtre-multiselect">
+
+                            <details class="multiselect-box" data-multiselect>
+
+                                <summary>
+
+                                    <span class="multiselect-label">
+
+                                        @{
+                                            var nombreUnites = uniteSelectionnees.Count;
+                                        }
+
+                                        @if (nombreUnites == unites.Count())
+                                        {
+                                            <span>Toutes les sociétés</span>
+                                        }
+                                        else if (nombreUnites == 0)
+                                        {
+                                            <span>Aucune société</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@nombreUnites société(s)</span>
+                                        }
+
+                                    </span>
+
+                                    <i class="fas fa-chevron-down"></i>
+
+                                </summary>
+
+                                <div class="multiselect-options">
+
+                                    <label class="multiselect-select-all">
+                                        <input type="checkbox" class="select-all-checkbox" data-target="unite"
+                                               autocomplete="off" />
+                                        <span>Sélectionner tous</span>
+                                    </label>
+
+                                    <div class="multiselect-divider"></div>
+
+                                    @foreach (var uniteItem in unites)
+                                    {
+                                        <label class="multiselect-option">
+                                            <input type="checkbox" name="unite" value="@uniteItem.Id"
+                                                   class="multiselect-item" data-group="unite"
+                                            @(uniteSelectionnees.Contains(uniteItem.Id) ? "checked" : null)
+                                                   autocomplete="off" />
+                                            <span>@uniteItem.Nom</span>
+                                        </label>
+                                    }
+
+                                </div>
+
+                            </details>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DÉPARTEMENT -->
+
+                    <div class="filtre-item">
+
+                        <label class="form-label">Département</label>
+
+                        <div class="filtre-multiselect">
+
+                            <details class="multiselect-box" data-multiselect>
+
+                                <summary>
+
+                                    <span class="multiselect-label">
+
+                                        @{
+                                            var nombreDepartements = departementSelectionnes.Count;
+                                        }
+
+                                        @if (nombreDepartements == departements.Count())
+                                        {
+                                            <span>Tous les départements</span>
+                                        }
+                                        else if (nombreDepartements == 0)
+                                        {
+                                            <span>Aucun département</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@nombreDepartements département(s)</span>
+                                        }
+
+                                    </span>
+
+                                    <i class="fas fa-chevron-down"></i>
+
+                                </summary>
+
+                                <div class="multiselect-options">
+
+                                    <label class="multiselect-select-all">
+                                        <input type="checkbox" class="select-all-checkbox" data-target="departement"
+                                               autocomplete="off" />
+                                        <span>Sélectionner tous</span>
+                                    </label>
+
+                                    <div class="multiselect-divider"></div>
+
+                                    @foreach (var departementItem in departements)
+                                    {
+                                        <label class="multiselect-option">
+                                            <input type="checkbox" name="departement" value="@departementItem.Id"
+                                                   class="multiselect-item" data-group="departement"
+                                            @(departementSelectionnes.Contains(departementItem.Id) ? "checked" : null)
+                                                   autocomplete="off" />
+                                            <span>@departementItem.Nom</span>
+                                        </label>
+                                    }
+
+                                </div>
+
+                            </details>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUT -->
+
+                    <div class="filtre-item">
+
+                        <label class="form-label">Statut</label>
+
+                        <div class="filtre-multiselect">
+
+                            <details class="multiselect-box" data-multiselect>
+
+                                <summary>
+
+                                    <span class="multiselect-label">
+
+                                        @{
+                                            var nombreStatuts = statutSelectionnes.Count;
+                                        }
+
+                                        @if (!statutFiltreActif)
+                                        {
+                                            <span>Statuts actifs</span>
+                                        }
+                                        else if (nombreStatuts == 0)
+                                        {
+                                            <span>Aucun statut</span>
+                                        }
+                                        else if (nombreStatuts == tousLesStatuts.Length)
+                                        {
+                                            <span>Tous les statuts</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@nombreStatuts statut(s)</span>
+                                        }
+
+                                    </span>
+
+                                    <i class="fas fa-chevron-down"></i>
+
+                                </summary>
+
+                                <div class="multiselect-options">
+
+                                    <label class="multiselect-select-all">
+                                        <input type="checkbox" class="select-all-checkbox" data-target="statut"
+                                               autocomplete="off" />
+                                        <span>Sélectionner tous</span>
+                                    </label>
+
+                                    <div class="multiselect-divider"></div>
+
+                                    @foreach (var statutItem in tousLesStatuts)
+                                    {
+                                        var estSelectionne = statutSelectionnes.Contains(statutItem);
+
+                                        <label class="multiselect-option">
+                                            <input type="checkbox" name="statut" value="@statutItem"
+                                                   class="multiselect-item" data-group="statut" @(estSelectionne ?
+                                                   "checked=\"checked\"" : null) autocomplete="off" />
+                                            <span>@statutItem</span>
+                                        </label>
+                                    }
+
+                                </div>
+
+                            </details>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TYPE -->
+
+                    <div class="filtre-item">
+
+                        <label class="form-label">Type</label>
+
+                        <div class="filtre-multiselect">
+
+                            <details class="multiselect-box" data-multiselect>
+
+                                <summary>
+
+                                    <span class="multiselect-label">
+
+                                        @{
+                                            var nombreTypes = typeSelectionnes.Count;
+                                        }
+
+                                        @if (nombreTypes == types.Count())
+                                        {
+                                            <span>Tous les types</span>
+                                        }
+                                        else if (nombreTypes == 0)
+                                        {
+                                            <span>Aucun type</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@nombreTypes type(s)</span>
+                                        }
+
+                                    </span>
+
+                                    <i class="fas fa-chevron-down"></i>
+
+                                </summary>
+
+                                <div class="multiselect-options">
+
+                                    <label class="multiselect-select-all">
+                                        <input type="checkbox" class="select-all-checkbox" data-target="type"
+                                               autocomplete="off" />
+                                        <span>Sélectionner tous</span>
+                                    </label>
+
+                                    <div class="multiselect-divider"></div>
+
+                                    @foreach (var typeItem in types)
+                                    {
+                                        <label class="multiselect-option">
+                                            <input type="checkbox" name="type" value="@typeItem.Id" class="multiselect-item"
+                                                   data-group="type" @(typeSelectionnes.Contains(typeItem.Id) ? "checked" :
+                                                   null) autocomplete="off" />
+                                            <span>@typeItem.Nom</span>
+                                        </label>
+                                    }
+
+                                </div>
+
+                            </details>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- OWNER IT -->
+
+                    <div class="filtre-item">
+
+                        <label class="form-label">Responsable IT</label>
+
+                        <div class="filtre-multiselect">
+
+                            <details class="multiselect-box" data-multiselect>
+
+                                <summary>
+
+                                    <span class="multiselect-label">
+
+                                        @{
+                                            var nombreOwners = ownerSelectionnes.Count;
+                                        }
+
+                                        @if (nombreOwners == utilisateurs.Count())
+                                        {
+                                            <span>Tous les responsables</span>
+                                        }
+                                        else if (nombreOwners == 0)
+                                        {
+                                            <span>Aucun responsable</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@nombreOwners responsable(s)</span>
+                                        }
+
+                                    </span>
+
+                                    <i class="fas fa-chevron-down"></i>
+
+                                </summary>
+
+                                <div class="multiselect-options">
+
+                                    <label class="multiselect-select-all">
+                                        <input type="checkbox" class="select-all-checkbox" data-target="ownerItId"
+                                               autocomplete="off" />
+                                        <span>Sélectionner tous</span>
+                                    </label>
+
+                                    <div class="multiselect-divider"></div>
+
+                                    @foreach (var utilisateurItem in utilisateurs)
+                                    {
+                                        <label class="multiselect-option">
+                                            <input type="checkbox" name="ownerItId" value="@utilisateurItem.Id"
+                                                   class="multiselect-item" data-group="ownerItId"
+                                            @(ownerSelectionnes.Contains(utilisateurItem.Id) ? "checked" : null)
+                                                   autocomplete="off" />
+                                            <span>@utilisateurItem.Nom</span>
+                                        </label>
+                                    }
+
+                                </div>
+
+                            </details>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FILTRER -->
+
+                    <div class="filtre-action">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-filter me-1"></i>
+                            Filtrer
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- EXPORTS -->
+
+            <div class="pj-actions-row">
+
+                <a href="@Url.Action("ExporterExcel", "Projet")@Context.Request.QueryString"
+                   class="btn btn-outline-success">
+                    <i class="fas fa-file-excel me-1"></i> Excel
+                </a>
+
+                <a href="@Url.Action("ExporterPdf", "Projet")@Context.Request.QueryString" class="btn btn-export-pdf">
+                    <i class="fas fa-file-pdf me-1"></i> PDF
+                </a>
+
+                <a asp-controller="Projet" asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-undo me-1"></i> Réinitialiser
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         LISTE DES PROJETS
+         ============================================================ -->
+
+    <div class="card pj-card">
+
+        <div class="card-header">
+
+            <h5>
+                <i class="fas fa-list"></i>
                 Liste des projets
             </h5>
 
-            <small class="text-muted">
-                @Model.Count projet(s)
-            </small>
+            <span class="badge">@Model.Count projet(s)</span>
+
         </div>
 
-        <i class="fas fa-folder-open text-socota"></i>
 
-    </div>
+        <div class="card-body">
 
-    <div class="card-body p-0">
+            <div class="pj-table-wrapper">
 
-        @if (!Model.Any())
-        {
-            <div class="text-center py-5">
 
-                <i class="fas fa-folder-open fa-2x text-muted mb-3"></i>
+                <!-- HEADER FIXE -->
 
-                <p class="text-muted mb-0">
-                    Aucun projet pour le moment.
-                </p>
+                <div class="pj-table-header" id="projetTableHeader">
 
-            </div>
-        }
-        else
-        {
-            <div class="table-responsive">
+                    <table>
 
-                <table class="table table-hover align-middle mb-0">
+                        <colgroup>
+                            <col class="colonne-actions" />
+                            <col class="colonne-reference" />
+                            <col class="colonne-ticket" />
+                            <col class="colonne-nom" />
+                            <col class="colonne-societe" />
+                            <col class="colonne-statut" />
+                            <col class="colonne-owner" />
+                            <col class="colonne-poweruser" />
+                            <col class="colonne-type" />
+                            <col class="colonne-plateforme" />
+                            <col class="colonne-date" />
+                            <col class="colonne-deadline" />
+                            <col class="colonne-date" />
+                            <col class="colonne-avancement" />
+                            <col class="colonne-avancement-pourcentage" />
+                            <col class="colonne-risque" />
+                        </colgroup>
 
-                    <thead class="table-light">
-
-                        <tr>
-                            <th>Référence</th>
-                            <th>Ticket ID</th>
-                            <th>Nom</th>
-                            <th>Unité</th>
-                            <th>Statut</th>
-                            <th>Owner IT</th>
-                            <th>Power User</th>
-                            <th>Type</th>
-                            <th>Plateforme</th>
-                            <th>Date de début</th>
-                            <th>Date de fin</th>
-                            <th style="min-width: 130px;">Avancement</th>
-                            <th>Risque</th>
-                            <th class="text-end">Actions</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @foreach (var projet in Model)
-                        {
+                        <thead>
                             <tr>
+                                <th class="colonne-actions">Actions</th>
+                                <th class="colonne-reference">Référence</th>
+                                <th class="colonne-ticket">Ticket ID</th>
+                                <th class="colonne-nom">Nom</th>
+                                <th class="colonne-societe">Société</th>
+                                <th class="colonne-statut">Statut</th>
+                                <th class="colonne-owner">Owner IT</th>
+                                <th class="colonne-poweruser">Power User</th>
+                                <th class="colonne-type">Type</th>
+                                <th class="colonne-plateforme">Plateforme</th>
+                                <th class="colonne-date">Début</th>
+                                <th class="colonne-deadline">Deadline</th>
+                                <th class="colonne-date">Fin</th>
+                                <th class="colonne-avancement">Avancement</th>
+                                <th class="colonne-avancement-pourcentage">Avancement (%)</th>
+                                <th class="colonne-risque">Risque</th>
+                            </tr>
+                        </thead>
 
-                                <!-- Référence -->
-                                <td class="fw-semibold">
-                                    @(string.IsNullOrWhiteSpace(projet.Reference)
-                                        ? "-"
-                                        : projet.Reference)
-                                </td>
+                    </table>
 
-                                <!-- Ticket ID -->
-                                <td>
-                                    <span class="text-muted">
-                                        @projet.TicketId
-                                    </span>
-                                </td>
+                </div>
 
-                                <!-- Nom -->
-                                <td>
-                                    <div class="fw-semibold">
-                                        @projet.Nom
-                                    </div>
-                                </td>
 
-                                <!-- Unité -->
-                                <td>
-                                    @(projet.UniteProjet?.Nom ?? "-")
-                                </td>
+                <!-- BODY SCROLLABLE -->
 
-                                <!-- Statut -->
-                                <td>
-                                    <span class="badge bg-socota">
-                                        @projet.Statut
-                                    </span>
-                                </td>
+                <div class="pj-table-body" id="projetTableBody">
 
-                                <!-- Owner IT -->
-                                <td>
-                                    @(projet.OwnerIt?.Nom ?? "-")
-                                </td>
+                    <table>
 
-                                <!-- Power User -->
-                                <td>
-                                    @(projet.PowerUser?.Nom ?? "-")
-                                </td>
+                        <colgroup>
+                            <col class="colonne-actions" />
+                            <col class="colonne-reference" />
+                            <col class="colonne-ticket" />
+                            <col class="colonne-nom" />
+                            <col class="colonne-societe" />
+                            <col class="colonne-statut" />
+                            <col class="colonne-owner" />
+                            <col class="colonne-poweruser" />
+                            <col class="colonne-type" />
+                            <col class="colonne-plateforme" />
+                            <col class="colonne-date" />
+                            <col class="colonne-deadline" />
+                            <col class="colonne-date" />
+                            <col class="colonne-avancement" />
+                            <col class="colonne-avancement-pourcentage" />
+                            <col class="colonne-risque" />
+                        </colgroup>
 
-                                <!-- Type -->
-                                <td>
-                                    @(projet.TypeProjetReference?.Nom ?? "-")
-                                </td>
+                        <tbody>
 
-                                <!-- Plateforme -->
-                                <td>
-                                    @(projet.PlateformeProjet?.Nom ?? "-")
-                                </td>
+                            @if (Model.Any())
+                            {
+                                foreach (var projet in Model)
+                                {
+                                    var risque =
+                                        scores.TryGetValue(projet.Id, out var scoreData)
+                                            ? scoreData
+                                            : (score: 0, couleur: "success");
 
-                                <!-- Date de début -->
-                                <td>
-                                    @if (projet.DateDebut.HasValue)
-                                    {
-                                        @projet.DateDebut.Value.ToString("dd/MM/yyyy")
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">
-                                            -
-                                        </span>
-                                    }
-                                </td>
+                                    var pourcentage =
+                                        Math.Clamp(projet.PourcentageAvancement, 0, 100);
 
-                                <!-- Date de fin -->
-                                <td>
-                                    @if (projet.DateFin.HasValue)
-                                    {
-                                        var dateEnRetard =
-                                            projet.DateFin.Value.Date < DateTime.Now.Date &&
-                                            projet.Statut != StatutProjet.Closed &&
-                                            projet.Statut != StatutProjet.Cancelled;
+                                    var deadlineDepassee =
+                                        projet.Deadline.HasValue &&
+                                        projet.Deadline.Value.Date < DateTime.Today &&
+                                        projet.Statut != GestionProjetSocota.Models.StatutProjet.Closed &&
+                                        projet.Statut != GestionProjetSocota.Models.StatutProjet.Cancelled;
 
-                                        <span class="@(dateEnRetard
-                                                                                                                                        ? "text-danger fw-semibold"
-                                                                                                                                        : "")">
+                                    var ownerInitiales =
+                                        string.IsNullOrWhiteSpace(projet.OwnerIt?.Nom)
+                                            ? "-"
+                                            : projet.OwnerIt.Nom.Trim().Substring(0, 1).ToUpper();
 
-                                            @projet.DateFin.Value.ToString("dd/MM/yyyy")
+                                    var powerUserInitiales =
+                                        string.IsNullOrWhiteSpace(projet.PowerUser?.Nom)
+                                            ? "-"
+                                            : projet.PowerUser.Nom.Trim().Substring(0, 1).ToUpper();
 
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted">
-                                            -
-                                        </span>
-                                    }
-                                </td>
+                                    <tr>
 
-                                <!-- Avancement -->
-                                <td>
+                                        <!-- ACTIONS -->
+                                        <td class="colonne-actions">
+                                            <div class="d-flex gap-1">
 
-                                    <div class="progress" role="progressbar" aria-valuenow="@projet.PourcentageAvancement"
-                                         aria-valuemin="0" aria-valuemax="100" style="height: 18px;">
+                                                <a asp-controller="Projet" asp-action="Details" asp-route-id="@projet.Id"
+                                                   class="btn btn-sm btn-outline-primary" title="Voir les détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
 
-                                        <div class="progress-bar bg-socota" style="width: @projet.PourcentageAvancement%;">
+                                                @if (peutModifierProjet)
+                                                {
+                                                    <a asp-controller="Projet" asp-action="ChangerStatut" asp-route-id="@projet.Id"
+                                                       class="btn btn-sm btn-outline-warning" title="Changer le statut">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </a>
 
-                                            <span class="small fw-semibold">
-                                                @projet.PourcentageAvancement%
+                                                    <a asp-controller="Projet" asp-action="Edit" asp-route-id="@projet.Id"
+                                                       class="btn btn-sm btn-outline-secondary" title="Modifier">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                }
+
+                                                @if (peutSupprimerProjet)
+                                                {
+                                                    <form asp-controller="Projet" asp-action="Delete" asp-route-id="@projet.Id"
+                                                          method="post" class="d-inline"
+                                                          onsubmit="return confirm('Voulez-vous vraiment supprimer ce projet ?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                                title="Supprimer">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+
+                                            </div>
+                                        </td>
+
+
+                                        <!-- RÉFÉRENCE -->
+                                        <td class="colonne-reference">
+                                            <strong style="color: var(--socota-green-dark);">@projet.Reference</strong>
+                                        </td>
+
+
+                                        <!-- TICKET -->
+                                        <td class="colonne-ticket">@projet.TicketId</td>
+
+
+                                        <!-- NOM -->
+                                        <td class="colonne-nom">
+                                            <div class="pj-cell-2-lines" title="@projet.Nom">@projet.Nom</div>
+                                        </td>
+
+
+                                        <!-- SOCIÉTÉ -->
+                                        <td class="colonne-societe">
+                                            <div class="pj-cell-2-lines" title="@projet.UniteProjet?.Nom">
+                                                @(projet.UniteProjet?.Nom ?? "-")
+                                            </div>
+                                        </td>
+
+
+                                        <!-- STATUT -->
+                                        <td class="colonne-statut">
+
+                                            @{
+                                                var statutClasse =
+                                                    projet.Statut switch
+                                                    {
+                                                        GestionProjetSocota.Models.StatutProjet.WaitingRFC => "bg-secondary",
+                                                        GestionProjetSocota.Models.StatutProjet.RFCApproved => "bg-info text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.Analyse => "bg-primary",
+                                                        GestionProjetSocota.Models.StatutProjet.DevStarted => "bg-primary",
+                                                        GestionProjetSocota.Models.StatutProjet.Testing => "bg-warning text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.Debugging => "bg-danger",
+                                                        GestionProjetSocota.Models.StatutProjet.Formation => "bg-info text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.GoLive => "bg-success",
+                                                        GestionProjetSocota.Models.StatutProjet.Support => "bg-success",
+                                                        GestionProjetSocota.Models.StatutProjet.Closed => "bg-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.Prospection => "bg-secondary",
+                                                        GestionProjetSocota.Models.StatutProjet.Achat => "bg-secondary",
+                                                        GestionProjetSocota.Models.StatutProjet.Installation => "bg-primary",
+                                                        GestionProjetSocota.Models.StatutProjet.Configuration => "bg-primary",
+                                                        GestionProjetSocota.Models.StatutProjet.DataUpload => "bg-info text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.Securisation => "bg-warning text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.ApresVente => "bg-success",
+                                                        GestionProjetSocota.Models.StatutProjet.Suspendu => "bg-warning text-dark",
+                                                        GestionProjetSocota.Models.StatutProjet.Cancelled => "bg-danger",
+                                                        _ => "bg-secondary"
+                                                    };
+                                            }
+
+                                            <span class="badge @statutClasse badge-statut">
+                                                <span class="dot"></span>
+                                                @projet.Statut
                                             </span>
 
+                                        </td>
+
+
+                                        <!-- OWNER IT -->
+                                        <td class="colonne-owner">
+                                            <div class="nom-avatar-wrap">
+                                                <span class="nom-avatar">@ownerInitiales</span>
+                                                <div class="pj-cell-2-lines">@(projet.OwnerIt?.Nom ?? "-")</div>
+                                            </div>
+                                        </td>
+
+
+                                        <!-- POWER USER -->
+                                        <td class="colonne-poweruser">
+                                            <div class="nom-avatar-wrap">
+                                                <span class="nom-avatar">@powerUserInitiales</span>
+                                                <div class="pj-cell-2-lines">@(projet.PowerUser?.Nom ?? "-")</div>
+                                            </div>
+                                        </td>
+
+
+                                        <!-- TYPE -->
+                                        <td class="colonne-type">
+                                            <div class="pj-cell-2-lines">@(projet.TypeProjetReference?.Nom ?? "-")</div>
+                                        </td>
+
+
+                                        <!-- PLATEFORME -->
+                                        <td class="colonne-plateforme">
+                                            <div class="pj-cell-2-lines">@(projet.PlateformeProjet?.Nom ?? "-")</div>
+                                        </td>
+
+
+                                        <!-- DÉBUT -->
+                                        <td class="colonne-date">
+                                            @if (projet.DateDebut.HasValue)
+                                            {
+                                                @projet.DateDebut.Value.ToString("dd/MM/yyyy")
+                                            }
+                                            else
+                                            {
+                                                <span>-</span>
+                                            }
+                                        </td>
+
+
+                                        <!-- DEADLINE -->
+                                        <td class="colonne-deadline">
+                                            @if (projet.Deadline.HasValue)
+                                            {
+                                                @if (deadlineDepassee)
+                                                {
+                                                    <span class="deadline-depassee">
+                                                        @projet.Deadline.Value.ToString("dd/MM/yyyy")
+                                                        <i class="fas fa-exclamation-triangle" title="Deadline dépassée"></i>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    @projet.Deadline.Value.ToString("dd/MM/yyyy")
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>-</span>
+                                            }
+                                        </td>
+
+
+                                        <!-- FIN -->
+                                        <td class="colonne-date">
+                                            @if (projet.DateFin.HasValue)
+                                            {
+                                                @projet.DateFin.Value.ToString("dd/MM/yyyy")
+                                            }
+                                            else
+                                            {
+                                                <span>-</span>
+                                            }
+                                        </td>
+
+
+                                        <!-- AVANCEMENT -->
+                                        <td class="colonne-avancement">
+                                            <div class="pj-cell-2-lines" title="@projet.Avancement">
+                                                @if (string.IsNullOrWhiteSpace(projet.Avancement))
+                                                {
+                                                    <span>-</span>
+                                                }
+                                                else
+                                                {
+                                                    @projet.Avancement
+                                                }
+                                            </div>
+                                        </td>
+
+
+                                        <!-- AVANCEMENT % -->
+                                        <td class="colonne-avancement-pourcentage">
+                                            <div class="progress" role="progressbar" aria-valuenow="@pourcentage"
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                <div class="progress-bar" style="width: @pourcentage%;">
+                                                    <span class="small fw-semibold">@pourcentage%</span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+
+                                        <!-- RISQUE -->
+                                        <td class="colonne-risque">
+                                            <span class="risque-badge bg-@risque.couleur" title="Score de risque">
+                                                @risque.score
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="16" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="fas fa-inbox fa-2x d-block mb-2"></i>
+                                            Aucun projet trouvé.
                                         </div>
+                                    </td>
+                                </tr>
+                            }
 
-                                    </div>
+                        </tbody>
 
-                                </td>
+                    </table>
 
-                                <!-- Risque -->
-                                <td>
-
-                                    @{
-                                        var scoreData =
-                                            scores != null &&
-                                            scores.TryGetValue(projet.Id, out var resultat)
-                                                ? resultat
-                                                : (score: 0, couleur: "success");
-
-                                        var classeRisque =
-                                            scoreData.couleur == "success"
-                                                ? "bg-socota"
-                                                : $"bg-{scoreData.couleur}";
-                                    }
-
-                                    <span class="badge @classeRisque">
-                                        @scoreData.score
-                                    </span>
-
-                                </td>
-
-                                <!-- Actions -->
-                                <td class="text-end text-nowrap">
-
-                                    <div class="btn-group" role="group">
-
-                                        <a href="/Projet/Details/@projet.Id" class="btn btn-sm btn-outline-secondary"
-                                           title="Voir">
-
-                                            <i class="fas fa-eye"></i>
-
-                                        </a>
-
-                                        @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
-                                        {
-                                            <a href="/Projet/ChangerStatut/@projet.Id" class="btn btn-sm btn-outline-socota"
-                                               title="Changer le statut">
-
-                                                <i class="fas fa-exchange-alt"></i>
-
-                                            </a>
-
-                                            <a href="/Projet/Edit/@projet.Id" class="btn btn-sm btn-outline-primary"
-                                               title="Modifier">
-
-                                                <i class="fas fa-edit"></i>
-
-                                            </a>
-                                        }
-
-                                        @if (User.IsInRole("Administrateur"))
-                                        {
-                                            <a href="/Projet/Delete/@projet.Id" class="btn btn-sm btn-outline-danger"
-                                               title="Supprimer">
-
-                                                <i class="fas fa-trash"></i>
-
-                                            </a>
-                                        }
-
-                                    </div>
-
-                                </td>
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
-        }
+
+        </div>
 
     </div>
 
 </div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* ============================================================
+           SCROLL HORIZONTAL SYNCHRONISÉ
+           ============================================================ */
+
+        const body = document.getElementById("projetTableBody");
+        const header = document.getElementById("projetTableHeader");
+
+        if (body && header) {
+            body.addEventListener("scroll", () => {
+                header.scrollLeft = body.scrollLeft;
+            });
+        }
+
+
+        /* ============================================================
+           MULTISELECT
+           ============================================================ */
+
+        const multiselects = document.querySelectorAll("[data-multiselect]");
+
+        multiselects.forEach((multiselect) => {
+
+            const selectAll = multiselect.querySelector(".select-all-checkbox");
+            const items = multiselect.querySelectorAll(".multiselect-item");
+
+            if (!selectAll || !items.length) return;
+
+            function updateSelectAll() {
+                const total = items.length;
+                const checked = multiselect.querySelectorAll(".multiselect-item:checked").length;
+                selectAll.checked = total > 0 && checked === total;
+                selectAll.indeterminate = checked > 0 && checked < total;
+            }
+
+            selectAll.addEventListener("change", () => {
+                items.forEach((item) => { item.checked = selectAll.checked; });
+                selectAll.indeterminate = false;
+            });
+
+            items.forEach((item) => {
+                item.addEventListener("change", updateSelectAll);
+            });
+
+            updateSelectAll();
+
+            let closeTimer = null;
+
+            multiselect.addEventListener("mouseenter", () => {
+                if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+            });
+
+            multiselect.addEventListener("mouseleave", () => {
+                if (!multiselect.open) return;
+                closeTimer = setTimeout(() => multiselect.removeAttribute("open"), 120);
+            });
+
+        });
+
+        multiselects.forEach((current) => {
+            current.addEventListener("toggle", () => {
+                if (!current.open) return;
+                multiselects.forEach((other) => {
+                    if (other !== current) other.removeAttribute("open");
+                });
+            });
+        });
+
+    });
+
+</script>

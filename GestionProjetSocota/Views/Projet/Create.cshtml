@@ -1,3 +1,4 @@
+
 @model GestionProjetSocota.ViewModels.ProjetCreateViewModel
 
 <style>
@@ -7,8 +8,9 @@
     }
 
     .edit-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.25rem;
+        color: var(--socota-green-dark);
     }
 
     .edit-subtitle {
@@ -18,15 +20,15 @@
     }
 
     .edit-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
     }
 
     .edit-section {
         padding-bottom: 1.25rem;
         margin-bottom: 1.25rem;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid #eef2ea;
     }
 
     .edit-section:last-of-type {
@@ -35,31 +37,43 @@
     }
 
     .edit-section-title {
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 0.92rem;
+        font-weight: 700;
         margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .edit-section-title i {
-        color: var(--socota-green);
-        margin-right: 0.4rem;
+        color: #fff;
+        background: var(--socota-green);
+        width: 26px;
+        height: 26px;
+        border-radius: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
     }
 
     .form-label {
         font-size: 0.85rem;
-        font-weight: 500;
+        font-weight: 600;
+        color: #3d4738;
         margin-bottom: 0.4rem;
     }
 
     .form-control,
     .form-select {
-        border-radius: 6px;
+        border-radius: 0.6rem;
+        border: 1.5px solid #dfe6d8;
     }
 
     .form-control:focus,
     .form-select:focus {
         border-color: var(--socota-green);
-        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.15);
+        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
     }
 
     .edit-actions {
@@ -70,15 +84,43 @@
     }
 
     .btn-socota {
-        background-color: var(--socota-green);
-        border-color: var(--socota-green);
-        color: #ffffff;
-    }
-
-    .btn-socota:hover {
         background-color: var(--socota-green-dark);
         border-color: var(--socota-green-dark);
         color: #ffffff;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .btn-socota:hover {
+        background-color: #5f8b28;
+        border-color: #5f8b28;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(112, 161, 48, 0.3);
+    }
+
+    .edit-actions .btn-outline-secondary {
+        border-radius: 0.6rem;
+        font-weight: 600;
+        border: 1.5px solid #d7ded1;
+        color: #55604f;
+    }
+
+    .edit-actions .btn-outline-secondary:hover {
+        border-color: var(--socota-green-dark);
+        color: var(--socota-green-dark);
+    }
+
+    .btn-outline-secondary,
+    .btn-outline-danger {
+        border-radius: 0.6rem;
+    }
+
+    .date-help {
+        font-size: 0.75rem;
+        color: #7a8375;
+        margin-top: 0.3rem;
     }
 
     body[data-bs-theme="dark"] .edit-card {
@@ -91,6 +133,10 @@
     }
 
     body[data-bs-theme="dark"] .edit-subtitle {
+        color: #a0a0a0;
+    }
+
+    body[data-bs-theme="dark"] .date-help {
         color: #a0a0a0;
     }
 </style>
@@ -223,16 +269,14 @@
 
                     <div class="row">
 
-                        <!-- ================================= -->
                         <!-- UNITÉ -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
                             <label asp-for="UniteProjetId"
                                    class="form-label">
 
-                                Unité
+                                Société
 
                             </label>
 
@@ -248,7 +292,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                         Sélectionner une unité 
+                                        Sélectionner une unité
                                     </option>
 
                                 </select>
@@ -306,9 +350,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- DÉPARTEMENT -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -331,7 +373,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                         Sélectionner un département 
+                                        Sélectionner un département
                                     </option>
 
                                 </select>
@@ -384,9 +426,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- TYPE -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -409,7 +449,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                        Sélectionner un type 
+                                        Sélectionner un type
                                     </option>
 
                                 </select>
@@ -462,9 +502,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- PLATEFORME -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -487,7 +525,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                         Sélectionner une plateforme 
+                                        Sélectionner une plateforme
                                     </option>
 
                                 </select>
@@ -540,9 +578,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- PRIORITÉ -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -584,9 +620,7 @@
 
                     <div class="row">
 
-                        <!-- ================================= -->
                         <!-- OWNER IT -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -609,7 +643,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                         Aucun 
+                                        Aucun
                                     </option>
 
                                 </select>
@@ -651,7 +685,6 @@
                                        class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
-
                                 <button type="button"
                                         class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurCreate('ownerIt')">
@@ -667,9 +700,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- POWER USER -->
-                        <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
@@ -692,7 +723,7 @@
                                         class="form-select">
 
                                     <option value="">
-                                         Aucun 
+                                        Aucun
                                     </option>
 
                                 </select>
@@ -734,7 +765,6 @@
                                        class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
-
                                 <button type="button"
                                         class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurCreate('powerUser')">
@@ -751,22 +781,44 @@
 
 
                         <!-- ================================= -->
-                        <!-- DATE DÉBUT -->
+                        <!-- DATES DU PROJET -->
                         <!-- ================================= -->
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-12 mt-2 mb-2">
+
+                            <div class="edit-section-title mb-3">
+
+                                <i class="fas fa-calendar-alt"></i>
+
+                                Planification
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATE DÉBUT -->
+
+                        <div class="col-md-4 mb-3">
 
                             <label asp-for="DateDebut"
                                    class="form-label">
 
                                 Date de début
+                                <span class="text-danger">*</span>
 
                             </label>
 
 
                             <input asp-for="DateDebut"
                                    type="date"
-                                   class="form-control" />
+                                   class="form-control"
+                                   required />
+
+
+                            <div class="date-help">
+                                Date à laquelle le projet commence.
+                            </div>
 
 
                             <span asp-validation-for="DateDebut"
@@ -776,16 +828,43 @@
                         </div>
 
 
-                        <!-- ================================= -->
-                        <!-- DATE FIN -->
-                        <!-- ================================= -->
+                        <!-- DEADLINE -->
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
+
+                            <label asp-for="Deadline"
+                                   class="form-label">
+
+                                Deadline
+
+                            </label>
+
+
+                            <input asp-for="Deadline"
+                                   type="date"
+                                   class="form-control" />
+
+
+                            <div class="date-help">
+                                Date limite du projet. Facultative.
+                            </div>
+
+
+                            <span asp-validation-for="Deadline"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- DATE FIN PRÉVUE -->
+
+                        <div class="col-md-4 mb-3">
 
                             <label asp-for="DateFin"
                                    class="form-label">
 
-                                Date de fin
+                                Date de fin prévue
 
                             </label>
 
@@ -793,6 +872,11 @@
                             <input asp-for="DateFin"
                                    type="date"
                                    class="form-control" />
+
+
+                            <div class="date-help">
+                                Fin prévue du projet. Facultative.
+                            </div>
 
 
                             <span asp-validation-for="DateFin"
@@ -853,11 +937,9 @@
             return;
         }
 
-
         if (section.classList.contains("d-none")) {
 
             section.classList.remove("d-none");
-
 
             const input =
                 section.querySelector("input");
@@ -882,7 +964,6 @@
                 'input[name="__RequestVerificationToken"]'
             );
 
-
         if (!tokenInput) {
 
             alert(
@@ -892,10 +973,8 @@
             return;
         }
 
-
         const token =
             tokenInput.value;
-
 
         let url = "";
         let selectId = "";
@@ -903,35 +982,25 @@
         let nom = "";
         let prefixe = "";
 
-
         switch (type) {
 
             case "unite":
 
                 url = "/Projet/AjouterUnite";
-
                 selectId = "UniteProjetId";
-
                 sectionId = "createAjoutUnite";
-
 
                 nom =
                     document
-                        .getElementById(
-                            "CreateNouvelleUnite"
-                        )
+                        .getElementById("CreateNouvelleUnite")
                         .value
                         .trim();
-
 
                 prefixe =
                     document
-                        .getElementById(
-                            "CreateNouvelleUnitePrefixe"
-                        )
+                        .getElementById("CreateNouvelleUnitePrefixe")
                         .value
                         .trim();
-
 
                 if (!nom) {
 
@@ -941,7 +1010,6 @@
 
                     return;
                 }
-
 
                 if (!prefixe) {
 
@@ -957,24 +1025,15 @@
 
             case "departement":
 
-                url =
-                    "/Projet/AjouterDepartement";
-
-                selectId =
-                    "DepartementProjetId";
-
-                sectionId =
-                    "createAjoutDepartement";
-
+                url = "/Projet/AjouterDepartement";
+                selectId = "DepartementProjetId";
+                sectionId = "createAjoutDepartement";
 
                 nom =
                     document
-                        .getElementById(
-                            "CreateNouveauDepartement"
-                        )
+                        .getElementById("CreateNouveauDepartement")
                         .value
                         .trim();
-
 
                 if (!nom) {
 
@@ -990,24 +1049,15 @@
 
             case "type":
 
-                url =
-                    "/Projet/AjouterTypeProjet";
-
-                selectId =
-                    "TypeProjetReferenceId";
-
-                sectionId =
-                    "createAjoutType";
-
+                url = "/Projet/AjouterTypeProjet";
+                selectId = "TypeProjetReferenceId";
+                sectionId = "createAjoutType";
 
                 nom =
                     document
-                        .getElementById(
-                            "CreateNouveauTypeProjet"
-                        )
+                        .getElementById("CreateNouveauTypeProjet")
                         .value
                         .trim();
-
 
                 if (!nom) {
 
@@ -1023,24 +1073,15 @@
 
             case "plateforme":
 
-                url =
-                    "/Projet/AjouterPlateforme";
-
-                selectId =
-                    "PlateformeProjetId";
-
-                sectionId =
-                    "createAjoutPlateforme";
-
+                url = "/Projet/AjouterPlateforme";
+                selectId = "PlateformeProjetId";
+                sectionId = "createAjoutPlateforme";
 
                 nom =
                     document
-                        .getElementById(
-                            "CreateNouvellePlateforme"
-                        )
+                        .getElementById("CreateNouvellePlateforme")
                         .value
                         .trim();
-
 
                 if (!nom) {
 
@@ -1069,12 +1110,10 @@
             const formData =
                 new URLSearchParams();
 
-
             formData.append(
                 "nom",
                 nom
             );
-
 
             if (type === "unite") {
 
@@ -1083,7 +1122,6 @@
                     prefixe
                 );
             }
-
 
             const response =
                 await fetch(
@@ -1104,10 +1142,8 @@
                     }
                 );
 
-
             const data =
                 await response.json();
-
 
             if (!response.ok || !data.success) {
 
@@ -1119,18 +1155,15 @@
                 return;
             }
 
-
             const select =
                 document.getElementById(
                     selectId
                 );
 
-
             const option =
                 document.createElement(
                     "option"
                 );
-
 
             option.value =
                 data.id;
@@ -1138,28 +1171,23 @@
             option.textContent =
                 data.nom;
 
-
             select.appendChild(
                 option
             );
 
-
             select.value =
                 data.id;
-
 
             const section =
                 document.getElementById(
                     sectionId
                 );
 
-
             if (section) {
 
                 section.classList.add(
                     "d-none"
                 );
-
 
                 section
                     .querySelectorAll("input")
@@ -1169,7 +1197,6 @@
 
                     });
             }
-
 
             alert(
                 `"${data.nom}" a été ajouté avec succès.`
@@ -1205,7 +1232,6 @@
 
         const token =
             tokenInput.value;
-
 
         let url = "";
         let selectId = "";
@@ -1271,24 +1297,29 @@
             const formData =
                 new URLSearchParams();
 
-            formData.append("id", id);
+            formData.append(
+                "id",
+                id
+            );
 
             const response =
-                await fetch(url, {
+                await fetch(
+                    url,
+                    {
+                        method: "POST",
 
-                    method: "POST",
+                        headers: {
 
-                    headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
 
-                        "Content-Type":
-                            "application/x-www-form-urlencoded",
+                            "RequestVerificationToken":
+                                token
+                        },
 
-                        "RequestVerificationToken":
-                            token
-                    },
-
-                    body: formData
-                });
+                        body: formData
+                    }
+                );
 
             const data =
                 await response.json();
@@ -1303,7 +1334,9 @@
                 return;
             }
 
-            select.remove(select.selectedIndex);
+            select.remove(
+                select.selectedIndex
+            );
 
             select.value = "";
 
@@ -1331,7 +1364,6 @@
                 'input[name="__RequestVerificationToken"]'
             );
 
-
         if (!tokenInput) {
 
             alert(
@@ -1341,17 +1373,14 @@
             return;
         }
 
-
         const token =
             tokenInput.value;
-
 
         let nomAD = "";
         let nom = "";
         let email = "";
         let selectId = "";
         let sectionId = "";
-
 
         if (type === "ownerIt") {
 
@@ -1363,7 +1392,6 @@
                     .value
                     .trim();
 
-
             nom =
                 document
                     .getElementById(
@@ -1371,7 +1399,6 @@
                     )
                     .value
                     .trim();
-
 
             email =
                 document
@@ -1381,14 +1408,12 @@
                     .value
                     .trim();
 
-
             selectId =
                 "OwnerItId";
 
             sectionId =
                 "createAjoutOwnerIt";
         }
-
 
         else if (type === "powerUser") {
 
@@ -1400,7 +1425,6 @@
                     .value
                     .trim();
 
-
             nom =
                 document
                     .getElementById(
@@ -1408,7 +1432,6 @@
                     )
                     .value
                     .trim();
-
 
             email =
                 document
@@ -1418,14 +1441,12 @@
                     .value
                     .trim();
 
-
             selectId =
                 "PowerUserId";
 
             sectionId =
                 "createAjoutPowerUser";
         }
-
 
         else {
 
@@ -1436,7 +1457,6 @@
             return;
         }
 
-
         if (!nomAD) {
 
             alert(
@@ -1445,7 +1465,6 @@
 
             return;
         }
-
 
         if (!nom) {
 
@@ -1456,28 +1475,23 @@
             return;
         }
 
-
         const formData =
             new URLSearchParams();
-
 
         formData.append(
             "nomADUtilisateur",
             nomAD
         );
 
-
         formData.append(
             "nom",
             nom
         );
 
-
         formData.append(
             "email",
             email
         );
-
 
         try {
 
@@ -1500,10 +1514,8 @@
                     }
                 );
 
-
             const data =
                 await response.json();
-
 
             if (!response.ok || !data.success) {
 
@@ -1515,18 +1527,15 @@
                 return;
             }
 
-
             const select =
                 document.getElementById(
                     selectId
                 );
 
-
             const option =
                 document.createElement(
                     "option"
                 );
-
 
             option.value =
                 data.id;
@@ -1534,28 +1543,23 @@
             option.textContent =
                 data.nom;
 
-
             select.appendChild(
                 option
             );
 
-
             select.value =
                 data.id;
-
 
             const section =
                 document.getElementById(
                     sectionId
                 );
 
-
             if (section) {
 
                 section.classList.add(
                     "d-none"
                 );
-
 
                 section
                     .querySelectorAll("input")
@@ -1565,7 +1569,6 @@
 
                     });
             }
-
 
             alert(
                 `"${data.nom}" a été ajouté avec succès.`
@@ -1641,24 +1644,29 @@
             const formData =
                 new URLSearchParams();
 
-            formData.append("id", id);
+            formData.append(
+                "id",
+                id
+            );
 
             const response =
-                await fetch("/Projet/SupprimerUtilisateur", {
+                await fetch(
+                    "/Projet/SupprimerUtilisateur",
+                    {
+                        method: "POST",
 
-                    method: "POST",
+                        headers: {
 
-                    headers: {
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
 
-                        "Content-Type":
-                            "application/x-www-form-urlencoded",
+                            "RequestVerificationToken":
+                                token
+                        },
 
-                        "RequestVerificationToken":
-                            token
-                    },
-
-                    body: formData
-                });
+                        body: formData
+                    }
+                );
 
             const data =
                 await response.json();
@@ -1673,24 +1681,33 @@
                 return;
             }
 
-           
-            ["OwnerItId", "PowerUserId"].forEach(sid => {
+            ["OwnerItId", "PowerUserId"].forEach(
+                sid => {
 
-                const s =
-                    document.getElementById(sid);
+                    const s =
+                        document.getElementById(
+                            sid
+                        );
 
-                if (!s) {
-                    return;
-                }
+                    if (!s) {
+                        return;
+                    }
 
-                for (let i = s.options.length - 1; i >= 0; i--) {
+                    for (
+                        let i = s.options.length - 1;
+                        i >= 0;
+                        i--
+                    ) {
 
-                    if (s.options[i].value === id) {
+                        if (
+                            s.options[i].value === id
+                        ) {
 
-                        s.remove(i);
+                            s.remove(i);
+                        }
                     }
                 }
-            });
+            );
 
             alert(
                 data.message ||
@@ -1709,3 +1726,4 @@
     }
 
 </script>
+

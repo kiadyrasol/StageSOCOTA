@@ -1,83 +1,156 @@
 @model GestionProjetSocota.Models.Projet
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 mb-1 text-danger">Confirmer la suppression</h1>
-        <p class="text-muted mb-0">
-            Cette action est définitive et ne pourra pas être annulée.
-        </p>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .delete-page .card-flat {
+        border: none;
+        border-radius: 1.1rem;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .delete-page .alert-danger-soft {
+        background: #fdecea;
+        border: none;
+        border-radius: 0.9rem;
+        color: #7a1f16;
+    }
+
+    .delete-page .info-box {
+        background: #f5f9ee;
+        border: 1px solid #e3f0cf;
+        border-radius: 0.9rem;
+        padding: 1.1rem 1.3rem;
+    }
+
+    .delete-page .info-label {
+        display: block;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #7c8a70;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.15rem;
+    }
+
+    .delete-page .info-value {
+        font-weight: 600;
+        color: #2b3327;
+    }
+
+    .delete-page .btn-outline-brand {
+        border: 1.5px solid #d7ded1;
+        color: #55604f;
+        font-weight: 600;
+        border-radius: 0.7rem;
+        padding: 0.55rem 1.3rem;
+        background: #fff;
+        transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .delete-page .btn-outline-brand:hover {
+        border-color: var(--socota-green-dark);
+        color: var(--socota-green-dark);
+    }
+
+    .delete-page .btn-danger {
+        border-radius: 0.7rem;
+        font-weight: 600;
+        padding: 0.55rem 1.3rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .delete-page .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(220, 53, 69, 0.25);
+    }
+</style>
+
+<div class="delete-page">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h1 class="h3 mb-1 text-danger">Confirmer la suppression</h1>
+            <p class="text-muted mb-0">
+                Cette action est définitive et ne pourra pas être annulée.
+            </p>
+        </div>
+
+        <a href="/Projet" class="btn btn-outline-brand">
+            <i class="fas fa-arrow-left me-1"></i>
+            Retour
+        </a>
     </div>
 
-    <a href="/Projet" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>
-        Retour
-    </a>
-</div>
+    <div class="card card-flat">
+        <div class="card-body p-4">
 
-<div class="card border-0 shadow-sm">
-    <div class="card-body p-4">
-
-        <div class="alert alert-danger d-flex align-items-start mb-4" role="alert">
-            <i class="fas fa-triangle-exclamation mt-1 me-3"></i>
-
-            <div>
-                <div class="fw-semibold mb-1">
-                    Attention
-                </div>
+            <div class="alert alert-danger-soft d-flex align-items-start mb-4" role="alert">
+                <i class="fas fa-triangle-exclamation mt-1 me-3"></i>
 
                 <div>
-                    Êtes-vous sûr de vouloir supprimer ce projet ?
-                    Toutes les informations associées seront définitivement supprimées.
+                    <div class="fw-semibold mb-1">
+                        Attention
+                    </div>
+
+                    <div>
+                        Êtes-vous sûr de vouloir supprimer ce projet ?
+                        Toutes les informations associées seront définitivement supprimées.
+                    </div>
                 </div>
             </div>
+
+            <div class="info-box mb-4">
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <span class="info-label">Nom du projet</span>
+                        <span class="info-value">@Model.Nom</span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <span class="info-label">Ticket ID</span>
+                        <span class="info-value">@Model.TicketId</span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <span class="info-label">Unité</span>
+                        <span class="info-value">@(Model.UniteProjet?.Nom ?? "-")</span>
+                    </div>
+
+                    <div class="col-12">
+                        <span class="info-label">Owner IT</span>
+                        <span class="info-value">
+                            @(Model.OwnerIt?.Nom ?? "-")
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <form asp-action="Delete" method="post">
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>
+                        Oui, supprimer
+                    </button>
+
+                    <a href="/Projet" class="btn btn-outline-brand">
+                        Annuler
+                    </a>
+
+                </div>
+
+            </form>
+
         </div>
-
-        <div class="bg-light rounded p-3 mb-4">
-            <div class="row g-3">
-
-                <div class="col-md-6">
-                    <span class="text-muted small d-block">Nom du projet</span>
-                    <span class="fw-semibold">@Model.Nom</span>
-                </div>
-
-                <div class="col-md-3">
-                    <span class="text-muted small d-block">Ticket ID</span>
-                    <span class="fw-semibold">@Model.TicketId</span>
-                </div>
-
-                <div class="col-md-3">
-                    <span class="text-muted small d-block">Unité</span>
-                   <span class="fw-semibold">@(Model.UniteProjet?.Nom ?? "-")</span>
-                </div>
-
-                <div class="col-12">
-                    <span class="text-muted small d-block">Owner IT</span>
-                    <span class="fw-semibold">
-                        @(Model.OwnerIt?.Nom ?? "-")
-                    </span>
-                </div>
-
-            </div>
-        </div>
-
-        <form asp-action="Delete" method="post">
-
-            <input type="hidden" asp-for="Id" />
-
-            <div class="d-flex gap-2">
-
-                <button type="submit" class="btn btn-danger">
-                    <i class="fas fa-trash me-1"></i>
-                    Oui, supprimer
-                </button>
-
-                <a href="/Projet" class="btn btn-outline-secondary">
-                    Annuler
-                </a>
-
-            </div>
-
-        </form>
-
     </div>
+
 </div>

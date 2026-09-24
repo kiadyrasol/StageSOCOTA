@@ -1,4 +1,3 @@
-
 @model GestionProjetSocota.Models.Projet
 
 @{
@@ -21,54 +20,205 @@
         : $"bg-{couleurRisque}";
 }
 
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .btn-socota {
+        background-color: var(--socota-green-dark);
+        border-color: var(--socota-green-dark);
+        color: #fff;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .btn-socota:hover {
+        background-color: #5f8b28;
+        border-color: #5f8b28;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(112, 161, 48, .28);
+    }
+
+    .btn-outline-socota {
+        color: var(--socota-green-dark);
+        border-color: var(--socota-green);
+        border-radius: 0.6rem;
+        font-weight: 600;
+        background: transparent;
+    }
+
+    .btn-outline-socota:hover {
+        background-color: var(--socota-green);
+        border-color: var(--socota-green);
+        color: #fff;
+    }
+
+    .btn-outline-secondary,
+    .btn-outline-primary,
+    .btn-outline-danger {
+        border-radius: 0.6rem;
+    }
+
+    .bg-socota {
+        background-color: var(--socota-green) !important;
+        color: #2b3327;
+    }
+
+    .badge-risque-socota {
+        background-color: var(--socota-green) !important;
+        color: #2b3327;
+    }
+
+    .progress-risque-socota {
+        background-color: var(--socota-green) !important;
+    }
+
+    .progress-bar-socota {
+        background-color: var(--socota-green) !important;
+        color: #2b3327;
+        font-weight: 600;
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        background-color: #f5f9ee;
+        border-bottom: 1px solid #e3f0cf;
+        border-radius: 1rem 1rem 0 0 !important;
+    }
+
+    .detail-label {
+        display: block;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #7c8a70;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.2rem;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #2b3327;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 1.5rem;
+        color: #6c757d;
+    }
+
+    .empty-state i {
+        font-size: 1.6rem;
+        color: var(--socota-green);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .project-action,
+    .attachment-item,
+    .comment-item {
+        border-color: #e3f0cf !important;
+        border-radius: 0.8rem !important;
+        transition: box-shadow .2s ease;
+    }
+
+    .project-action:hover,
+    .attachment-item:hover {
+        box-shadow: 0 3px 10px rgba(0, 0, 0, .04);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
+
     <div>
-        <h1 class="h3 mb-1">@Model.Nom</h1>
+
+        <h1 class="h3 mb-1">
+            @Model.Nom
+        </h1>
+
         <p class="text-muted mb-0">
             Détails et suivi du projet
         </p>
+
     </div>
 
     <div class="d-flex gap-2">
+
         @if (User.IsInRole("Administrateur") || User.IsInRole("ChefDeProjet"))
         {
-            <a href="/Projet/ChangerStatut/@Model.Id" class="btn btn-outline-socota">
+            <a href="/Projet/ChangerStatut/@Model.Id"
+               class="btn btn-outline-socota">
+
                 <i class="fas fa-exchange-alt me-1"></i>
                 Statut
+
             </a>
 
-            <a href="/Projet/Edit/@Model.Id" class="btn btn-outline-primary">
+            <a href="/Projet/Edit/@Model.Id"
+               class="btn btn-outline-primary">
+
                 <i class="fas fa-edit me-1"></i>
                 Modifier
+
             </a>
         }
 
-        <a href="/Projet" class="btn btn-outline-secondary">
+        <a href="/Projet"
+           class="btn btn-outline-secondary">
+
             <i class="fas fa-arrow-left me-1"></i>
             Retour
+
         </a>
+
     </div>
+
 </div>
+
 
 @if (Model.PowerUser != null)
 {
     @if (Model.ValidePowerUser)
     {
         <div class="alert d-flex align-items-center mb-4"
-             style="border-left: 6px solid #8BC53F; font-size: 1.05rem; background-color: rgba(139,197,63,0.1);">
+             style="border-left: 6px solid #8BC53F; font-size: 1.05rem; background-color: rgba(139,197,63,0.1); border-radius: 0.9rem;">
 
-            <i class="fas fa-check-circle fa-2x me-3" style="color:#8BC53F;"></i>
+            <i class="fas fa-check-circle fa-2x me-3"
+               style="color:#8BC53F;"></i>
 
             <div>
-                <strong>Projet validé par le Power User</strong>
+
+                <strong>
+                    Projet validé par le Power User
+                </strong>
 
                 @if (Model.DateValidationPowerUser.HasValue)
                 {
                     <div class="text-muted small">
-                        Validé le @Model.DateValidationPowerUser.Value.ToString("dd/MM/yyyy à HH:mm")
-                        par @Model.PowerUser.Nom
+
+                        Validé le
+                        @Model.DateValidationPowerUser.Value.ToString("dd/MM/yyyy à HH:mm")
+                        par
+                        @Model.PowerUser.Nom
+
                     </div>
                 }
+
             </div>
 
         </div>
@@ -76,32 +226,46 @@
     else
     {
         <div class="alert alert-warning d-flex align-items-center justify-content-between mb-4"
-             style="border-left: 6px solid #ffc107; font-size: 1.05rem;">
+             style="border-left: 6px solid #ffc107; font-size: 1.05rem; border-radius: 0.9rem;">
 
             <div class="d-flex align-items-center">
 
                 <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
 
                 <div>
-                    <strong>Validation du Power User requise</strong>
+
+                    <strong>
+                        Validation du Power User requise
+                    </strong>
 
                     <div class="small">
+
                         Le développement ne peut pas démarrer tant que
                         @Model.PowerUser.Nom n'a pas validé ce projet.
+
                     </div>
+
                 </div>
 
             </div>
 
-            @if (User.Identity != null && User.Identity.Name == Model.PowerUser.NomADUtilisateur)
+            @if (User.Identity != null &&
+                 User.Identity.Name == Model.PowerUser.NomADUtilisateur)
             {
-                <form asp-action="ValiderPowerUser" method="post" class="ms-3">
+                <form asp-action="ValiderPowerUser"
+                      method="post"
+                      class="ms-3">
 
-                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.Id" />
 
-                    <button type="submit" class="btn btn-socota btn-lg">
+                    <button type="submit"
+                            class="btn btn-socota btn-lg">
+
                         <i class="fas fa-check me-1"></i>
                         Valider ce projet
+
                     </button>
 
                 </form>
@@ -111,20 +275,27 @@
     }
 }
 
+
 <!-- INFORMATIONS DU PROJET -->
 
 <div class="card mb-4">
+
     <div class="card-header">
+
         <h2 class="h6 mb-0 fw-bold">
             Informations du projet
         </h2>
+
     </div>
 
     <div class="card-body">
 
+
         <!-- UNITÉ EN PREMIER -->
 
-        <div class="mb-4 p-3 border rounded">
+        <div class="mb-4 p-3 border rounded"
+             style="border-color:#e3f0cf !important; border-radius:0.8rem !important; background:#f5f9ee;">
+
             <span class="detail-label">
                 Unité
             </span>
@@ -132,7 +303,9 @@
             <span class="detail-value fs-5 fw-semibold">
                 @(Model.UniteProjet?.Nom ?? "-")
             </span>
+
         </div>
+
 
         <!-- CLASSIFICATION -->
 
@@ -149,6 +322,7 @@
                     <tbody>
 
                         <tr>
+
                             <th style="width: 25%;">
                                 Département
                             </th>
@@ -156,9 +330,11 @@
                             <td>
                                 @(Model.DepartementProjet?.Nom ?? "-")
                             </td>
+
                         </tr>
 
                         <tr>
+
                             <th>
                                 Type
                             </th>
@@ -166,9 +342,11 @@
                             <td>
                                 @(Model.TypeProjetReference?.Nom ?? "-")
                             </td>
+
                         </tr>
 
                         <tr>
+
                             <th>
                                 Plateforme
                             </th>
@@ -176,9 +354,11 @@
                             <td>
                                 @(Model.PlateformeProjet?.Nom ?? "-")
                             </td>
+
                         </tr>
 
                         <tr>
+
                             <th>
                                 Priorité
                             </th>
@@ -186,6 +366,7 @@
                             <td>
                                 @Model.Priorite
                             </td>
+
                         </tr>
 
                     </tbody>
@@ -196,11 +377,16 @@
 
         </div>
 
+
         <!-- AUTRES INFORMATIONS -->
 
         <div class="row g-4">
 
+
+            <!-- TICKET ID -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Ticket ID
                 </span>
@@ -208,32 +394,48 @@
                 <span class="detail-value">
                     @Model.TicketId
                 </span>
+
             </div>
 
+
+            <!-- RÉFÉRENCE -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Référence
                 </span>
 
                 <span class="detail-value">
+
                     @(string.IsNullOrWhiteSpace(Model.Reference)
                         ? "-"
                         : Model.Reference)
+
                 </span>
+
             </div>
 
+
+            <!-- STATUT -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Statut
                 </span>
 
-
                 <span class="badge bg-socota">
                     @Model.Statut
                 </span>
+
             </div>
 
+
+            <!-- OWNER IT -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Owner IT
                 </span>
@@ -241,9 +443,14 @@
                 <span class="detail-value">
                     @(Model.OwnerIt?.Nom ?? "-")
                 </span>
+
             </div>
 
+
+            <!-- POWER USER -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Power User
                 </span>
@@ -251,14 +458,20 @@
                 <span class="detail-value">
                     @(Model.PowerUser?.Nom ?? "-")
                 </span>
+
             </div>
 
+
+            <!-- AVANCEMENT -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Avancement
                 </span>
 
                 <div class="project-progress">
+
                     <div class="progress">
 
                         <div class="progress-bar progress-bar-socota"
@@ -270,10 +483,16 @@
                         </div>
 
                     </div>
+
                 </div>
+
             </div>
 
+
+            <!-- DATE DE DÉBUT -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
                     Date de début
                 </span>
@@ -290,21 +509,58 @@
                         Non définie
                     </span>
                 }
+
             </div>
 
+
+            <!-- DEADLINE -->
+
             <div class="col-md-4">
+
                 <span class="detail-label">
-                    Date de fin
+                    Deadline
+                </span>
+
+                @if (Model.Deadline.HasValue)
+                {
+                    var deadlineDepassee =
+                        Model.Deadline.Value.Date < DateTime.Now.Date &&
+                        Model.Statut != StatutProjet.Closed &&
+                        Model.Statut != StatutProjet.Cancelled;
+
+                    <span class="detail-value @(deadlineDepassee ? "text-danger fw-semibold" : "")">
+
+                        @Model.Deadline.Value.ToString("dd/MM/yyyy")
+
+                        @if (deadlineDepassee)
+                        {
+                            <i class="fas fa-triangle-exclamation ms-1"
+                               title="Deadline dépassée"></i>
+                        }
+
+                    </span>
+                }
+                else
+                {
+                    <span class="text-muted">
+                        Non définie
+                    </span>
+                }
+
+            </div>
+
+
+            <!-- DATE DE FIN PRÉVUE -->
+
+            <div class="col-md-4">
+
+                <span class="detail-label">
+                    Date de fin prévue
                 </span>
 
                 @if (Model.DateFin.HasValue)
                 {
-                    var dateFinDepassee =
-                        Model.DateFin.Value.Date < DateTime.Now.Date &&
-                        Model.Statut != StatutProjet.Closed &&
-                        Model.Statut != StatutProjet.Cancelled;
-
-                    <span class="detail-value @(dateFinDepassee ? "text-danger fw-semibold" : "")">
+                    <span class="detail-value">
                         @Model.DateFin.Value.ToString("dd/MM/yyyy")
                     </span>
                 }
@@ -314,9 +570,11 @@
                         Non définie
                     </span>
                 }
+
             </div>
 
         </div>
+
 
         @if (!string.IsNullOrWhiteSpace(Model.Description))
         {
@@ -333,6 +591,7 @@
             </div>
         }
 
+
         <div class="mt-4">
 
             <a href="/Projet/GenererCompteRendu/@Model.Id"
@@ -346,6 +605,7 @@
         </div>
 
     </div>
+
 </div>
 
 
@@ -467,7 +727,6 @@
 
                     @if (rfc.EstValide)
                     {
-                        <!-- CORRECTION : badge-socota -> bg-socota -->
                         <span class="badge bg-socota">
                             Validé
                         </span>
@@ -507,12 +766,14 @@
 
             </div>
 
+
             @if (TempData["Erreur"] != null)
             {
                 <div class="alert alert-danger mt-4">
                     @TempData["Erreur"]
                 </div>
             }
+
 
             <div class="mt-4">
 
@@ -605,6 +866,7 @@
                         <p class="text-muted small mb-0">
 
                             <i class="fas fa-user me-1"></i>
+
                             @(action.Responsable?.Nom ?? "-")
 
                             <span class="mx-1">
@@ -612,20 +874,24 @@
                             </span>
 
                             <i class="fas fa-calendar me-1"></i>
+
                             @action.DateEcheance.ToString("dd/MM/yyyy")
 
                         </p>
 
                     </div>
 
+
                     <div class="project-action-status">
 
-                        <!-- CORRECTION : badge-socota -> bg-socota -->
                         <span class="badge @(action.Statut == GestionProjetSocota.Models.StatutAction.Closed ? "bg-socota" : "bg-warning text-dark")">
+
                             @action.Statut
+
                         </span>
 
                     </div>
+
 
                     <div class="project-action-buttons d-flex gap-1">
 
@@ -655,6 +921,7 @@
                                 </form>
                             }
 
+
                             @if (action.Statut != GestionProjetSocota.Models.StatutAction.Closed)
                             {
                                 <form asp-controller="ActionProjet"
@@ -678,6 +945,7 @@
 
                                 </form>
                             }
+
 
                             <form asp-controller="ActionProjet"
                                   asp-action="Delete"
@@ -727,8 +995,10 @@
     <div class="card-header">
 
         <h2 class="h6 mb-0 fw-bold">
+
             <i class="fas fa-paperclip me-2"></i>
             Pièces jointes
+
         </h2>
 
     </div>
@@ -745,6 +1015,7 @@
                    name="ProjetId"
                    value="@Model.Id" />
 
+
             <div class="mb-3">
 
                 <label class="form-label small fw-semibold">
@@ -756,6 +1027,7 @@
                        class="form-control form-control-sm" />
 
             </div>
+
 
             <div class="mb-3">
 
@@ -794,6 +1066,7 @@
 
             </div>
 
+
             <div class="attachment-submit">
 
                 <button type="submit"
@@ -807,6 +1080,7 @@
             </div>
 
         </form>
+
 
         @if (piecesJointes != null && piecesJointes.Any())
         {
@@ -834,6 +1108,7 @@
 
                     </div>
 
+
                     <div class="d-flex gap-2">
 
                         <a asp-controller="PieceJointe"
@@ -845,6 +1120,7 @@
                             Télécharger
 
                         </a>
+
 
                         <form asp-controller="PieceJointe"
                               asp-action="Delete"
@@ -916,6 +1192,7 @@
                       class="form-control mb-2"
                       rows="3"></textarea>
 
+
             <button type="submit"
                     class="btn btn-socota btn-sm">
 
@@ -925,6 +1202,7 @@
             </button>
 
         </form>
+
 
         @if (commentaires != null && commentaires.Any())
         {
@@ -944,9 +1222,11 @@
 
                     </div>
 
+
                     <p class="mb-2 mt-2">
                         @commentaire.Contenu
                     </p>
+
 
                     <form asp-controller="Commentaire"
                           asp-action="Delete"
@@ -1027,6 +1307,7 @@
 
                         </div>
 
+
                         <span class="badge bg-secondary">
 
                             @item.DateAction.ToString("dd/MM/yyyy HH:mm")
@@ -1054,4 +1335,3 @@
     </div>
 
 </div>
-

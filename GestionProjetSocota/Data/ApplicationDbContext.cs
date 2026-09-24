@@ -169,22 +169,36 @@ namespace GestionProjetSocota.Data
                 new UniteProjet
                 {
                     Id = 1,
-                    Nom = "CTN",
+                    Nom = "CF : COTONA Fabrics",
                     Prefixe = "CF",
                     Actif = true
                 },
                 new UniteProjet
                 {
                     Id = 2,
-                    Nom = "SGL",
-                    Prefixe = "SG",
+                    Nom = "SGL : SOCOTA Garments Limited",
+                    Prefixe = "SGL",
                     Actif = true
                 },
                 new UniteProjet
                 {
                     Id = 3,
-                    Nom = "CRE",
-                    Prefixe = "CR",
+                    Nom = "CRE : COTONA Real Estate",
+                    Prefixe = "CRE",
+                    Actif = true
+                },
+                 new UniteProjet
+                {
+                    Id = 4,
+                    Nom = "SH : SOCOTA House",
+                    Prefixe = "SH",
+                    Actif = true
+                },
+                 new UniteProjet
+                {
+                    Id = 5,
+                    Nom = "GS : GROUPE SOCOTA",
+                    Prefixe = "GS",
                     Actif = true
                 }
             );

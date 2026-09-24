@@ -1,139 +1,254 @@
 @model GestionProjetSocota.Models.Projet
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h1 class="h3 mb-1">Changer le statut</h1>
-        <p class="text-muted mb-0">Faites évoluer le projet vers une nouvelle étape.</p>
-    </div>
+<div class="pmo-statut-page">
 
-    <a href="/Projet/Details/@Model.Id" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-1"></i>
-        Retour
-    </a>
-</div>
-
-<div class="card border-0 shadow-sm">
-    <div class="card-body p-4">
-
-        <div class="bg-light rounded p-3 mb-4">
-            <div class="row g-3">
-
-                <div class="col-md-6">
-                    <span class="text-muted small d-block">Projet</span>
-                    <span class="fw-semibold">@Model.Nom</span>
-                </div>
-
-                <div class="col-md-4">
-                 <span class="detail-label">Type</span>
-                 <span class="detail-value">
-                     @(Model.TypeProjetReference?.Nom ?? "-")
-                 </span>
-                </div>
-
-                <div class="col-md-3">
-                    <span class="text-muted small d-block">Statut actuel</span>
-                    <span class="badge bg-socota mt-1">@Model.Statut</span>
-                </div>
-
-            </div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h1 class="h3 mb-1 pmo-text-brand fw-bold">Changer le statut</h1>
+            <p class="text-muted mb-0">Faites évoluer le projet vers une nouvelle étape.</p>
         </div>
 
-        @if (TempData["Erreur"] != null)
-        {
-            <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
-                <i class="fas fa-circle-exclamation me-2"></i>
-                <span>@TempData["Erreur"]</span>
+        <a href="/Projet/Details/@Model.Id" class="btn pmo-btn-outline">
+            <i class="fas fa-arrow-left me-1"></i>
+            Retour
+        </a>
+    </div>
+
+    <div class="card pmo-card-flat">
+        <div class="card-body p-4">
+
+            <div class="pmo-info-box mb-4">
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <span class="pmo-label">Projet</span>
+                        <span class="pmo-value">@Model.Nom</span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <span class="pmo-label">Type</span>
+                        <span class="pmo-value">
+                            @(Model.TypeProjetReference?.Nom ?? "-")
+                        </span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <span class="pmo-label">Statut actuel</span>
+                        <span class="badge pmo-badge-status mt-1">@Model.Statut</span>
+                    </div>
+
+                </div>
             </div>
-        }
 
-        @if (Model.Statut == GestionProjetSocota.Models.StatutProjet.Suspendu ||
-             Model.Statut == GestionProjetSocota.Models.StatutProjet.Cancelled)
-        {
-            <div class="alert alert-warning border-0">
-                <div class="d-flex align-items-start">
-                    <i class="fas fa-triangle-exclamation mt-1 me-3"></i>
+            @if (TempData["Erreur"] != null)
+            {
+                <div class="alert alert-danger d-flex align-items-center mb-4 pmo-alert" role="alert">
+                    <i class="fas fa-circle-exclamation me-2"></i>
+                    <span>@TempData["Erreur"]</span>
+                </div>
+            }
 
-                    <div>
-                        <div class="fw-semibold mb-1">
-                            Projet @Model.Statut
-                        </div>
+            @if (Model.Statut == GestionProjetSocota.Models.StatutProjet.Suspendu ||
+                 Model.Statut == GestionProjetSocota.Models.StatutProjet.Cancelled)
+            {
+                <div class="alert pmo-alert-warning border-0">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-triangle-exclamation mt-1 me-3"></i>
 
                         <div>
-                            Vous pouvez réactiver ce projet.
-                            Il reprendra son statut précédent :
-                            <strong>@Model.StatutPrecedent</strong>.
+                            <div class="fw-semibold mb-1">
+                                Projet @Model.Statut
+                            </div>
+
+                            <div>
+                                Vous pouvez réactiver ce projet.
+                                Il reprendra son statut précédent :
+                                <strong>@Model.StatutPrecedent</strong>.
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <form asp-action="ChangerStatut" method="post">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <input type="hidden" name="nouveauStatut" value="@Model.StatutPrecedent" />
+                <form asp-action="ChangerStatut" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="nouveauStatut" value="@Model.StatutPrecedent" />
 
-                <button type="submit" class="btn btn-socota">
-                    <i class="fas fa-rotate-left me-1"></i>
-                    Réactiver le projet
-                </button>
-            </form>
-        }
-        else
-        {
-            var transitions =
-                ViewBag.TransitionsPossibles
-                as List<GestionProjetSocota.Models.StatutProjet>;
-
-            <form asp-action="ChangerStatut" method="post">
-
-                <input type="hidden" name="id" value="@Model.Id" />
-
-                <div class="mb-4">
-                    <label for="nouveauStatut" class="form-label fw-semibold">
-                        Nouveau statut
-                    </label>
-
-                    <select id="nouveauStatut"
-                            name="nouveauStatut"
-                            class="form-select"
-                            @(transitions == null || !transitions.Any() ? "disabled" : null)>
-
-                        @if (transitions != null && transitions.Any())
-                        {
-                            @foreach (var statut in transitions)
-                            {
-                                <option value="@statut">@statut</option>
-                            }
-                        }
-                        else
-                        {
-                            <option>Aucune transition possible</option>
-                        }
-
-                    </select>
-
-                    <div class="form-text">
-                        Sélectionnez le prochain statut autorisé pour ce projet.
-                    </div>
-                </div>
-
-                <div class="d-flex gap-2">
-
-                    <button type="submit"
-                            class="btn btn-socota"
-                            @(transitions == null || !transitions.Any() ? "disabled" : null)>
-                        <i class="fas fa-check me-1"></i>
-                        Valider le changement
+                    <button type="submit" class="btn pmo-btn-primary">
+                        <i class="fas fa-rotate-left me-1"></i>
+                        Réactiver le projet
                     </button>
+                </form>
+            }
+            else
+            {
+                var transitions =
+                    ViewBag.TransitionsPossibles
+                    as List<GestionProjetSocota.Models.StatutProjet>;
 
-                    <a href="/Projet/Details/@Model.Id"
-                       class="btn btn-outline-secondary">
-                        Annuler
-                    </a>
+                <form asp-action="ChangerStatut" method="post">
 
-                </div>
+                    <input type="hidden" name="id" value="@Model.Id" />
 
-            </form>
-        }
+                    <div class="mb-4">
+                        <label for="nouveauStatut" class="form-label fw-semibold">
+                            Nouveau statut
+                        </label>
 
+                        <select id="nouveauStatut"
+                                name="nouveauStatut"
+                                class="form-select pmo-select"
+                                @(transitions == null || !transitions.Any() ? "disabled" : null)>
+
+                            @if (transitions != null && transitions.Any())
+                            {
+                                @foreach (var statut in transitions)
+                                {
+                                    <option value="@statut">@statut</option>
+                                }
+                            }
+                            else
+                            {
+                                <option>Aucune transition possible</option>
+                            }
+
+                        </select>
+
+                        <div class="form-text">
+                            Sélectionnez le prochain statut autorisé pour ce projet.
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button type="submit"
+                                class="btn pmo-btn-primary"
+                                @(transitions == null || !transitions.Any() ? "disabled" : null)>
+                            <i class="fas fa-check me-1"></i>
+                            Valider le changement
+                        </button>
+
+                        <a href="/Projet/Details/@Model.Id"
+                           class="btn pmo-btn-outline">
+                            Annuler
+                        </a>
+
+                    </div>
+
+                </form>
+            }
+
+        </div>
     </div>
+
 </div>
+
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .pmo-text-brand { color: var(--socota-green-dark); }
+
+    /* carte principale */
+    .pmo-card-flat {
+        border: none;
+        border-radius: 1.1rem;
+        box-shadow: 0 6px 24px rgba(0,0,0,.06);
+    }
+
+    /* bloc récap projet */
+    .pmo-info-box {
+        background: #f5f9ee;
+        border: 1px solid #e3f0cf;
+        border-radius: .9rem;
+        padding: 1.1rem 1.3rem;
+    }
+
+    .pmo-label {
+        display: block;
+        font-size: .76rem;
+        font-weight: 600;
+        color: #7c8a70;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+        margin-bottom: .15rem;
+    }
+
+    .pmo-value {
+        font-weight: 600;
+        color: #2b3327;
+    }
+
+    .pmo-badge-status {
+        display: inline-block;
+        background: var(--socota-green);
+        color: #fff;
+        font-weight: 600;
+        padding: .4rem .8rem;
+        border-radius: 30px;
+        font-size: .8rem;
+    }
+
+    /* boutons */
+    .pmo-btn-primary {
+        background: var(--socota-green-dark);
+        border: 1px solid var(--socota-green-dark);
+        color: #fff;
+        font-weight: 600;
+        border-radius: .7rem;
+        padding: .55rem 1.3rem;
+        transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+
+    .pmo-btn-primary:hover:not(:disabled) {
+        background: #5f8b28;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(112,161,48,.3);
+        color: #fff;
+    }
+
+    .pmo-btn-primary:disabled {
+        opacity: .55;
+        cursor: not-allowed;
+    }
+
+    .pmo-btn-outline {
+        border: 1.5px solid #d7ded1;
+        color: #55604f;
+        font-weight: 600;
+        border-radius: .7rem;
+        padding: .55rem 1.3rem;
+        background: #fff;
+        transition: border-color .2s ease, color .2s ease;
+    }
+
+    .pmo-btn-outline:hover {
+        border-color: var(--socota-green-dark);
+        color: var(--socota-green-dark);
+    }
+
+    /* select */
+    .pmo-select {
+        border-radius: .7rem;
+        border: 1.5px solid #dfe6d8;
+        padding: .6rem .9rem;
+    }
+
+    .pmo-select:focus {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 .2rem rgba(139,197,63,.25);
+    }
+
+    /* alertes */
+    .pmo-alert {
+        border-radius: .8rem;
+        border: none;
+    }
+
+    .pmo-alert-warning {
+        background: #fdf5e0;
+        border-radius: .8rem;
+        color: #7a5c12;
+    }
+</style>

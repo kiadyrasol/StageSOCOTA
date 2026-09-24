@@ -1,101 +1,251 @@
-﻿<div class="container-fluid">
+﻿<div class="pmo-page-bg"></div>
+<div class="pmo-page-overlay"></div>
 
-    <div class="text-center py-4">
+<div class="pmo-page container py-3">
 
-        <img src="~/Logo/logosocota.jfif" alt="SOCOTA" style="max-height: 110px; width: auto;" class="mb-2" />
+    <!-- En-tête -->
+    <div class="text-center mb-2 pmo-header-box">
 
-        <h1 class="display-5 fw-bold text-socota mb-3">
+        <img src="~/Logo/logosocota.jfif" alt="SOCOTA" style="max-height: 140px; width: auto;"
+             class="d-block mx-auto mb-2 pmo-logo" />
+
+        <h1 class="fw-bold pmo-text-brand mb-1 pmo-title">
             Bienvenue sur GestionProjetSocota
         </h1>
 
-        <p class="text-muted fs-5 mb-5">
+        <p class="text-muted mb-2 mx-auto pmo-sub" style="max-width: 560px;">
             Plateforme de gestion des projets de digitalisation.
-            <span class="mx-2">•</span>
-            CTN, SGL, CRE
         </p>
 
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <span class="badge rounded-pill bg-white pmo-text-brand pmo-badge-border px-3 py-2">CTN</span>
+            <span class="badge rounded-pill bg-white pmo-text-brand pmo-badge-border px-3 py-2">SGL</span>
+            <span class="badge rounded-pill bg-white pmo-text-brand pmo-badge-border px-3 py-2">CRE</span>
+        </div>
+
     </div>
 
-    <div class="row justify-content-center g-4">
+    <!-- Cartes de navigation -->
+    <div class="row justify-content-center g-3 w-100">
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <a href="/Projet" class="card h-100 text-decoration-none text-dark">
-
-                <div class="card-body text-center p-4">
-
-                    <i class="fas fa-list fa-2x text-socota mb-3"></i>
-
-                    <h5 class="fw-semibold mb-2">
-                        Voir les projets
-                    </h5>
-
-                    <p class="text-muted small mb-0">
-                        Consulter et gérer les projets
-                    </p>
-
+        <div class="col-6 col-lg-3">
+            <a href="/Projet" class="card pmo-card h-100 text-decoration-none text-dark border-0">
+                <div class="card-body text-center d-flex flex-column align-items-center p-3">
+                    <span class="pmo-icon mb-2">
+                        <i class="fas fa-list pmo-text-brand"></i>
+                    </span>
+                    <h5 class="fw-semibold mb-1 pmo-card-title">Voir les projets</h5>
+                    <p class="text-muted small mb-2 pmo-card-text">Consulter et gérer les projets</p>
+                    <span class="mt-auto pmo-text-brand fw-medium small">
+                        Accéder <i class="fas fa-arrow-right ms-1"></i>
+                    </span>
                 </div>
             </a>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <a href="/Projet/Dashboard" class="card h-100 text-decoration-none text-dark">
-
-                <div class="card-body text-center p-4">
-
-                    <i class="fas fa-chart-bar fa-2x text-socota mb-3"></i>
-
-                    <h5 class="fw-semibold mb-2">
-                        Dashboard Exécutif
-                    </h5>
-
-                    <p class="text-muted small mb-0">
-                        Suivre les indicateurs clés
-                    </p>
-
+        <div class="col-6 col-lg-3">
+            <a href="/Projet/Dashboard" class="card pmo-card h-100 text-decoration-none text-dark border-0">
+                <div class="card-body text-center d-flex flex-column align-items-center p-3">
+                    <span class="pmo-icon mb-2">
+                        <i class="fas fa-chart-bar pmo-text-brand"></i>
+                    </span>
+                    <h5 class="fw-semibold mb-1 pmo-card-title">Dashboard Exécutif</h5>
+                    <p class="text-muted small mb-2 pmo-card-text">Suivre les indicateurs clés</p>
+                    <span class="mt-auto pmo-text-brand fw-medium small">
+                        Accéder <i class="fas fa-arrow-right ms-1"></i>
+                    </span>
                 </div>
             </a>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <a href="/Projet/Kanban" class="card h-100 text-decoration-none text-dark">
-
-                <div class="card-body text-center p-4">
-
-                    <i class="fas fa-columns fa-2x text-socota mb-3"></i>
-
-                    <h5 class="fw-semibold mb-2">
-                        Vue Kanban
-                    </h5>
-
-                    <p class="text-muted small mb-0">
-                        Visualiser l'avancement des projets
-                    </p>
-
+        <div class="col-6 col-lg-3">
+            <a href="/Projet/Kanban" class="card pmo-card h-100 text-decoration-none text-dark border-0">
+                <div class="card-body text-center d-flex flex-column align-items-center p-3">
+                    <span class="pmo-icon mb-2">
+                        <i class="fas fa-columns pmo-text-brand"></i>
+                    </span>
+                    <h5 class="fw-semibold mb-1 pmo-card-title">Vue Kanban</h5>
+                    <p class="text-muted small mb-2 pmo-card-text">Visualiser l'avancement des projets</p>
+                    <span class="mt-auto pmo-text-brand fw-medium small">
+                        Accéder <i class="fas fa-arrow-right ms-1"></i>
+                    </span>
                 </div>
             </a>
         </div>
 
-        <div class="col-12 col-sm-6 col-lg-3">
-            <a href="/Projet/Create" class="card h-100 text-decoration-none text-dark">
-
-                <div class="card-body text-center p-4">
-
-                    <i class="fas fa-plus fa-2x text-socota mb-3"></i>
-
-                    <h5 class="fw-semibold mb-2">
-                        Nouveau projet
-                    </h5>
-
-                    <p class="text-muted small mb-0">
-                        Créer un nouveau projet
-                    </p>
-
+        <div class="col-6 col-lg-3">
+            <a href="/Projet/Create" class="card pmo-card h-100 text-decoration-none text-dark border-0">
+                <div class="card-body text-center d-flex flex-column align-items-center p-3">
+                    <span class="pmo-icon mb-2">
+                        <i class="fas fa-plus pmo-text-brand"></i>
+                    </span>
+                    <h5 class="fw-semibold mb-1 pmo-card-title">Nouveau projet</h5>
+                    <p class="text-muted small mb-2 pmo-card-text">Créer un nouveau projet</p>
+                    <span class="mt-auto pmo-text-brand fw-medium small">
+                        Accéder <i class="fas fa-arrow-right ms-1"></i>
+                    </span>
                 </div>
             </a>
         </div>
 
     </div>
-
 </div>
 
-</div>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+        --pmo-header-h: 56px;
+    }
+
+    .pmo-text-brand {
+        color: var(--socota-green-dark);
+    }
+
+    .pmo-badge-border {
+        border: 2px solid var(--socota-green);
+    }
+
+    html,
+    body {
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .pmo-page-bg {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        background-image: url('@Url.Content("~/Logo/images.jfif")');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .pmo-page-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.35);
+    }
+
+    .pmo-page {
+        position: relative;
+        z-index: 3;
+        background: transparent !important;
+        height: calc(100vh - var(--pmo-header-h));
+        max-height: calc(100vh - var(--pmo-header-h));
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .pmo-header-box {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(4px);
+        border-radius: 1rem;
+        padding: 1rem 1.5rem;
+        display: inline-block;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pmo-title {
+        font-size: clamp(1.3rem, 2.8vw, 1.9rem);
+    }
+
+    .pmo-sub {
+        font-size: .9rem;
+    }
+
+    .pmo-logo {
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, .12));
+        animation: pmoPop .5s ease both;
+    }
+
+    .pmo-card {
+        border-radius: 1rem;
+        background-color: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+
+    .pmo-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 26px rgba(139, 197, 63, .28);
+    }
+
+    .pmo-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: .8rem;
+        background: linear-gradient(135deg, #eef8de, #d7edb2);
+        font-size: 1.1rem;
+        transition: transform .25s ease;
+    }
+
+    .pmo-card:hover .pmo-icon {
+        transform: scale(1.08) rotate(-4deg);
+    }
+
+    .pmo-card-title {
+        font-size: .9rem;
+    }
+
+    .pmo-card-text {
+        font-size: .76rem;
+    }
+
+    @@keyframes pmoPop {
+        from {
+            opacity: 0;
+            transform: scale(.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .pmo-logo {
+            animation: none;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .pmo-page-bg {
+            position: absolute;
+        }
+
+        .pmo-page {
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+
+        html,
+        body {
+            overflow: auto;
+        }
+
+        .pmo-logo {
+            max-height: 100px !important;
+        }
+
+        .pmo-footer {
+            right: 8px;
+            bottom: 6px;
+            font-size: .7rem;
+        }
+    }
+</style>

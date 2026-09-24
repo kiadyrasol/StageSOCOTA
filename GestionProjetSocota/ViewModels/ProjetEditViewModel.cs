@@ -37,17 +37,37 @@ namespace GestionProjetSocota.ViewModels
 
         public PrioriteProjet Priorite { get; set; }
 
-        [Required(ErrorMessage = "La date de début est obligatoire")]
-        public DateTime DateDebut { get; set; }
+        // =========================================================
+        // PLANIFICATION
+        // =========================================================
 
-        [Required(ErrorMessage = "La date de fin est obligatoire")]
-        public DateTime DateFin { get; set; }
+        // OBLIGATOIRE
+        [Required(ErrorMessage = "La date de début est obligatoire")]
+        public DateTime? DateDebut { get; set; }
+
+        // OPTIONNELLE : fin prévue du projet
+        public DateTime? DateFin { get; set; }
+
+        // OPTIONNELLE : date limite du projet
+        public DateTime? Deadline { get; set; }
+
+        // =========================================================
+        // AVANCEMENT
+        // =========================================================
 
         public int PourcentageAvancement { get; set; }
+
+        // =========================================================
+        // UTILISATEURS
+        // =========================================================
 
         public int? OwnerItId { get; set; }
 
         public int? PowerUserId { get; set; }
+
+        // =========================================================
+        // LISTES DISPONIBLES
+        // =========================================================
 
         public List<Utilisateur> UtilisateursDisponibles { get; set; } = new();
 

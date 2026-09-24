@@ -13,6 +13,7 @@ namespace GestionProjetSocota.ViewModels
         public string Nom { get; set; } = string.Empty;
 
         public string? Description { get; set; }
+
         // =========================
         // CLASSIFICATION
         // =========================
@@ -52,15 +53,29 @@ namespace GestionProjetSocota.ViewModels
 
         public string DevVolume { get; set; } = string.Empty;
 
-        [Required]
+        // =========================
+        // PLANIFICATION
+        // =========================
+
+        // OBLIGATOIRE
+        [Required(ErrorMessage = "La date de début est obligatoire")]
         [Display(Name = "Date de début")]
         [DataType(DataType.Date)]
         public DateTime? DateDebut { get; set; }
 
-        [Required]
-        [Display(Name = "Date de fin")]
+        // OPTIONNELLE : date limite
+        [Display(Name = "Deadline")]
+        [DataType(DataType.Date)]
+        public DateTime? Deadline { get; set; }
+
+        // OPTIONNELLE : fin prévue
+        [Display(Name = "Date de fin prévue")]
         [DataType(DataType.Date)]
         public DateTime? DateFin { get; set; }
+
+        // =========================
+        // AVANCEMENT
+        // =========================
 
         public int PourcentageAvancement { get; set; } = 0;
 

@@ -9,8 +9,9 @@
     }
 
     .it-manager-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.25rem;
+        color: var(--socota-green-dark);
     }
 
     .it-manager-subtitle {
@@ -20,23 +21,32 @@
     }
 
     .it-section-title {
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin-bottom: 0.75rem;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.9rem;
+        color: #55604f;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .it-section-title i {
+        color: var(--socota-green-dark);
+        font-size: 0.78rem;
     }
 
     .it-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .it-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
     }
 
     .it-stat-card {
@@ -50,7 +60,7 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 4px;
+        width: 5px;
         background-color: var(--socota-green);
     }
 
@@ -62,20 +72,50 @@
         background-color: var(--danger);
     }
 
+    .it-stat-body {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .it-stat-icon {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        background: linear-gradient(135deg, #eef8de, #d7edb2);
+        color: var(--socota-green-dark);
+    }
+
+    .it-stat-card.warning .it-stat-icon {
+        background: linear-gradient(135deg, #fdf1dd, #fadfae);
+        color: var(--warning);
+    }
+
+    .it-stat-card.danger .it-stat-icon {
+        background: linear-gradient(135deg, #fbe6e3, #f7cfc9);
+        color: var(--danger);
+    }
+
     .it-stat-label {
         color: #6c757d;
         font-size: 0.8rem;
+        font-weight: 600;
         margin-bottom: 0.35rem;
     }
 
     .it-stat-value {
         font-size: 1.8rem;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1;
     }
 
     .it-green {
-        color: var(--socota-green);
+        color: var(--socota-green-dark);
     }
 
     .it-warning {
@@ -87,15 +127,23 @@
     }
 
     .it-chart-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     }
 
     .it-chart-title {
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 0.92rem;
+        font-weight: 700;
         margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .it-chart-title i {
+        color: var(--socota-green-dark);
+        font-size: 0.85rem;
     }
 
     .it-chart {
@@ -110,9 +158,17 @@
     }
 
     .it-date-title {
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 0.95rem;
+        font-weight: 700;
         margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .it-date-title i {
+        color: var(--socota-green-dark);
+        font-size: 0.85rem;
     }
 
     .it-date-table {
@@ -120,11 +176,11 @@
     }
 
     .it-date-table th {
-        font-size: 0.78rem;
-        font-weight: 600;
+        font-size: 0.76rem;
+        font-weight: 700;
         color: #6c757d;
         text-transform: uppercase;
-        letter-spacing: 0.03em;
+        letter-spacing: 0.04em;
         border-bottom-width: 1px;
     }
 
@@ -133,20 +189,26 @@
         vertical-align: middle;
     }
 
+    .it-date-table tbody tr:hover {
+        background-color: #f5f9ee;
+    }
+
     .it-project-link {
         color: inherit;
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 600;
     }
 
     .it-project-link:hover {
-        color: var(--socota-green);
+        color: var(--socota-green-dark);
     }
 
     .it-status {
         background-color: var(--socota-green);
-        color: #ffffff;
-        font-weight: 500;
+        color: #2b3327;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 0.35rem 0.75rem;
     }
 
     .it-empty {
@@ -155,16 +217,24 @@
         color: #6c757d;
     }
 
+    .it-empty i {
+        color: var(--socota-green);
+    }
+
     body[data-bs-theme="dark"] .it-card,
     body[data-bs-theme="dark"] .it-chart-card {
-        border-color: #3a3f44;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 1px solid #3a3f44;
+        box-shadow: none;
     }
 
     body[data-bs-theme="dark"] .it-stat-label,
     body[data-bs-theme="dark"] .it-date-table th,
     body[data-bs-theme="dark"] .it-manager-subtitle {
         color: #a0a0a0;
+    }
+
+    body[data-bs-theme="dark"] .it-date-table tbody tr:hover {
+        background-color: #333d31;
     }
 </style>
 
@@ -187,6 +257,7 @@
     <!-- INDICATEURS -->
 
     <div class="it-section-title">
+        <i class="fas fa-gauge-high"></i>
         Vue opérationnelle
     </div>
 
@@ -197,14 +268,20 @@
         <div class="col-md-4">
             <div class="card it-card it-stat-card h-100">
 
-                <div class="card-body">
+                <div class="card-body it-stat-body">
 
-                    <div class="it-stat-label">
-                        Projets actifs
-                    </div>
+                    <span class="it-stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </span>
 
-                    <div class="it-stat-value it-green">
-                        @Model.ProjetsActifs
+                    <div>
+                        <div class="it-stat-label">
+                            Projets actifs
+                        </div>
+
+                        <div class="it-stat-value it-green">
+                            @Model.ProjetsActifs
+                        </div>
                     </div>
 
                 </div>
@@ -218,14 +295,20 @@
         <div class="col-md-4">
             <div class="card it-card it-stat-card danger h-100">
 
-                <div class="card-body">
+                <div class="card-body it-stat-body">
 
-                    <div class="it-stat-label">
-                        Projets en retard
-                    </div>
+                    <span class="it-stat-icon">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </span>
 
-                    <div class="it-stat-value it-danger">
-                        @Model.ProjetsEnRetard
+                    <div>
+                        <div class="it-stat-label">
+                            Projets en retard
+                        </div>
+
+                        <div class="it-stat-value it-danger">
+                            @Model.ProjetsEnRetard
+                        </div>
                     </div>
 
                 </div>
@@ -239,14 +322,20 @@
         <div class="col-md-4">
             <div class="card it-card it-stat-card warning h-100">
 
-                <div class="card-body">
+                <div class="card-body it-stat-body">
 
-                    <div class="it-stat-label">
-                        Projets critiques
-                    </div>
+                    <span class="it-stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </span>
 
-                    <div class="it-stat-value it-warning">
-                        @Model.ProjetsCritiques
+                    <div>
+                        <div class="it-stat-label">
+                            Projets critiques
+                        </div>
+
+                        <div class="it-stat-value it-warning">
+                            @Model.ProjetsCritiques
+                        </div>
                     </div>
 
                 </div>
@@ -260,6 +349,7 @@
     <!-- GRAPHIQUES -->
 
     <div class="it-section-title">
+        <i class="fas fa-chart-line"></i>
         Analyse des projets
     </div>
 
@@ -274,6 +364,7 @@
                 <div class="card-body">
 
                     <div class="it-chart-title">
+                        <i class="fas fa-users-gear"></i>
                         Charge équipe
                         <span class="text-muted fw-normal">
                             — par responsable IT
@@ -300,6 +391,7 @@
                 <div class="card-body">
 
                     <div class="it-chart-title">
+                        <i class="fas fa-hourglass-half"></i>
                         Aging des projets
                     </div>
 
@@ -326,6 +418,7 @@
 
                 <div>
                     <p class="it-date-title">
+                        <i class="fas fa-calendar-days"></i>
                         Dates de fin à venir
                     </p>
 

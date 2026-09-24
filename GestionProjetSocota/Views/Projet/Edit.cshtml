@@ -81,6 +81,17 @@
         color: #ffffff;
     }
 
+    .planning-help {
+        font-size: 0.78rem;
+        color: #6c757d;
+        margin-top: 0.35rem;
+    }
+
+    .required-mark {
+        color: #dc3545;
+        font-weight: 600;
+    }
+
     body[data-bs-theme="dark"] .edit-card {
         border-color: #3a3f44;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -90,7 +101,8 @@
         border-color: #3a3f44;
     }
 
-    body[data-bs-theme="dark"] .edit-subtitle {
+    body[data-bs-theme="dark"] .edit-subtitle,
+    body[data-bs-theme="dark"] .planning-help {
         color: #a0a0a0;
     }
 </style>
@@ -98,7 +110,9 @@
 
 <div class="edit-page">
 
+    <!-- ========================================= -->
     <!-- EN-TÊTE -->
+    <!-- ========================================= -->
 
     <div class="mb-4">
 
@@ -121,7 +135,9 @@
 
                 <input type="hidden" asp-for="Id" />
 
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger"
+                     role="alert">
                 </div>
 
 
@@ -152,9 +168,11 @@
 
                             </label>
 
-                            <input asp-for="TicketId" class="form-control" />
+                            <input asp-for="TicketId"
+                                   class="form-control" />
 
-                            <span asp-validation-for="TicketId" class="text-danger small">
+                            <span asp-validation-for="TicketId"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -170,7 +188,9 @@
 
                             </label>
 
-                            <input asp-for="Reference" class="form-control" readonly />
+                            <input asp-for="Reference"
+                                   class="form-control"
+                                   readonly />
 
                             <small class="text-muted">
 
@@ -192,9 +212,11 @@
 
                             </label>
 
-                            <input asp-for="Nom" class="form-control" />
+                            <input asp-for="Nom"
+                                   class="form-control" />
 
-                            <span asp-validation-for="Nom" class="text-danger small">
+                            <span asp-validation-for="Nom"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -210,7 +232,9 @@
 
                             </label>
 
-                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      rows="4"></textarea>
 
                         </div>
 
@@ -237,25 +261,28 @@
                     <div class="row">
 
                         <!-- ================================= -->
-                        <!-- UNITÉ -->
+                        <!-- SOCIÉTÉ -->
                         <!-- ================================= -->
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="UniteProjetId" class="form-label">
+                            <label asp-for="UniteProjetId"
+                                   class="form-label">
 
-                                Unité
+                                Société
 
                             </label>
 
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="UniteProjetId" asp-items="@(new SelectList(
-                                                                                                                            Model.UnitesDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="UniteProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.UnitesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Sélectionner une unité
@@ -264,7 +291,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutUnite')">
 
                                     <i class="fas fa-plus"></i>
@@ -272,7 +300,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerClassificationEdit('unite')">
 
                                     <i class="fas fa-trash"></i>
@@ -282,15 +311,20 @@
                             </div>
 
 
-                            <div id="editAjoutUnite" class="mt-2 d-none">
+                            <div id="editAjoutUnite"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouvelleUnite" class="form-control mb-2"
+                                <input id="EditNouvelleUnite"
+                                       class="form-control mb-2"
                                        placeholder="Nom de la nouvelle unité" />
 
-                                <input id="EditNouvelleUnitePrefixe" class="form-control mb-2" maxlength="20"
+                                <input id="EditNouvelleUnitePrefixe"
+                                       class="form-control mb-2"
+                                       maxlength="20"
                                        placeholder="Préfixe de référence (ex. FN)" />
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationEdit('unite')">
 
                                     <i class="fas fa-check"></i>
@@ -302,7 +336,8 @@
                             </div>
 
 
-                            <span asp-validation-for="UniteProjetId" class="text-danger small">
+                            <span asp-validation-for="UniteProjetId"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -314,7 +349,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="DepartementProjetId" class="form-label">
+                            <label asp-for="DepartementProjetId"
+                                   class="form-label">
 
                                 Département
 
@@ -323,11 +359,13 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="DepartementProjetId" asp-items="@(new SelectList(
-                                                                                                                            Model.DepartementsDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="DepartementProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.DepartementsDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Sélectionner un département
@@ -336,7 +374,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutDepartement')">
 
                                     <i class="fas fa-plus"></i>
@@ -344,7 +383,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerClassificationEdit('departement')">
 
                                     <i class="fas fa-trash"></i>
@@ -354,12 +394,15 @@
                             </div>
 
 
-                            <div id="editAjoutDepartement" class="mt-2 d-none">
+                            <div id="editAjoutDepartement"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouveauDepartement" class="form-control mb-2"
+                                <input id="EditNouveauDepartement"
+                                       class="form-control mb-2"
                                        placeholder="Nom du nouveau département" />
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationEdit('departement')">
 
                                     <i class="fas fa-check"></i>
@@ -371,7 +414,8 @@
                             </div>
 
 
-                            <span asp-validation-for="DepartementProjetId" class="text-danger small">
+                            <span asp-validation-for="DepartementProjetId"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -383,7 +427,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="TypeProjetReferenceId" class="form-label">
+                            <label asp-for="TypeProjetReferenceId"
+                                   class="form-label">
 
                                 Type
 
@@ -392,11 +437,13 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="TypeProjetReferenceId" asp-items="@(new SelectList(
-                                                                                                                            Model.TypesDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="TypeProjetReferenceId"
+                                        asp-items="@(new SelectList(
+                                            Model.TypesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Sélectionner un type
@@ -405,7 +452,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutType')">
 
                                     <i class="fas fa-plus"></i>
@@ -413,7 +461,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerClassificationEdit('type')">
 
                                     <i class="fas fa-trash"></i>
@@ -423,12 +472,15 @@
                             </div>
 
 
-                            <div id="editAjoutType" class="mt-2 d-none">
+                            <div id="editAjoutType"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouveauTypeProjet" class="form-control mb-2"
+                                <input id="EditNouveauTypeProjet"
+                                       class="form-control mb-2"
                                        placeholder="Nom du nouveau type" />
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationEdit('type')">
 
                                     <i class="fas fa-check"></i>
@@ -440,7 +492,8 @@
                             </div>
 
 
-                            <span asp-validation-for="TypeProjetReferenceId" class="text-danger small">
+                            <span asp-validation-for="TypeProjetReferenceId"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -452,7 +505,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="PlateformeProjetId" class="form-label">
+                            <label asp-for="PlateformeProjetId"
+                                   class="form-label">
 
                                 Plateforme
 
@@ -461,11 +515,13 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="PlateformeProjetId" asp-items="@(new SelectList(
-                                                                                                                            Model.PlateformesDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="PlateformeProjetId"
+                                        asp-items="@(new SelectList(
+                                            Model.PlateformesDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Sélectionner une plateforme
@@ -474,7 +530,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutPlateforme')">
 
                                     <i class="fas fa-plus"></i>
@@ -482,7 +539,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerClassificationEdit('plateforme')">
 
                                     <i class="fas fa-trash"></i>
@@ -492,12 +550,15 @@
                             </div>
 
 
-                            <div id="editAjoutPlateforme" class="mt-2 d-none">
+                            <div id="editAjoutPlateforme"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouvellePlateforme" class="form-control mb-2"
+                                <input id="EditNouvellePlateforme"
+                                       class="form-control mb-2"
                                        placeholder="Nom de la nouvelle plateforme (ex. SAP)" />
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationEdit('plateforme')">
 
                                     <i class="fas fa-check"></i>
@@ -509,7 +570,8 @@
                             </div>
 
 
-                            <span asp-validation-for="PlateformeProjetId" class="text-danger small">
+                            <span asp-validation-for="PlateformeProjetId"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -521,7 +583,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="Priorite" class="form-label">
+                            <label asp-for="Priorite"
+                                   class="form-label">
 
                                 Priorité
 
@@ -531,7 +594,6 @@
                             <select asp-for="Priorite"
                                     asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.PrioriteProjet>()"
                                     class="form-select">
-
                             </select>
 
                         </div>
@@ -564,7 +626,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="Statut" class="form-label">
+                            <label asp-for="Statut"
+                                   class="form-label">
 
                                 Statut
 
@@ -574,7 +637,6 @@
                             <select asp-for="Statut"
                                     asp-items="Html.GetEnumSelectList<GestionProjetSocota.Models.StatutProjet>()"
                                     class="form-select">
-
                             </select>
 
                         </div>
@@ -586,21 +648,30 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="PourcentageAvancement" class="form-label">
+                            <label asp-for="PourcentageAvancement"
+                                   class="form-label">
 
                                 Avancement (%)
 
                             </label>
 
 
-                            <input asp-for="PourcentageAvancement" type="number" min="0" max="100" class="form-control"
+                            <input asp-for="PourcentageAvancement"
+                                   type="number"
+                                   min="0"
+                                   max="100"
+                                   class="form-control"
                                    readonly />
 
                             <small class="text-muted">
-                                L'avancement est calculé automatiquement selon le statut du projet.
+
+                                L'avancement est calculé automatiquement
+                                selon le statut du projet.
+
                             </small>
 
-                            <span asp-validation-for="PourcentageAvancement" class="text-danger small">
+                            <span asp-validation-for="PourcentageAvancement"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -612,7 +683,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="OwnerItId" class="form-label">
+                            <label asp-for="OwnerItId"
+                                   class="form-label">
 
                                 Owner IT
 
@@ -621,11 +693,13 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="OwnerItId" asp-items="@(new SelectList(
-                                                                                                                            Model.UtilisateursDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="OwnerItId"
+                                        asp-items="@(new SelectList(
+                                            Model.UtilisateursDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Aucun
@@ -634,7 +708,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutOwnerIt')">
 
                                     <i class="fas fa-plus"></i>
@@ -642,7 +717,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerUtilisateurEdit('ownerIt')">
 
                                     <i class="fas fa-trash"></i>
@@ -652,18 +728,25 @@
                             </div>
 
 
-                            <div id="editAjoutOwnerIt" class="mt-2 d-none">
+                            <div id="editAjoutOwnerIt"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouvelOwnerItNomADUtilisateur" class="form-control mb-2"
+                                <input id="EditNouvelOwnerItNomADUtilisateur"
+                                       class="form-control mb-2"
                                        placeholder="Nom AD utilisateur" />
 
-                                <input id="EditNouvelOwnerItNom" class="form-control mb-2" placeholder="Nom complet" />
+                                <input id="EditNouvelOwnerItNom"
+                                       class="form-control mb-2"
+                                       placeholder="Nom complet" />
 
-                                <input id="EditNouvelOwnerItEmail" type="email" class="form-control mb-2"
+                                <input id="EditNouvelOwnerItEmail"
+                                       type="email"
+                                       class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurEdit('ownerIt')">
 
                                     <i class="fas fa-check"></i>
@@ -683,7 +766,8 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="PowerUserId" class="form-label">
+                            <label asp-for="PowerUserId"
+                                   class="form-label">
 
                                 Power User
 
@@ -692,11 +776,13 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="PowerUserId" asp-items="@(new SelectList(
-                                                                                                                            Model.UtilisateursDisponibles,
-                                                                                                                            "Id",
-                                                                                                                            "Nom"
-                                                                                                                        ))" class="form-select">
+                                <select asp-for="PowerUserId"
+                                        asp-items="@(new SelectList(
+                                            Model.UtilisateursDisponibles,
+                                            "Id",
+                                            "Nom"
+                                        ))"
+                                        class="form-select">
 
                                     <option value="">
                                         Aucun
@@ -705,7 +791,8 @@
                                 </select>
 
 
-                                <button type="button" class="btn btn-outline-secondary"
+                                <button type="button"
+                                        class="btn btn-outline-secondary"
                                         onclick="toggleAjout('editAjoutPowerUser')">
 
                                     <i class="fas fa-plus"></i>
@@ -713,7 +800,8 @@
                                 </button>
 
 
-                                <button type="button" class="btn btn-outline-danger"
+                                <button type="button"
+                                        class="btn btn-outline-danger"
                                         onclick="supprimerUtilisateurEdit('powerUser')">
 
                                     <i class="fas fa-trash"></i>
@@ -723,19 +811,25 @@
                             </div>
 
 
-                            <div id="editAjoutPowerUser" class="mt-2 d-none">
+                            <div id="editAjoutPowerUser"
+                                 class="mt-2 d-none">
 
-                                <input id="EditNouveauPowerUserNomADUtilisateur" class="form-control mb-2"
+                                <input id="EditNouveauPowerUserNomADUtilisateur"
+                                       class="form-control mb-2"
                                        placeholder="Nom AD utilisateur" />
 
-                                <input id="EditNouveauPowerUserNom" class="form-control mb-2"
+                                <input id="EditNouveauPowerUserNom"
+                                       class="form-control mb-2"
                                        placeholder="Nom complet" />
 
-                                <input id="EditNouveauPowerUserEmail" type="email" class="form-control mb-2"
+                                <input id="EditNouveauPowerUserEmail"
+                                       type="email"
+                                       class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
 
-                                <button type="button" class="btn btn-sm btn-socota"
+                                <button type="button"
+                                        class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurEdit('powerUser')">
 
                                     <i class="fas fa-check"></i>
@@ -749,45 +843,120 @@
                         </div>
 
 
+                        <!-- ========================================= -->
+                        <!-- PLANIFICATION -->
+                        <!-- ========================================= -->
+
+                        <div class="col-12 mt-2 mb-2">
+
+                            <div class="edit-section-title mb-3">
+
+                                <i class="fas fa-calendar-alt"></i>
+
+                                Planification
+
+                            </div>
+
+                        </div>
+
+
                         <!-- ================================= -->
-                        <!-- DATE DÉBUT -->
+                        <!-- DATE DE DÉBUT -->
                         <!-- ================================= -->
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
 
-                            <label asp-for="DateDebut" class="form-label">
+                            <label asp-for="DateDebut"
+                                   class="form-label">
 
                                 Date de début
+                                <span class="required-mark">*</span>
 
                             </label>
 
 
-                            <input asp-for="DateDebut" type="date" class="form-control" />
+                            <input asp-for="DateDebut"
+                                   type="date"
+                                   class="form-control"
+                                   required />
 
 
-                            <span asp-validation-for="DateDebut" class="text-danger small">
+                            <div class="planning-help">
+
+                                Date à laquelle le projet débute.
+
+                            </div>
+
+
+                            <span asp-validation-for="DateDebut"
+                                  class="text-danger small">
                             </span>
 
                         </div>
 
 
                         <!-- ================================= -->
-                        <!-- DATE FIN -->
+                        <!-- DEADLINE -->
                         <!-- ================================= -->
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
 
-                            <label asp-for="DateFin" class="form-label">
+                            <label asp-for="Deadline"
+                                   class="form-label">
 
-                                Date de fin
+                                Deadline
 
                             </label>
 
 
-                            <input asp-for="DateFin" type="date" class="form-control" />
+                            <input asp-for="Deadline"
+                                   type="date"
+                                   class="form-control" />
 
 
-                            <span asp-validation-for="DateFin" class="text-danger small">
+                            <div class="planning-help">
+
+                                Date limite du projet, si une échéance
+                                officielle existe.
+
+                            </div>
+
+
+                            <span asp-validation-for="Deadline"
+                                  class="text-danger small">
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- FIN PRÉVUE -->
+                        <!-- ================================= -->
+
+                        <div class="col-md-4 mb-3">
+
+                            <label asp-for="DateFin"
+                                   class="form-label">
+
+                                Fin prévue
+
+                            </label>
+
+
+                            <input asp-for="DateFin"
+                                   type="date"
+                                   class="form-control" />
+
+
+                            <div class="planning-help">
+
+                                Date prévue de fin du projet.
+
+                            </div>
+
+
+                            <span asp-validation-for="DateFin"
+                                  class="text-danger small">
                             </span>
 
                         </div>
@@ -803,7 +972,8 @@
 
                 <div class="edit-actions">
 
-                    <a href="/Projet/Details/@Model.Id" class="btn btn-outline-secondary">
+                    <a href="/Projet/Details/@Model.Id"
+                       class="btn btn-outline-secondary">
 
                         <i class="fas fa-times"></i>
 
@@ -812,7 +982,8 @@
                     </a>
 
 
-                    <button type="submit" class="btn btn-socota">
+                    <button type="submit"
+                            class="btn btn-socota">
 
                         <i class="fas fa-save"></i>
 
@@ -842,11 +1013,9 @@
             return;
         }
 
-
         if (section.classList.contains("d-none")) {
 
             section.classList.remove("d-none");
-
 
             const input =
                 section.querySelector("input");
@@ -1183,6 +1352,7 @@
                 'input[name="__RequestVerificationToken"]'
             );
 
+
         if (!tokenInput) {
 
             alert(
@@ -1192,6 +1362,7 @@
             return;
         }
 
+
         const token =
             tokenInput.value;
 
@@ -1199,38 +1370,64 @@
         let url = "";
         let selectId = "";
 
+
         switch (type) {
 
             case "unite":
+
                 url = "/Projet/SupprimerUnite";
+
                 selectId = "UniteProjetId";
+
                 break;
+
 
             case "departement":
+
                 url = "/Projet/SupprimerDepartement";
+
                 selectId = "DepartementProjetId";
+
                 break;
+
 
             case "type":
+
                 url = "/Projet/SupprimerTypeProjet";
+
                 selectId = "TypeProjetReferenceId";
+
                 break;
+
 
             case "plateforme":
+
                 url = "/Projet/SupprimerPlateforme";
+
                 selectId = "PlateformeProjetId";
+
                 break;
 
+
             default:
-                alert("Type de classification inconnu.");
+
+                alert(
+                    "Type de classification inconnu."
+                );
+
                 return;
         }
 
+
         const select =
-            document.getElementById(selectId);
+            document.getElementById(
+                selectId
+            );
+
 
         const id =
             select.value;
+
 
         if (!id) {
 
@@ -1241,46 +1438,63 @@
             return;
         }
 
+
         const optionSelectionnee =
-            select.options[select.selectedIndex];
+            select.options[
+                select.selectedIndex
+            ];
+
 
         const nom =
             optionSelectionnee
                 ? optionSelectionnee.textContent.trim()
                 : "cet élément";
 
+
         if (!confirm(
             `Voulez-vous vraiment supprimer "${nom}" ? Cette action est irréversible.`
         )) {
+
             return;
         }
+
 
         try {
 
             const formData =
                 new URLSearchParams();
 
-            formData.append("id", id);
+
+            formData.append(
+                "id",
+                id
+            );
+
 
             const response =
-                await fetch(url, {
+                await fetch(
+                    url,
+                    {
 
-                    method: "POST",
+                        method: "POST",
 
-                    headers: {
+                        headers: {
 
-                        "Content-Type":
-                            "application/x-www-form-urlencoded",
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
 
-                        "RequestVerificationToken":
-                            token
-                    },
+                            "RequestVerificationToken":
+                                token
+                        },
 
-                    body: formData
-                });
+                        body: formData
+                    }
+                );
+
 
             const data =
                 await response.json();
+
 
             if (!response.ok || !data.success) {
 
@@ -1292,9 +1506,14 @@
                 return;
             }
 
-            select.remove(select.selectedIndex);
+
+            select.remove(
+                select.selectedIndex
+            );
+
 
             select.value = "";
+
 
             alert(
                 data.message ||
@@ -1474,6 +1693,7 @@
                 await fetch(
                     "/Projet/AjouterUtilisateur",
                     {
+
                         method: "POST",
 
                         headers: {
@@ -1579,6 +1799,7 @@
                 'input[name="__RequestVerificationToken"]'
             );
 
+
         if (!tokenInput) {
 
             alert(
@@ -1588,19 +1809,26 @@
             return;
         }
 
+
         const token =
             tokenInput.value;
+
 
         const selectId =
             champ === "ownerIt"
                 ? "OwnerItId"
                 : "PowerUserId";
 
+
         const select =
-            document.getElementById(selectId);
+            document.getElementById(
+                selectId
+            );
+
 
         const id =
             select.value;
+
 
         if (!id) {
 
@@ -1611,46 +1839,63 @@
             return;
         }
 
+
         const optionSelectionnee =
-            select.options[select.selectedIndex];
+            select.options[
+                select.selectedIndex
+            ];
+
 
         const nom =
             optionSelectionnee
                 ? optionSelectionnee.textContent.trim()
                 : "cet utilisateur";
 
+
         if (!confirm(
             `Voulez-vous vraiment supprimer l'utilisateur "${nom}" ? Cette action est irréversible.`
         )) {
+
             return;
         }
+
 
         try {
 
             const formData =
                 new URLSearchParams();
 
-            formData.append("id", id);
+
+            formData.append(
+                "id",
+                id
+            );
+
 
             const response =
-                await fetch("/Projet/SupprimerUtilisateur", {
+                await fetch(
+                    "/Projet/SupprimerUtilisateur",
+                    {
 
-                    method: "POST",
+                        method: "POST",
 
-                    headers: {
+                        headers: {
 
-                        "Content-Type":
-                            "application/x-www-form-urlencoded",
+                            "Content-Type":
+                                "application/x-www-form-urlencoded",
 
-                        "RequestVerificationToken":
-                            token
-                    },
+                            "RequestVerificationToken":
+                                token
+                        },
 
-                    body: formData
-                });
+                        body: formData
+                    }
+                );
+
 
             const data =
                 await response.json();
+
 
             if (!response.ok || !data.success) {
 
@@ -1662,24 +1907,42 @@
                 return;
             }
 
-            // Retirer l'utilisateur des deux listes (Owner IT et Power User)
-            ["OwnerItId", "PowerUserId"].forEach(sid => {
+
+            // Retirer l'utilisateur des deux listes
+            // Owner IT et Power User
+
+            [
+                "OwnerItId",
+                "PowerUserId"
+            ].forEach(sid => {
 
                 const s =
-                    document.getElementById(sid);
+                    document.getElementById(
+                        sid
+                    );
+
 
                 if (!s) {
                     return;
                 }
 
-                for (let i = s.options.length - 1; i >= 0; i--) {
 
-                    if (s.options[i].value === id) {
+                for (
+                    let i = s.options.length - 1;
+                    i >= 0;
+                    i--
+                ) {
+
+                    if (
+                        s.options[i].value === id
+                    ) {
 
                         s.remove(i);
                     }
                 }
+
             });
+
 
             alert(
                 data.message ||

@@ -9,8 +9,9 @@
     }
 
     .comex-title {
-        font-weight: 600;
+        font-weight: 700;
         margin-bottom: 0.25rem;
+        color: var(--socota-green-dark);
     }
 
     .comex-subtitle {
@@ -20,23 +21,32 @@
     }
 
     .comex-section-title {
-        font-size: 0.85rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin-bottom: 0.75rem;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.9rem;
+        color: #55604f;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .comex-section-title i {
+        color: var(--socota-green-dark);
+        font-size: 0.78rem;
     }
 
     .comex-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .comex-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
     }
 
     .comex-health-card {
@@ -50,7 +60,7 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 4px;
+        width: 5px;
         background-color: var(--socota-green);
     }
 
@@ -62,20 +72,50 @@
         background-color: var(--comex-danger);
     }
 
+    .comex-health-body {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .comex-health-icon {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        background: linear-gradient(135deg, #eef8de, #d7edb2);
+        color: var(--socota-green-dark);
+    }
+
+    .comex-health-card.warning .comex-health-icon {
+        background: linear-gradient(135deg, #fdf1dd, #fadfae);
+        color: var(--comex-warning);
+    }
+
+    .comex-health-card.danger .comex-health-icon {
+        background: linear-gradient(135deg, #fbe6e3, #f7cfc9);
+        color: var(--comex-danger);
+    }
+
     .comex-label {
         color: #6c757d;
         font-size: 0.8rem;
+        font-weight: 600;
         margin-bottom: 0.35rem;
     }
 
     .comex-value {
         font-size: 1.8rem;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1;
     }
 
     .comex-green {
-        color: var(--socota-green);
+        color: var(--socota-green-dark);
     }
 
     .comex-warning {
@@ -87,15 +127,23 @@
     }
 
     .comex-chart-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     }
 
     .comex-chart-title {
-        font-size: 0.9rem;
-        font-weight: 600;
+        font-size: 0.92rem;
+        font-weight: 700;
         margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .comex-chart-title i {
+        color: var(--socota-green-dark);
+        font-size: 0.85rem;
     }
 
     .comex-chart {
@@ -105,8 +153,8 @@
 
     body[data-bs-theme="dark"] .comex-card,
     body[data-bs-theme="dark"] .comex-chart-card {
-        border-color: #3a3f44;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        box-shadow: none;
+        border: 1px solid #3a3f44;
     }
 
     body[data-bs-theme="dark"] .comex-label,
@@ -131,6 +179,7 @@
     <!-- PORTFOLIO HEALTH -->
 
     <div class="comex-section-title">
+        <i class="fas fa-heart-pulse"></i>
         Portfolio Health
     </div>
 
@@ -139,14 +188,20 @@
         <!-- Vert -->
         <div class="col-md-4">
             <div class="card comex-card comex-health-card h-100">
-                <div class="card-body">
+                <div class="card-body comex-health-body">
 
-                    <div class="comex-label">
-                        Délai respecté
-                    </div>
+                    <span class="comex-health-icon">
+                        <i class="fas fa-check"></i>
+                    </span>
 
-                    <div class="comex-value comex-green">
-                        @Model.PortfolioVert
+                    <div>
+                        <div class="comex-label">
+                            Délai respecté
+                        </div>
+
+                        <div class="comex-value comex-green">
+                            @Model.PortfolioVert
+                        </div>
                     </div>
 
                 </div>
@@ -157,14 +212,20 @@
         <!-- Orange -->
         <div class="col-md-4">
             <div class="card comex-card comex-health-card warning h-100">
-                <div class="card-body">
+                <div class="card-body comex-health-body">
 
-                    <div class="comex-label">
-                        Retard inférieur à 30 jours
-                    </div>
+                    <span class="comex-health-icon">
+                        <i class="fas fa-clock"></i>
+                    </span>
 
-                    <div class="comex-value comex-warning">
-                        @Model.PortfolioOrange
+                    <div>
+                        <div class="comex-label">
+                            Retard inférieur à 30 jours
+                        </div>
+
+                        <div class="comex-value comex-warning">
+                            @Model.PortfolioOrange
+                        </div>
                     </div>
 
                 </div>
@@ -175,14 +236,20 @@
         <!-- Rouge -->
         <div class="col-md-4">
             <div class="card comex-card comex-health-card danger h-100">
-                <div class="card-body">
+                <div class="card-body comex-health-body">
 
-                    <div class="comex-label">
-                        Retard supérieur à 30 jours
-                    </div>
+                    <span class="comex-health-icon">
+                        <i class="fas fa-triangle-exclamation"></i>
+                    </span>
 
-                    <div class="comex-value comex-danger">
-                        @Model.PortfolioRouge
+                    <div>
+                        <div class="comex-label">
+                            Retard supérieur à 30 jours
+                        </div>
+
+                        <div class="comex-value comex-danger">
+                            @Model.PortfolioRouge
+                        </div>
                     </div>
 
                 </div>
@@ -204,6 +271,7 @@
                 <div class="card-body">
 
                     <div class="comex-chart-title">
+                        <i class="fas fa-chart-pie"></i>
                         Répartition In House / Outsourced
                     </div>
 
@@ -226,6 +294,7 @@
                 <div class="card-body">
 
                     <div class="comex-chart-title">
+                        <i class="fas fa-chart-column"></i>
                         Répartition par plateforme
                     </div>
 

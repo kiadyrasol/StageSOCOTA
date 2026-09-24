@@ -1,7 +1,79 @@
-<h1 class="h3 mb-3">Importer depuis Excel</h1>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
 
-<div class="card">
-    <div class="card-body">
+    .import-title {
+        font-weight: 700;
+        color: var(--socota-green-dark);
+    }
+
+    .import-card {
+        border: none;
+        border-radius: 1.1rem;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .import-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 0.9rem;
+        background: linear-gradient(135deg, #eef8de, #d7edb2);
+        color: var(--socota-green-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-control {
+        border-radius: 0.6rem;
+        border: 1.5px solid #dfe6d8;
+    }
+
+    .form-control:focus {
+        border-color: var(--socota-green);
+        box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
+    }
+
+    .btn-socota {
+        background-color: var(--socota-green-dark);
+        border-color: var(--socota-green-dark);
+        color: #fff;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .btn-socota:hover {
+        background-color: #5f8b28;
+        border-color: #5f8b28;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(112,161,48,.28);
+    }
+
+    .alert-danger {
+        border: none;
+        border-radius: 0.8rem;
+    }
+
+    body[data-bs-theme="dark"] .import-card {
+        box-shadow: none;
+        border: 1px solid #3a3f44;
+    }
+</style>
+
+<h1 class="h3 mb-3 import-title">Importer depuis Excel</h1>
+
+<div class="card import-card">
+    <div class="card-body p-4">
+
+        <span class="import-icon">
+            <i class="fas fa-file-excel"></i>
+        </span>
 
         <p class="text-muted">
             Sélectionnez le fichier de suivi Excel.
@@ -19,7 +91,7 @@
               enctype="multipart/form-data">
 
             <div class="mb-3">
-                <label for="fichier" class="form-label">
+                <label for="fichier" class="form-label fw-semibold">
                     Fichier Excel (.xlsx)
                 </label>
 

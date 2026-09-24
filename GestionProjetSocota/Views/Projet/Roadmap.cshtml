@@ -5,52 +5,105 @@
 }
 
 <style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .roadmap-title {
+        font-weight: 700;
+        color: var(--socota-green-dark);
+    }
 
     .roadmap-header {
-        background-color: #8BC53F ;
-        color: #ffffff ;
-        border-color: #8BC53F;
+        background-color: var(--socota-green);
+        color: #ffffff;
+        border-color: var(--socota-green);
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        letter-spacing: 0.3px;
+        padding: 0.85rem 1.1rem;
+    }
+
+    /* Compteur de projets dans l'en-tête */
+    .roadmap-header-count {
+        background-color: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+    }
+
+    .roadmap-card {
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .roadmap-card:hover {
+        box-shadow: 0 10px 24px rgba(139, 197, 63, 0.16);
+        transform: translateY(-2px);
     }
 
     .roadmap-projet {
         display: block;
         text-decoration: none;
         border: 1px solid #dee2e6;
-        border-radius: 6px;
-        padding: 10px;
+        border-radius: 0.8rem;
+        padding: 12px;
         margin-bottom: 10px;
         transition: all 0.2s ease;
     }
 
+    .roadmap-projet:last-child {
+        margin-bottom: 0;
+    }
+
     .roadmap-projet:hover {
-        border-color: #8BC53F;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        border-color: var(--socota-green);
+        box-shadow: 0 4px 12px rgba(139, 197, 63, 0.18);
         transform: translateY(-1px);
     }
 
     .roadmap-projet-nom {
-        font-weight: bold;
+        font-weight: 700;
         font-size: 0.9rem;
+        color: #212529;
+        margin-bottom: 6px;
     }
 
     .roadmap-projet-date {
         font-size: 0.8rem;
         color: #6c757d;
+        margin-bottom: 8px;
     }
 
     .roadmap-statut {
-        background-color: #8BC53F;
+        background-color: var(--socota-green);
         color: #ffffff !important;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 0.35rem 0.75rem;
+    }
+
+    /* Etat vide plus clair */
+    .roadmap-empty {
+        border: 1px dashed #dee2e6;
+        border-radius: 0.8rem;
+        padding: 18px 10px;
+        text-align: center;
     }
 
     body[data-bs-theme="dark"] .roadmap-projet {
         background-color: #2b2f33;
         border-color: #555b61;
-        color: #e0e0e;
+        color: #e0e0e0;
     }
 
     body[data-bs-theme="dark"] .roadmap-projet:hover {
-        border-color: #8BC53F;
+        border-color: var(--socota-green);
         background-color: #33383d;
     }
 
@@ -77,32 +130,49 @@
     }
 
     body[data-bs-theme="dark"] .roadmap-header {
-        background-color: #8BC53F;
-        color: #ffffff ;
+        background-color: var(--socota-green);
+        color: #ffffff;
     }
 
+    body[data-bs-theme="dark"] .roadmap-empty {
+        border-color: #555b61;
+    }
+
+    body[data-bs-theme="dark"] .roadmap-card {
+        box-shadow: none;
+    }
 </style>
 
 
-<h1 class="h3 mb-3">
-    Roadmap trimestrielle
-</h1>
+<div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
+    <h1 class="h3 mb-0 roadmap-title">
+        Roadmap trimestrielle
+    </h1>
+    <span class="text-muted small">
+        <i class="fas fa-diagram-project me-1"></i>
+        @trimestres!.Sum(t => t.Projets.Count) projet(s) au total
+    </span>
+</div>
 
 
-<div class="row">
+<div class="row g-3">
 
     @foreach (var trimestre in trimestres!)
     {
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-lg-3">
 
-            <div class="card h-100">
+            <div class="card roadmap-card h-100 border-0">
 
                 <!-- TITRE DU TRIMESTRE -->
-                <div class="card-header roadmap-header text-center">
+                <div class="card-header roadmap-header d-flex align-items-center justify-content-between border-0">
 
                     <b>
                         @trimestre.Label
                     </b>
+
+                    <span class="roadmap-header-count">
+                        @trimestre.Projets.Count
+                    </span>
 
                 </div>
 
@@ -112,9 +182,12 @@
 
                     @if (!trimestre.Projets.Any())
                     {
-                        <p class="text-muted small mb-0">
-                            Aucun projet
-                        </p>
+                        <div class="roadmap-empty">
+                            <i class="fas fa-folder-open text-muted mb-2 d-block"></i>
+                            <p class="text-muted small mb-0">
+                                Aucun projet
+                            </p>
+                        </div>
                     }
                     else
                     {

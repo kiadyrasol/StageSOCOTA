@@ -1,16 +1,86 @@
 @model List<GestionProjetSocota.Models.Projet>
 
-<h1 class="h3 mb-3">Gantt</h1>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
 
-<div class="card">
+    .gantt-title {
+        font-weight: 700;
+        color: var(--socota-green-dark);
+    }
+
+    .gantt-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .gantt-empty {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        color: #6c757d;
+    }
+
+    .gantt-empty i {
+        font-size: 1.8rem;
+        color: var(--socota-green);
+        margin-bottom: 0.6rem;
+        display: block;
+    }
+
+    .gantt-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .gantt .bar {
+        fill: var(--socota-green);
+    }
+
+    .gantt .bar-progress {
+        fill: var(--socota-green-dark);
+    }
+
+    .gantt .bar-label {
+        fill: #ffffff;
+        font-weight: 600;
+    }
+
+    .gantt .bar-wrapper:hover .bar {
+        fill: var(--socota-green-dark);
+    }
+
+    .gantt .grid-header {
+        fill: #f5f9ee;
+        stroke: #e3f0cf;
+    }
+
+    .gantt .today-highlight {
+        fill: rgba(139, 197, 63, 0.15);
+    }
+
+    body[data-bs-theme="dark"] .gantt-card {
+        border: 1px solid #3a3f44;
+        box-shadow: none;
+    }
+</style>
+
+<h1 class="h3 mb-3 gantt-title">Gantt</h1>
+
+<div class="card gantt-card">
     <div class="card-body">
 
         @if (!Model.Any(p => p.DateDebut.HasValue && p.DateFin.HasValue))
         {
-            <p class="text-muted mb-0">
-                Aucun projet avec une date de début et une date de fin définies
-                pour afficher le Gantt.
-            </p>
+            <div class="gantt-empty">
+                <i class="fas fa-chart-gantt"></i>
+                <p class="mb-0">
+                    Aucun projet avec une date de début et une date de fin définies
+                    pour afficher le Gantt.
+                </p>
+            </div>
         }
         else
         {
@@ -24,29 +94,6 @@
 
 <link rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css">
-
-<style>
-    .gantt-wrapper {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-    .gantt .bar {
-        fill: var(--socota-green);
-    }
-
-    .gantt .bar-progress {
-        fill: #70A130;
-    }
-
-    .gantt .bar-label {
-        fill: #ffffff;
-    }
-
-    .gantt .bar-wrapper:hover .bar {
-        fill: #70A130;
-    }
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.min.js"></script>
 

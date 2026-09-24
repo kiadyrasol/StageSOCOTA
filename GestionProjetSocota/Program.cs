@@ -13,6 +13,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+// On commente l'authentification Windows/Negotiate stricte pour la démo
+/*
 builder.Services.AddAuthentication(
     NegotiateDefaults.AuthenticationScheme
 )
@@ -22,6 +24,9 @@ builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = options.DefaultPolicy;
 });
+*/
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
 
@@ -47,8 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
-app.UseAuthentication();
-
+// Le middleware qui simule l'Admin injecte l'utilisateur ICI
 app.UseMiddleware<GestionProjetSocota.Middlewares.SyncUtilisateurMiddleware>();
 
 app.UseAuthorization();

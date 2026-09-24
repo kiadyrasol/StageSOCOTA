@@ -403,6 +403,10 @@ namespace GestionProjetSocota.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Avancement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Commentaire")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -417,6 +421,9 @@ namespace GestionProjetSocota.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DateValidationPowerUser")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Deadline")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("DepartementProjetId")
@@ -636,22 +643,36 @@ namespace GestionProjetSocota.Migrations
                         {
                             Id = 1,
                             Actif = true,
-                            Nom = "CTN",
+                            Nom = "CF : COTONA Fabrics",
                             Prefixe = "CF"
                         },
                         new
                         {
                             Id = 2,
                             Actif = true,
-                            Nom = "SGL",
-                            Prefixe = "SG"
+                            Nom = "SGL : SOCOTA Garments Limited",
+                            Prefixe = "SGL"
                         },
                         new
                         {
                             Id = 3,
                             Actif = true,
-                            Nom = "CRE",
-                            Prefixe = "CR"
+                            Nom = "CRE : COTONA Real Estate",
+                            Prefixe = "CRE"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Actif = true,
+                            Nom = "SH : SOCOTA House",
+                            Prefixe = "SH"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Actif = true,
+                            Nom = "GS : GROUPE SOCOTA",
+                            Prefixe = "GS"
                         });
                 });
 

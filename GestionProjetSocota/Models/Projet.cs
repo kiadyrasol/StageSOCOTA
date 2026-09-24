@@ -34,6 +34,11 @@ namespace GestionProjetSocota.Models
     {
         public int Id { get; set; }
 
+
+        // =========================================================
+        // IDENTIFICATION
+        // =========================================================
+
         public string TicketId { get; set; } = string.Empty;
 
         public string Reference { get; set; } = string.Empty;
@@ -44,7 +49,7 @@ namespace GestionProjetSocota.Models
 
 
         // =========================================================
-        // CLASSIFICATION 
+        // CLASSIFICATION
         // =========================================================
 
         public int? UniteProjetId { get; set; }
@@ -63,7 +68,7 @@ namespace GestionProjetSocota.Models
 
 
         public int? PlateformeProjetId { get; set; }
-        
+
         public PlateformeProjet? PlateformeProjet { get; set; }
 
 
@@ -99,21 +104,60 @@ namespace GestionProjetSocota.Models
             PrioriteProjet.Medium;
 
 
+        // =========================================================
+        // INFORMATIONS PROJET
+        // =========================================================
+
         public string DevVolume { get; set; } = string.Empty;
 
+
+        // =========================================================
+        // DATES DU PROJET
+        // =========================================================
+
+        // Date de début du projet.
+        // OBLIGATOIRE.
         public DateTime? DateDebut { get; set; }
 
+
+        // Fin prévue du projet.
+        // OPTIONNELLE.
         public DateTime? DateFin { get; set; }
 
+
+        // Date limite du projet.
+        // OPTIONNELLE.
+        public DateTime? Deadline { get; set; }
+
+
+        // =========================================================
+        // AVANCEMENT
+        // =========================================================
         public int PourcentageAvancement { get; set; } = 0;
+
+        public string Avancement { get; set; } = string.Empty;
+
+
+        // =========================================================
+        // VALIDATION POWER USER
+        // =========================================================
 
         public bool ValidePowerUser { get; set; } = false;
 
         public DateTime? DateValidationPowerUser { get; set; }
 
+
+        // =========================================================
+        // COMMENTAIRES
+        // =========================================================
+
         public string Commentaire { get; set; } = string.Empty;
 
-        public DateTime DateCreation { get; set; } = DateTime.Now;
 
+        // =========================================================
+        // CRÉATION
+        // =========================================================
+
+        public DateTime DateCreation { get; set; } = DateTime.Now;
     }
 }

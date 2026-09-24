@@ -4,9 +4,114 @@
     ViewData["Title"] = "Notifications";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">
-        <i class="fas fa-bell text-primary"></i>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
+
+    .notif-title {
+        font-weight: 700;
+        color: var(--socota-green-dark);
+    }
+
+    .notif-title i {
+        color: var(--socota-green);
+    }
+
+    .btn-mark-all {
+        border: 1.5px solid #d7ded1;
+        color: #55604f;
+        font-weight: 600;
+        border-radius: 0.6rem;
+        background: #fff;
+    }
+
+    .btn-mark-all:hover {
+        border-color: var(--socota-green-dark);
+        color: var(--socota-green-dark);
+        background: #fff;
+    }
+
+    .notif-card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .notif-empty {
+        padding: 3rem 1rem;
+    }
+
+    .notif-empty i {
+        color: var(--socota-green);
+    }
+
+    .list-group-item {
+        border-color: #edf1ea;
+        transition: background-color 0.2s ease;
+    }
+
+    .list-group-item.non-lue {
+        background-color: #f5f9ee;
+        border-left: 4px solid var(--socota-green) !important;
+    }
+
+    .badge-nouveau {
+        background-color: var(--socota-green);
+        color: #2b3327;
+        font-weight: 700;
+        border-radius: 20px;
+        padding: 0.3rem 0.7rem;
+    }
+
+    .notif-type {
+        color: #2b3327;
+    }
+
+    .notif-message {
+        color: #55604f;
+    }
+
+    .notif-lien-projet {
+        color: var(--socota-green-dark) !important;
+        font-weight: 600;
+    }
+
+    .notif-lien-projet:hover {
+        color: var(--socota-green-dark) !important;
+        text-decoration: underline !important;
+    }
+
+    .btn-outline-success {
+        color: var(--socota-green-dark) !important;
+        border-color: var(--socota-green) !important;
+        border-radius: 0.6rem;
+    }
+
+    .btn-outline-success:hover {
+        background-color: var(--socota-green) !important;
+        border-color: var(--socota-green) !important;
+        color: #fff !important;
+    }
+
+    .btn-outline-danger {
+        border-radius: 0.6rem;
+    }
+
+    body[data-bs-theme="dark"] .notif-card {
+        box-shadow: none;
+        border: 1px solid #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .list-group-item.non-lue {
+        background-color: #253023;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h1 class="h3 mb-0 notif-title">
+        <i class="fas fa-bell"></i>
         Notifications
     </h1>
 
@@ -14,7 +119,7 @@
     {
         <form asp-action="ToutMarquerCommeLu" method="post">
             @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-outline-secondary btn-sm">
+            <button type="submit" class="btn btn-mark-all btn-sm">
                 <i class="fas fa-check-double me-1"></i>
                 Tout marquer comme lu
             </button>
@@ -24,21 +129,21 @@
 
 @if (!Model.Any())
 {
-    <div class="card shadow-sm">
-        <div class="card-body text-center text-muted py-5">
-            <i class="fas fa-bell-slash fa-3x mb-3 text-black-50"></i>
+    <div class="card notif-card">
+        <div class="card-body text-center text-muted notif-empty">
+            <i class="fas fa-bell-slash fa-3x mb-3"></i>
             <p class="mb-0 fs-5">Aucune notification pour le moment.</p>
         </div>
     </div>
 }
 else
 {
-    <div class="card shadow-sm">
+    <div class="card notif-card">
         <div class="list-group list-group-flush">
 
             @foreach (var notification in Model)
             {
-                <div class="list-group-item @(notification.EstLue ? "" : "bg-light border-start border-success border-3")">
+                <div class="list-group-item @(notification.EstLue ? "" : "non-lue")">
 
                     <div class="d-flex justify-content-between align-items-start">
 
@@ -46,19 +151,19 @@ else
                             <div class="d-flex align-items-center gap-2">
                                 @if (!notification.EstLue)
                                 {
-                                    <span class="badge bg-success">Nouveau</span>
+                                    <span class="badge badge-nouveau">Nouveau</span>
                                 }
-                                <strong class="text-dark">@notification.Type</strong>
+                                <strong class="notif-type">@notification.Type</strong>
                             </div>
 
-                            <p class="mb-1 mt-2 text-secondary">
+                            <p class="mb-1 mt-2 notif-message">
                                 @notification.Message
                             </p>
 
                             @if (notification.Projet != null)
                             {
                                 <div class="mt-1">
-                                    <a href="@Url.Action("Details", "Projet", new { id = notification.ProjetId })" class="small text-decoration-none text-primary">
+                                    <a href="@Url.Action("Details", "Projet", new { id = notification.ProjetId })" class="small text-decoration-none notif-lien-projet">
                                         <i class="fas fa-project-diagram me-1"></i>@notification.Projet.Nom
                                     </a>
                                 </div>

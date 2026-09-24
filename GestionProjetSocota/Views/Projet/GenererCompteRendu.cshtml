@@ -3,16 +3,117 @@
     var compteRendu = ViewBag.CompteRendu as string;
 }
 
-<h1 class="h3 mb-3">Compte-rendu généré par IA</h1>
+<style>
+    :root {
+        --socota-green: #8BC53F;
+        --socota-green-dark: #70A130;
+    }
 
-<p class="text-muted small mb-3">
+    .cr-title {
+        font-weight: 700;
+        color: var(--socota-green-dark);
+    }
+
+    .cr-projet {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .cr-card {
+        border: none;
+        border-radius: 1.1rem;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        background: linear-gradient(180deg, #f9fdf3, #ffffff 40%);
+    }
+
+    .cr-card .card-body {
+        position: relative;
+        padding: 1.75rem;
+    }
+
+    .cr-badge-ia {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--socota-green);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 0.3rem 0.75rem;
+        border-radius: 30px;
+        margin-bottom: 1rem;
+    }
+
+    .compte-rendu {
+        white-space: pre-line;
+        line-height: 1.65;
+        color: #2b3327;
+        font-size: 0.96rem;
+    }
+
+    .btn-socota {
+        background-color: var(--socota-green-dark);
+        border-color: var(--socota-green-dark);
+        color: #fff;
+        border-radius: 0.6rem;
+        font-weight: 600;
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .btn-socota:hover {
+        background-color: #5f8b28;
+        border-color: #5f8b28;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(112,161,48,.28);
+    }
+
+    .btn-outline-secondary {
+        border: 1.5px solid #d7ded1;
+        color: #55604f;
+        font-weight: 600;
+        border-radius: 0.6rem;
+        background: #fff;
+    }
+
+    .btn-outline-secondary:hover {
+        border-color: var(--socota-green-dark);
+        color: var(--socota-green-dark);
+        background: #fff;
+    }
+
+    body[data-bs-theme="dark"] .cr-card {
+        background: #2b2f33;
+        box-shadow: none;
+        border: 1px solid #3a3f44;
+    }
+
+    body[data-bs-theme="dark"] .compte-rendu {
+        color: #e0e0e0;
+    }
+</style>
+
+<h1 class="h3 mb-1 cr-title">Compte-rendu généré par IA</h1>
+
+<p class="cr-projet mb-3">
     Projet :
     <strong>@projet?.Nom</strong>
 </p>
 
-<div class="card mb-3">
-    <div class="card-body compte-rendu">
-        @compteRendu
+<div class="card mb-3 cr-card">
+    <div class="card-body">
+
+        <span class="cr-badge-ia">
+            <i class="fas fa-sparkles"></i>
+            Généré par IA
+        </span>
+
+        <div class="compte-rendu">
+            @compteRendu
+        </div>
+
     </div>
 </div>
 
