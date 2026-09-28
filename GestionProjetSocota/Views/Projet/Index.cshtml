@@ -586,17 +586,27 @@
     }
 
     .btn-export-pdf {
-        color: #97292c !important;
-        border-color: #e3b3b4 !important;
+        color: #6c757d !important;
+        border-color: #ced4da !important;
         background: transparent;
     }
 
     .btn-export-pdf:hover {
         color: #fff !important;
-        background: #c0392b !important;
-        border-color: #c0392b !important;
+        background: #6c757d !important;
+        border-color: #6c757d !important;
     }
 
+    body[data-bs-theme="dark"] .btn-export-pdf {
+        color: #adb5bd !important;
+        border-color: #495057 !important;
+    }
+
+    body[data-bs-theme="dark"] .btn-export-pdf:hover {
+        color: #fff !important;
+        background: #6c757d !important;
+        border-color: #6c757d !important;
+    }
 
     /* ============================================================
        CARTE PRINCIPALE
@@ -950,6 +960,12 @@
         border-radius: 50%;
         background: currentColor;
         opacity: .85;
+    }
+
+    /* statut Debugging : orange (le rouge reste réservé à Cancelled) */
+    .bg-debugging {
+        background-color: #e8590c !important;
+        color: #fff !important;
     }
 
 
@@ -1741,7 +1757,7 @@
                                                         GestionProjetSocota.Models.StatutProjet.Analyse => "bg-primary",
                                                         GestionProjetSocota.Models.StatutProjet.DevStarted => "bg-primary",
                                                         GestionProjetSocota.Models.StatutProjet.Testing => "bg-warning text-dark",
-                                                        GestionProjetSocota.Models.StatutProjet.Debugging => "bg-danger",
+                                                        GestionProjetSocota.Models.StatutProjet.Debugging => "bg-debugging",
                                                         GestionProjetSocota.Models.StatutProjet.Formation => "bg-info text-dark",
                                                         GestionProjetSocota.Models.StatutProjet.GoLive => "bg-success",
                                                         GestionProjetSocota.Models.StatutProjet.Support => "bg-success",
