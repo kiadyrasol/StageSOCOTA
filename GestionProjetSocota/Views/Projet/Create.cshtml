@@ -1,4 +1,3 @@
-
 @model GestionProjetSocota.ViewModels.ProjetCreateViewModel
 
 <style>
@@ -76,11 +75,37 @@
         box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.2);
     }
 
+    /* =========================================================
+       BOUTONS 
+       ========================================================= */
+
     .edit-actions {
         display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        padding-top: 1rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 2rem 1.5rem;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .edit-actions .btn {
+        min-width: 150px;
+        padding: 0.65rem 1.2rem;
+    }
+
+   @@media
+    (max-width: 576px) {
+        .edit-actions {
+            flex-direction: column;
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
+
+        .edit-actions .btn {
+            width: 100%;
+            max-width: 280px;
+        }
     }
 
     .btn-socota {
@@ -139,6 +164,21 @@
     body[data-bs-theme="dark"] .date-help {
         color: #a0a0a0;
     }
+
+    @@media (max-width: 576px) {
+
+        .edit-actions {
+            flex-direction: column;
+            gap: 0.6rem;
+            padding-top: 0;
+            margin-top: 0.25rem;
+        }
+
+        .edit-actions .btn {
+            width: 100%;
+            min-width: 0;
+        }
+    }
 </style>
 
 
@@ -165,9 +205,7 @@
 
             <form asp-action="Create" method="post">
 
-                <div asp-validation-summary="ModelOnly"
-                     class="alert alert-danger"
-                     role="alert">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
                 </div>
 
 
@@ -192,18 +230,15 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="TicketId"
-                                   class="form-label">
+                            <label asp-for="TicketId" class="form-label">
 
                                 Ticket ID
 
                             </label>
 
-                            <input asp-for="TicketId"
-                                   class="form-control" />
+                            <input asp-for="TicketId" class="form-control" />
 
-                            <span asp-validation-for="TicketId"
-                                  class="text-danger small">
+                            <span asp-validation-for="TicketId" class="text-danger small">
                             </span>
 
                         </div>
@@ -213,18 +248,15 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="Nom"
-                                   class="form-label">
+                            <label asp-for="Nom" class="form-label">
 
                                 Nom du projet
 
                             </label>
 
-                            <input asp-for="Nom"
-                                   class="form-control" />
+                            <input asp-for="Nom" class="form-control" />
 
-                            <span asp-validation-for="Nom"
-                                  class="text-danger small">
+                            <span asp-validation-for="Nom" class="text-danger small">
                             </span>
 
                         </div>
@@ -234,16 +266,13 @@
 
                         <div class="col-12">
 
-                            <label asp-for="Description"
-                                   class="form-label">
+                            <label asp-for="Description" class="form-label">
 
                                 Description
 
                             </label>
 
-                            <textarea asp-for="Description"
-                                      class="form-control"
-                                      rows="4"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
 
                         </div>
 
@@ -273,8 +302,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="UniteProjetId"
-                                   class="form-label">
+                            <label asp-for="UniteProjetId" class="form-label">
 
                                 Société
 
@@ -283,13 +311,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="UniteProjetId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="UniteProjetId" asp-items="@(new SelectList(
                                             Model.UnitesDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Sélectionner une unité
@@ -298,8 +324,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutUnite')">
 
                                     <i class="fas fa-plus"></i>
@@ -307,8 +332,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerClassificationCreate('unite')">
 
                                     <i class="fas fa-trash"></i>
@@ -318,20 +342,15 @@
                             </div>
 
 
-                            <div id="createAjoutUnite"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutUnite" class="mt-2 d-none">
 
-                                <input id="CreateNouvelleUnite"
-                                       class="form-control mb-2"
+                                <input id="CreateNouvelleUnite" class="form-control mb-2"
                                        placeholder="Nom de la nouvelle unité" />
 
-                                <input id="CreateNouvelleUnitePrefixe"
-                                       class="form-control mb-2"
-                                       maxlength="20"
+                                <input id="CreateNouvelleUnitePrefixe" class="form-control mb-2" maxlength="20"
                                        placeholder="Préfixe de référence (ex. FN)" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationCreate('unite')">
 
                                     <i class="fas fa-check"></i>
@@ -343,8 +362,7 @@
                             </div>
 
 
-                            <span asp-validation-for="UniteProjetId"
-                                  class="text-danger small">
+                            <span asp-validation-for="UniteProjetId" class="text-danger small">
                             </span>
 
                         </div>
@@ -354,8 +372,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="DepartementProjetId"
-                                   class="form-label">
+                            <label asp-for="DepartementProjetId" class="form-label">
 
                                 Département
 
@@ -364,13 +381,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="DepartementProjetId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="DepartementProjetId" asp-items="@(new SelectList(
                                             Model.DepartementsDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Sélectionner un département
@@ -379,8 +394,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutDepartement')">
 
                                     <i class="fas fa-plus"></i>
@@ -388,8 +402,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerClassificationCreate('departement')">
 
                                     <i class="fas fa-trash"></i>
@@ -399,15 +412,12 @@
                             </div>
 
 
-                            <div id="createAjoutDepartement"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutDepartement" class="mt-2 d-none">
 
-                                <input id="CreateNouveauDepartement"
-                                       class="form-control mb-2"
+                                <input id="CreateNouveauDepartement" class="form-control mb-2"
                                        placeholder="Nom du nouveau département" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationCreate('departement')">
 
                                     <i class="fas fa-check"></i>
@@ -419,8 +429,7 @@
                             </div>
 
 
-                            <span asp-validation-for="DepartementProjetId"
-                                  class="text-danger small">
+                            <span asp-validation-for="DepartementProjetId" class="text-danger small">
                             </span>
 
                         </div>
@@ -430,8 +439,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="TypeProjetReferenceId"
-                                   class="form-label">
+                            <label asp-for="TypeProjetReferenceId" class="form-label">
 
                                 Type
 
@@ -440,13 +448,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="TypeProjetReferenceId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="TypeProjetReferenceId" asp-items="@(new SelectList(
                                             Model.TypesDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Sélectionner un type
@@ -455,8 +461,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutType')">
 
                                     <i class="fas fa-plus"></i>
@@ -464,8 +469,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerClassificationCreate('type')">
 
                                     <i class="fas fa-trash"></i>
@@ -475,15 +479,12 @@
                             </div>
 
 
-                            <div id="createAjoutType"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutType" class="mt-2 d-none">
 
-                                <input id="CreateNouveauTypeProjet"
-                                       class="form-control mb-2"
+                                <input id="CreateNouveauTypeProjet" class="form-control mb-2"
                                        placeholder="Nom du nouveau type" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationCreate('type')">
 
                                     <i class="fas fa-check"></i>
@@ -495,8 +496,7 @@
                             </div>
 
 
-                            <span asp-validation-for="TypeProjetReferenceId"
-                                  class="text-danger small">
+                            <span asp-validation-for="TypeProjetReferenceId" class="text-danger small">
                             </span>
 
                         </div>
@@ -506,8 +506,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="PlateformeProjetId"
-                                   class="form-label">
+                            <label asp-for="PlateformeProjetId" class="form-label">
 
                                 Plateforme
 
@@ -516,13 +515,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="PlateformeProjetId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="PlateformeProjetId" asp-items="@(new SelectList(
                                             Model.PlateformesDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Sélectionner une plateforme
@@ -531,8 +528,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutPlateforme')">
 
                                     <i class="fas fa-plus"></i>
@@ -540,8 +536,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerClassificationCreate('plateforme')">
 
                                     <i class="fas fa-trash"></i>
@@ -551,15 +546,12 @@
                             </div>
 
 
-                            <div id="createAjoutPlateforme"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutPlateforme" class="mt-2 d-none">
 
-                                <input id="CreateNouvellePlateforme"
-                                       class="form-control mb-2"
+                                <input id="CreateNouvellePlateforme" class="form-control mb-2"
                                        placeholder="Nom de la nouvelle plateforme (ex. SAP)" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterClassificationCreate('plateforme')">
 
                                     <i class="fas fa-check"></i>
@@ -571,8 +563,7 @@
                             </div>
 
 
-                            <span asp-validation-for="PlateformeProjetId"
-                                  class="text-danger small">
+                            <span asp-validation-for="PlateformeProjetId" class="text-danger small">
                             </span>
 
                         </div>
@@ -582,8 +573,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="Priorite"
-                                   class="form-label">
+                            <label asp-for="Priorite" class="form-label">
 
                                 Priorité
 
@@ -624,8 +614,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="OwnerItId"
-                                   class="form-label">
+                            <label asp-for="OwnerItId" class="form-label">
 
                                 Owner IT
 
@@ -634,13 +623,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="OwnerItId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="OwnerItId" asp-items="@(new SelectList(
                                             Model.UtilisateursDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Aucun
@@ -649,8 +636,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutOwnerIt')">
 
                                     <i class="fas fa-plus"></i>
@@ -658,8 +644,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerUtilisateurCreate('ownerIt')">
 
                                     <i class="fas fa-trash"></i>
@@ -669,24 +654,18 @@
                             </div>
 
 
-                            <div id="createAjoutOwnerIt"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutOwnerIt" class="mt-2 d-none">
 
-                                <input id="CreateNouvelOwnerItNomADUtilisateur"
-                                       class="form-control mb-2"
+                                <input id="CreateNouvelOwnerItNomADUtilisateur" class="form-control mb-2"
                                        placeholder="Nom AD utilisateur" />
 
-                                <input id="CreateNouvelOwnerItNom"
-                                       class="form-control mb-2"
+                                <input id="CreateNouvelOwnerItNom" class="form-control mb-2"
                                        placeholder="Nom complet" />
 
-                                <input id="CreateNouvelOwnerItEmail"
-                                       type="email"
-                                       class="form-control mb-2"
+                                <input id="CreateNouvelOwnerItEmail" type="email" class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurCreate('ownerIt')">
 
                                     <i class="fas fa-check"></i>
@@ -704,8 +683,7 @@
 
                         <div class="col-md-6 mb-3">
 
-                            <label asp-for="PowerUserId"
-                                   class="form-label">
+                            <label asp-for="PowerUserId" class="form-label">
 
                                 Power User
 
@@ -714,13 +692,11 @@
 
                             <div class="d-flex gap-2">
 
-                                <select asp-for="PowerUserId"
-                                        asp-items="@(new SelectList(
+                                <select asp-for="PowerUserId" asp-items="@(new SelectList(
                                             Model.UtilisateursDisponibles,
                                             "Id",
                                             "Nom"
-                                        ))"
-                                        class="form-select">
+                                        ))" class="form-select">
 
                                     <option value="">
                                         Aucun
@@ -729,8 +705,7 @@
                                 </select>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-secondary"
+                                <button type="button" class="btn btn-outline-secondary"
                                         onclick="toggleAjout('createAjoutPowerUser')">
 
                                     <i class="fas fa-plus"></i>
@@ -738,8 +713,7 @@
                                 </button>
 
 
-                                <button type="button"
-                                        class="btn btn-outline-danger"
+                                <button type="button" class="btn btn-outline-danger"
                                         onclick="supprimerUtilisateurCreate('powerUser')">
 
                                     <i class="fas fa-trash"></i>
@@ -749,24 +723,18 @@
                             </div>
 
 
-                            <div id="createAjoutPowerUser"
-                                 class="mt-2 d-none">
+                            <div id="createAjoutPowerUser" class="mt-2 d-none">
 
-                                <input id="CreateNouveauPowerUserNomADUtilisateur"
-                                       class="form-control mb-2"
+                                <input id="CreateNouveauPowerUserNomADUtilisateur" class="form-control mb-2"
                                        placeholder="Nom AD utilisateur" />
 
-                                <input id="CreateNouveauPowerUserNom"
-                                       class="form-control mb-2"
+                                <input id="CreateNouveauPowerUserNom" class="form-control mb-2"
                                        placeholder="Nom complet" />
 
-                                <input id="CreateNouveauPowerUserEmail"
-                                       type="email"
-                                       class="form-control mb-2"
+                                <input id="CreateNouveauPowerUserEmail" type="email" class="form-control mb-2"
                                        placeholder="Adresse e-mail" />
 
-                                <button type="button"
-                                        class="btn btn-sm btn-socota"
+                                <button type="button" class="btn btn-sm btn-socota"
                                         onclick="ajouterUtilisateurCreate('powerUser')">
 
                                     <i class="fas fa-check"></i>
@@ -780,9 +748,7 @@
                         </div>
 
 
-                        <!-- ================================= -->
                         <!-- DATES DU PROJET -->
-                        <!-- ================================= -->
 
                         <div class="col-12 mt-2 mb-2">
 
@@ -801,28 +767,20 @@
 
                         <div class="col-md-4 mb-3">
 
-                            <label asp-for="DateDebut"
-                                   class="form-label">
+                            <label asp-for="DateDebut" class="form-label">
 
                                 Date de début
                                 <span class="text-danger">*</span>
 
                             </label>
 
-
-                            <input asp-for="DateDebut"
-                                   type="date"
-                                   class="form-control"
-                                   required />
-
+                            <input asp-for="DateDebut" type="date" class="form-control" required />
 
                             <div class="date-help">
                                 Date à laquelle le projet commence.
                             </div>
 
-
-                            <span asp-validation-for="DateDebut"
-                                  class="text-danger small">
+                            <span asp-validation-for="DateDebut" class="text-danger small">
                             </span>
 
                         </div>
@@ -832,26 +790,19 @@
 
                         <div class="col-md-4 mb-3">
 
-                            <label asp-for="Deadline"
-                                   class="form-label">
+                            <label asp-for="Deadline" class="form-label">
 
                                 Deadline
 
                             </label>
 
-
-                            <input asp-for="Deadline"
-                                   type="date"
-                                   class="form-control" />
-
+                            <input asp-for="Deadline" type="date" class="form-control" />
 
                             <div class="date-help">
                                 Date limite du projet. Facultative.
                             </div>
 
-
-                            <span asp-validation-for="Deadline"
-                                  class="text-danger small">
+                            <span asp-validation-for="Deadline" class="text-danger small">
                             </span>
 
                         </div>
@@ -861,26 +812,19 @@
 
                         <div class="col-md-4 mb-3">
 
-                            <label asp-for="DateFin"
-                                   class="form-label">
+                            <label asp-for="DateFin" class="form-label">
 
                                 Date de fin prévue
 
                             </label>
 
-
-                            <input asp-for="DateFin"
-                                   type="date"
-                                   class="form-control" />
-
+                            <input asp-for="DateFin" type="date" class="form-control" />
 
                             <div class="date-help">
                                 Fin prévue du projet. Facultative.
                             </div>
 
-
-                            <span asp-validation-for="DateFin"
-                                  class="text-danger small">
+                            <span asp-validation-for="DateFin" class="text-danger small">
                             </span>
 
                         </div>
@@ -891,25 +835,22 @@
 
 
                 <!-- ========================================= -->
-                <!-- ACTIONS -->
+                <!-- ACTIONS DU FORMULAIRE -->
                 <!-- ========================================= -->
 
                 <div class="edit-actions">
 
-                    <a href="/Projet/Index"
-                       class="btn btn-outline-secondary">
+                    <a href="/Projet/Index" class="btn btn-outline-secondary">
 
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times me-1"></i>
 
                         Annuler
 
                     </a>
 
+                    <button type="submit" class="btn btn-socota">
 
-                    <button type="submit"
-                            class="btn btn-socota">
-
-                        <i class="fas fa-save"></i>
+                        <i class="fas fa-save me-1"></i>
 
                         Créer le projet
 
@@ -1726,4 +1667,3 @@
     }
 
 </script>
-
