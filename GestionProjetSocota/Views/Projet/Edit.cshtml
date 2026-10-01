@@ -4,6 +4,7 @@
     .edit-page {
         --socota-green: #8BC53F;
         --socota-green-dark: #70A130;
+        padding-bottom: 2rem; /* espace entre la carte et le bas de l'écran */
     }
 
     .edit-title {
@@ -62,11 +63,13 @@
         box-shadow: 0 0 0 0.2rem rgba(139, 197, 63, 0.15);
     }
 
+    /* Boutons du bas : centrés, avec de l'espace autour */
     .edit-actions {
         display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        padding-top: 1rem;
+        justify-content: center;   /* centre les boutons horizontalement */
+        flex-wrap: wrap;           /* évite les débordements sur petit écran */
+        gap: 1rem;                 /* espace entre les deux boutons */
+        padding: 1.5rem 0 0.5rem;  /* haut / côtés / bas */
     }
 
     .btn-socota {
@@ -1907,9 +1910,6 @@
                 return;
             }
 
-
-            // Retirer l'utilisateur des deux listes
-            // Owner IT et Power User
 
             [
                 "OwnerItId",

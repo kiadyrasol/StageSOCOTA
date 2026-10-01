@@ -37,22 +37,38 @@
         white-space: nowrap;
     }
 
+    /* Conteneur des colonnes : hauteur fixe + scroll horizontal toujours visible */
     .kanban-container {
         display: flex;
+        flex-wrap: nowrap;
         gap: 18px;
-        overflow-x: auto;
         align-items: flex-start;
         padding: 4px 4px 18px;
+
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        height: calc(100vh - 230px); /* hauteur = écran moins l'en-tête */
+        min-height: 420px;           /* jamais plus petit que ça */
+
+        overflow-x: auto;            /* barre horizontale */
+        overflow-y: hidden;          /* pas de barre verticale sur le conteneur */
     }
 
     .kanban-column {
+        flex: 0 0 285px;
         width: 285px;
         min-width: 285px;
+        max-height: 100%;            /* la colonne ne dépasse pas le conteneur */
+
+        display: flex;               /* en-tête + corps empilés */
+        flex-direction: column;
+
         background-color: var(--kanban-bg);
         border: 1px solid var(--kanban-border);
         border-radius: 1rem;
         overflow: hidden;
-        flex-shrink: 0;
         box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
         transition: box-shadow 0.2s ease;
     }
@@ -62,6 +78,7 @@
     }
 
     .kanban-header {
+        flex: 0 0 auto;              /* l'en-tête garde sa taille */
         min-height: 52px;
         padding: 12px 14px;
         color: #ffffff;
@@ -119,6 +136,8 @@
     .kanban-body {
         padding: 12px;
         min-height: 110px;
+        flex: 1 1 auto;              /* prend la place restante sous l'en-tête */
+        overflow-y: auto;            /* les cartes défilent dans la colonne */
     }
 
     .kanban-card {

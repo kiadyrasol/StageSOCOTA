@@ -1117,15 +1117,20 @@
         </div>
 
 
-        <!-- RECHERCHE -->
+        <!-- RECHERCHE (automatique : voir le script en bas de page) -->
 
         <div class="pj-search">
 
-            <form method="get" asp-controller="Projet" asp-action="Index">
+            <form id="rechercheForm" method="get" asp-controller="Projet" asp-action="Index">
 
                 <div class="input-group input-group-sm">
 
-                    <input type="text" name="recherche" value="@recherche" class="form-control"
+                    <input type="text"
+                           id="searchInput"
+                           name="recherche"
+                           value="@recherche"
+                           class="form-control"
+                           autocomplete="off"
                            placeholder="Ticket ID, nom, référence..." />
 
                     <button type="submit" class="btn">
@@ -1160,14 +1165,12 @@
 
         <div class="card-body">
 
-            <form method="get" asp-controller="Projet" asp-action="Index">
+            <form id="filtresForm" method="get" asp-controller="Projet" asp-action="Index">
 
                 <input type="hidden" name="statutFiltreActif" value="true" />
 
-                @if (!string.IsNullOrWhiteSpace(recherche))
-                {
-                    <input type="hidden" name="recherche" value="@recherche" />
-                }
+                <!-- Transporte le texte de la recherche avec les filtres -->
+                <input type="hidden" id="rechercheHidden" name="recherche" value="@recherche" />
 
 
                 <div class="filtres-recherche">
@@ -1995,6 +1998,80 @@
                 });
             });
         });
+
+
+        /* ============================================================
+           RECHERCHE AUTOMATIQUE (à chaque saisie + à chaque filtre)
+           ============================================================ */
+
+        const filtresForm = document.getElementById("filtresForm");
+        const rechercheForm = document.getElementById("rechercheForm");
+        const searchInput = document.getElementById("searchInput");
+        const rechercheHidden = document.getElementById("rechercheHidden");
+
+        // Envoie le formulaire des filtres avec le texte de recherche.
+        // "garderFocus" = true quand c'est la recherche qui a déclenché l'envoi.
+        function lancerFiltrage(garderFocus) {
+
+            if (!filtresForm) return;
+
+            // Copie le texte tapé dans le champ caché du formulaire de filtres
+            if (rechercheHidden && searchInput) {
+                rechercheHidden.value = searchInput.value;
+            }
+
+            // Mémorise qu'il faudra remettre le curseur dans la recherche après le rechargement
+            if (garderFocus) {
+                sessionStorage.setItem("refocusRecherche", "1");
+            }
+
+            filtresForm.submit();
+        }
+
+
+        // --- 1) Recherche : se lance 400 ms après la dernière touche tapée ---
+
+        let rechercheTimer = null;
+
+        if (searchInput) {
+
+            searchInput.addEventListener("input", () => {
+                clearTimeout(rechercheTimer);
+                rechercheTimer = setTimeout(() => lancerFiltrage(true), 400);
+            });
+
+            // Touche Entrée ou clic sur la loupe : lancement immédiat
+            if (rechercheForm) {
+                rechercheForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    clearTimeout(rechercheTimer);
+                    lancerFiltrage(true);
+                });
+            }
+
+            // Après le rechargement : remet le curseur à la fin du texte
+            if (sessionStorage.getItem("refocusRecherche") === "1") {
+                sessionStorage.removeItem("refocusRecherche");
+                searchInput.focus();
+                const fin = searchInput.value.length;
+                searchInput.setSelectionRange(fin, fin);
+            }
+        }
+
+
+        // --- 2) Filtres : se lancent 900 ms après la dernière case cochée ---
+        // (le délai permet de cocher plusieurs cases avant le rechargement)
+
+        let filtreTimer = null;
+
+        document
+            .querySelectorAll(".multiselect-item, .select-all-checkbox")
+            .forEach((checkbox) => {
+                checkbox.addEventListener("change", () => {
+                    clearTimeout(filtreTimer);
+                    filtreTimer = setTimeout(() => lancerFiltrage(false), 900);
+                });
+            });
 
     });
 
