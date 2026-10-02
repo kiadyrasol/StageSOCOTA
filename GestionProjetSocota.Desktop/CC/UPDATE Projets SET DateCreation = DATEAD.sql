@@ -1,0 +1,1 @@
+UPDATE Projets SET DateCreation = DATEADD(day, -75, GETDATE()) WHERE Id = 1;

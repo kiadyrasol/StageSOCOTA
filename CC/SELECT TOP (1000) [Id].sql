@@ -1,6 +1,0 @@
-SELECT TOP (1000) [Id]
-      ,[NomADUtilisateur]
-      ,[Nom]
-      ,[Email]
-      ,[Role]
-  FROM [GestionProjetSocotaDb].[dbo].[Utilisateurs]
